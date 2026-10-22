@@ -1,14 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Poké Pop Defense</title>
-<meta name="description" content="A free fan-made tower defense game: place Pokémon beside the path, recruit new friends, evolve them and teach them stronger moves, and defend your base through 20 Mystery Dungeon dungeons.">
-<meta property="og:title" content="Poké Pop Defense">
-<meta property="og:description" content="A free fan-made tower defense game: place Pokémon beside the path, recruit new friends, evolve them and teach them stronger moves, and defend your base through 20 Mystery Dungeon dungeons.">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
-<script>if (/[?&]debug\b/.test(location.search)) document.documentElement.classList.add('debug');</script>
-<style>html:not(.debug) .debug, html:not(.debug) #cheatBtn, html:not(.debug) .dbgOnly { display: none !important; }</style>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;700&family=Rubik:wght@400;500;700&display=swap">
@@ -32,12 +24,15 @@ body{font-family:var(--body);font-size:14px;padding-left:max(16px, env(safe-area
 .stat{display:flex;align-items:baseline;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-variant-numeric:tabular-nums}
 .stat b{font-weight:700;font-size:17px}
 .stat span{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
-.controls{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.controls{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;align-items:center}
 button{font:inherit;color:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--panel-2);padding:8px 12px}
 button:hover:not(:disabled){border-color:var(--accent)}
 button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 button:disabled{opacity:.45;cursor:not-allowed}
 .primary{background:var(--accent);color:#2a2100;border-color:var(--accent);font-weight:700}
+#startBtn.go{font-size:14px;padding:10px 12px;border-radius:12px;animation:startflash 1s ease-in-out infinite}
+@keyframes startflash{0%,100%{box-shadow:0 0 0 0 rgba(255,210,63,0);filter:brightness(1)}50%{box-shadow:0 0 0 8px rgba(255,210,63,.6),0 0 22px rgba(255,210,63,.9);filter:brightness(1.25)}}
+@media (prefers-reduced-motion:reduce){#startBtn.go{animation:none;box-shadow:0 0 0 4px rgba(255,210,63,.7)}}
 .toggle[aria-pressed="true"]{background:#33407a;border-color:var(--accent)}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px;align-items:start}
 .stage{position:relative;min-width:0}
@@ -55,6 +50,21 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:960/600;border-radius:1
 .story-box #storyText{position:absolute;inset:0}
 .story-box .arrow{position:absolute;right:12px;bottom:6px;font-size:12px;color:#ffd23f;animation:storyBob 1s infinite}
 @keyframes storyBob{50%{transform:translateY(3px)}}
+.starrow{position:relative;display:flex;justify-content:center;gap:14px;margin:4px 0 12px}
+.starslot{width:56px;height:56px;border-radius:50%;background:rgba(10,14,34,.7);border:3px solid #3a4272;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 3px 8px rgba(0,0,0,.5)}
+.starslot .star{font-size:34px;line-height:1;color:#2c3358}
+.starslot.on{border-color:#ffd23f;background:rgba(255,210,63,.12)}
+.starslot.on .star{color:#ffd23f;text-shadow:0 0 12px rgba(255,210,63,.8);animation:starPop .45s cubic-bezier(.2,1.6,.4,1)}
+.starslot:nth-child(2){margin-top:-8px}
+@keyframes starPop{0%{transform:scale(0) rotate(-90deg)}100%{transform:scale(1) rotate(0)}}
+.starrow.perfect .starslot.on{animation:starGlow 1.4s ease-in-out infinite}
+@keyframes starGlow{50%{box-shadow:0 0 18px 4px rgba(255,210,63,.6)}}
+.spark{position:absolute;left:50%;top:50%;width:12px;height:12px;pointer-events:none;background:#fff6c4;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);transform:translate(-50%,-50%) scale(0);animation:sparkFly 1.1s ease-out forwards}
+@keyframes sparkFly{0%{transform:translate(-50%,-50%) scale(0)}25%{transform:translate(calc(-50% + var(--dx)*.4),calc(-50% + var(--dy)*.4)) scale(1.3)}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(0);opacity:0}}
+.overlay .starbonus{color:#ffd23f;font-weight:700;white-space:nowrap}.overlay .starbonus b{font-size:1.15em;text-shadow:0 0 8px rgba(255,210,63,.7)}
+.dcard .dstars{position:absolute;left:6px;bottom:6px;z-index:3;display:flex;gap:1px;padding:1px 6px;border-radius:999px;background:rgba(20,26,46,.85);font-size:14px;line-height:1.2}
+.dcard .dstars i{font-style:normal;color:#4a5280}.dcard .dstars i.on{color:#ffd23f}
+@media (prefers-reduced-motion:reduce){.spark{display:none}.starslot.on .star,.starrow.perfect .starslot.on{animation:none}}
 .overlay p.small{font-size:13px}
 .overlay p.joined{color:var(--gold)}
 .debug{display:flex;align-items:center;gap:8px;margin-top:8px;background:var(--panel);border:1px dashed var(--line);border-radius:8px;padding:6px 8px}
@@ -79,6 +89,7 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:960/600;border-radius:1
 .mon{display:grid;justify-items:center;gap:2px;text-align:center;padding:6px 4px}
 .mon .orb{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:18px;border:2px solid rgba(0,0,0,.35)}
 .mon .nm{font-weight:500;font-size:13px}
+.mon .type,.ally .type{font-size:8px;padding:1px 4px;letter-spacing:.02em}
 .tip{position:fixed;z-index:20;width:250px;padding:10px 12px;border-radius:10px;background:var(--panel,#1c2238);border:1px solid rgba(255,255,255,.18);box-shadow:0 8px 24px rgba(0,0,0,.45);font-size:13px;line-height:1.4;pointer-events:none;text-align:left}
 .tip b{font-size:14px}
 .tip .type{display:inline-block;padding:1px 8px;border-radius:999px;font-size:11px;font-weight:700;color:#14182a;text-transform:uppercase;letter-spacing:.04em}
@@ -141,6 +152,9 @@ kbd{font-family:var(--body);font-size:11px;background:var(--panel-2);border:1px 
 .dcard .dinfo{padding:8px 10px 10px;display:flex;flex-direction:column;gap:2px}
 .dcard .dname{font-family:var(--display);font-weight:700;font-size:15px;line-height:1.2}
 .dcard .dmeta{font-size:12px;color:var(--muted)}
+.dcard .dtypes{display:flex;flex-wrap:wrap;align-items:center;gap:3px;margin-top:4px}
+.dcard .dtypes .dlab{font-size:10px;color:var(--muted);margin-right:2px}
+.dcard .dtypes .type{font-size:9px;padding:1px 5px;letter-spacing:.04em}
 .dcard.cleared{border-color:var(--ok)}
 .dcard.next{border-color:var(--accent);box-shadow:0 0 0 2px rgba(255,210,63,.35)}
 .dcard.locked{cursor:not-allowed}
@@ -150,6 +164,7 @@ kbd{font-family:var(--body);font-size:11px;background:var(--panel-2);border:1px 
 .dexbtn{padding:6px 8px;line-height:0;margin-left:8px}
 .app.in-menu .bar .dexbtn{margin-left:8px}
 .wigbtn{display:none}
+.app.in-menu .bar .wigbtn.gone{display:none}
 .app.in-menu .bar .wigbtn{display:inline-block;margin-left:auto}
 .wigbtn .orb{display:block;width:22px;height:22px}
 .wigbtn .orb img{width:22px;height:22px;display:block}
@@ -172,24 +187,92 @@ kbd{font-family:var(--body);font-size:11px;background:var(--panel-2);border:1px 
 .talk h2{font-family:var(--display);font-size:22px;margin:0 0 6px;color:var(--accent)}
 .talk p{margin:0 0 8px;line-height:1.5}
 .talkpanel{width:min(560px,100%)}
+.dexpanel.tutpanel{width:min(640px,100%)}
+.setbtn{font-size:20px;min-width:40px;line-height:1;color:#cfd6ff}
+.dexpanel.setpanel{width:min(520px,100%);padding:0;overflow:hidden;border-color:#3a5aa0;font-family:var(--display)}
+.sethead{display:flex;align-items:center;justify-content:space-between;background:#2b4f8f;padding:14px 16px;border-bottom:3px solid #dfe8ff;color:#fff;font-size:20px;letter-spacing:.08em;text-transform:uppercase}
+.setx{position:relative;background:#1b2a4e;border:2px solid #0e1630;color:#fff;font-size:18px;line-height:1;width:40px;height:40px;border-radius:6px;padding:0}
+.setx kbd{position:absolute;right:-6px;top:-14px;background:#6a52b5;border:2px solid #1b1040;color:#fff;border-radius:6px;font-size:11px;padding:1px 6px;font-family:inherit}
+.setbody{max-height:min(70vh,560px);overflow:auto;background:#1d1c18}
+.setsec{background:#15140f;color:#5b92e0;padding:10px 16px;font-size:15px;letter-spacing:.1em;text-transform:uppercase;border-top:2px solid #2a2923}
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;background:#24231d;border-top:2px solid #2d2c25;color:#e9e7da;font-size:14px;letter-spacing:.03em}
+.setrow.click{cursor:pointer}.setrow.click:hover{background:#2a2922}
+.langsel{border:3px solid #4a4a44;background:#e9e7da;color:#24231d;border-radius:3px;margin:10px 16px;padding:10px 14px;box-shadow:3px 3px 0 #3a3a35}
+.langsel:hover{background:#f3f1e4}
+.langsel .caret{font-size:16px;transition:transform .15s}.langsel.open .caret{transform:rotate(180deg)}
+.langlist{margin:-6px 16px 10px;border:3px solid #4a4a44;border-radius:3px;overflow:hidden;background:#24231d}
+.langlist .opt{border-top:2px solid #2d2c25;padding:11px 14px}.langlist .opt:first-child{border-top:0}
+.langlist .opt.cur{background:#2b4f8f;color:#fff}.langlist .opt.cur::after{content:"\2713";font-size:16px}
+.chk{width:30px;height:30px;flex:none;border:3px solid #4a4a44;background:#e9e7da;border-radius:3px;padding:0;position:relative;box-shadow:3px 3px 0 #3a3a35}
+.chk.on{background:#5b92e0;border-color:#9cc1f5}
+.chk.on::after{content:"";position:absolute;left:7px;top:2px;width:7px;height:14px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg)}
+.setrow input[type=range]{width:min(230px,52%);height:22px;-webkit-appearance:none;appearance:none;background:transparent}
+.setrow input[type=range]::-webkit-slider-runnable-track{height:12px;background:#33322c;border-radius:8px}
+.setrow input[type=range]::-moz-range-track{height:12px;background:#33322c;border-radius:8px}
+.setrow input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:34px;height:22px;border-radius:12px;background:#fff;margin-top:-5px;border:2px solid #bbb}
+.setrow input[type=range]::-moz-range-thumb{width:34px;height:22px;border-radius:12px;background:#fff;border:2px solid #bbb}
+.setrow.dim{opacity:.5}
+.setfoot{display:flex;justify-content:flex-end;padding:12px 16px;background:#1d1c18;border-top:2px solid #2d2c25}
+.tutbtn{font-weight:800;font-size:19px;min-width:40px;color:#ffd23f;line-height:1}
+.tscene{position:relative;height:210px;border-radius:10px;overflow:hidden;background:#79b94a;border:2px solid rgba(0,0,0,.4);margin:10px 0}
+.tpath{position:absolute;left:0;right:0;top:96px;height:38px;background:#e3c77a;border-top:3px solid #b8964a;border-bottom:3px solid #b8964a}
+.ttok{position:absolute;width:40px;height:40px;border-radius:50%;overflow:hidden;border:3px solid rgba(0,0,0,.45);background:#fff;z-index:3}
+.ttok img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated;display:block}
+.tbox{position:absolute;left:8px;right:8px;bottom:8px;height:54px;background:#1d2340;border-radius:8px;display:flex;align-items:center;gap:8px;padding:0 10px;z-index:2}
+.tbox .ttok{position:static}
+.tbox span{color:#cfd6ff;font-size:12px;margin-left:6px}
+.thand{position:absolute;font-size:30px;z-index:8;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.55))}
+.tring{position:absolute;width:56px;height:56px;border-radius:50%;border:3px solid #ffd23f;z-index:4;pointer-events:none;opacity:0}
+.trng{position:absolute;border-radius:50%;border:2px dashed #fff;background:rgba(255,255,255,.16);z-index:1;pointer-events:none}
+.ttag{position:absolute;font-size:12px;font-weight:700;color:#fff;background:rgba(0,0,0,.55);padding:2px 9px;border-radius:6px;z-index:7}
+.tstart{position:absolute;left:12px;top:10px;z-index:5;font-weight:700;background:var(--accent);color:#2a2100;border:1px solid var(--accent);border-radius:8px;padding:6px 12px;font-size:13px}
+.tcard{position:absolute;z-index:6;background:#1d2340;border:1px solid #3a4478;border-radius:8px;padding:8px 10px;font-size:12px;color:#e8ecff;width:190px}
+.tcard div{display:flex;justify-content:space-between;margin:3px 0;padding:3px 6px;border-radius:6px;background:#2a3262}
+.tfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
+.tdots{display:flex;gap:6px}.tdots i{width:9px;height:9px;border-radius:50%;background:#3a4478;display:block}.tdots i.on{background:var(--accent)}
+.tutpanel h2{margin:0 0 4px}.tutpanel p{margin:0}
+.hintpink{color:#ff7ab8}
+.hintpurple{color:#b388ff}
 .areainfo{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
 .areagrid .dcell{pointer-events:none;position:relative}
 .cntb{position:absolute;top:4px;right:6px;font-size:11px;font-weight:700;background:var(--accent);color:#2a2100;border-radius:999px;padding:0 6px}
 .wigbtn.pulse{animation:wigpulse 1.4s ease-in-out infinite}
 @keyframes wigpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,210,63,.0)}50%{box-shadow:0 0 0 6px rgba(255,210,63,.55)}}
-.wigtip{position:fixed;z-index:40;max-width:220px;background:var(--accent);color:#2a2100;font-size:13px;font-weight:600;line-height:1.35;padding:8px 12px;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.4)}
-.wigtip::before{content:"";position:absolute;top:-6px;right:18px;border:6px solid transparent;border-top:0;border-bottom-color:var(--accent)}
+.wigtip{position:fixed;z-index:40;max-width:min(300px,calc(100vw - 16px));background:var(--accent);color:#2a2100;font-size:18px;font-weight:700;line-height:1.3;padding:14px 18px;border-radius:14px;border:3px solid #fff7d0;box-shadow:0 6px 22px rgba(0,0,0,.55);animation:wigbob 1.6s ease-in-out infinite}
+.wigtip::before{content:"";position:absolute;top:-13px;right:20px;border:10px solid transparent;border-top:0;border-bottom:10px solid #fff7d0}
+@keyframes wigbob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
 .loadmsg{position:fixed;left:50%;top:40%;transform:translateX(-50%);z-index:60;background:var(--panel);border:2px solid var(--accent);border-radius:12px;padding:14px 22px;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,.5)}
 .boxh{font-weight:700;font-size:15px;margin:0 0 8px}
+.teamhead{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 0 8px}
+.teamhead .boxh{margin:0 auto 0 0}
+.teamhead{margin-bottom:10px}
+.teamctl{display:contents}   /* its buttons sit in the same row as Team, Lives and Money */
+.teamctl button{padding:8px 10px;font-size:13px;white-space:nowrap}
+.teamctl #startBtn{flex:0 0 auto}
 .legs:not(:empty){margin-top:8px}
-.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px;margin-bottom:12px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px;margin-bottom:12px}
 .tslot{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;text-align:center;background:var(--panel-2);border:1px solid var(--line);border-radius:10px}
 .tslot .orb{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;border:2px solid rgba(0,0,0,.35)}
-.tslot .nm{font-size:13px;font-weight:600}
+.tslot .nt{display:flex;flex-wrap:nowrap;justify-content:center;align-items:center;gap:4px;max-width:100%}
+.tslot .nt .type{font-size:8px;padding:1px 4px;letter-spacing:.02em}
+.tslot .nm{font-size:12px;font-weight:600;white-space:nowrap}
 .tslot .role{font-size:11px;color:var(--muted)}
 .tslot.empty{justify-content:center;border-style:dashed;background:transparent;color:var(--muted);font-size:13px;min-height:120px}
 .tslot button{font-size:12px;padding:3px 10px}
 .tslot .rm{border-color:#c0584d;color:#ff9f93}
+.tslot .btnrow{display:flex;gap:6px;justify-content:center}
+.tslot .btnrow button{padding:3px 8px}
+.tslot .rel{background:#4d2523;border-color:#7d3a36;color:#e2aaa4;font-weight:600}
+.tslot .rel:hover{background:#613029;border-color:#9a4a44}
+.confirmbtns .reldo{background:#c0392b;border-color:#e2584a;color:#fff;font-weight:700}   /* the final decision stays bright red */
+.confirmbtns .reldo:hover{background:#d84636}
+.tslot .btnrow button[data-add]:not(:disabled){background:#0aa8ff;border-color:#8fe6ff;color:#02172e;font-weight:800;box-shadow:0 0 10px rgba(30,190,255,.6)}
+.tslot .btnrow button[data-add]:disabled{background:rgba(10,168,255,.38);border-color:rgba(143,230,255,.65);color:#d6f2ff;font-weight:700;cursor:not-allowed}
+.tslot .btnrow button[data-add]:not(:disabled):hover{background:#33bcff;box-shadow:0 0 15px rgba(80,210,255,.85)}
+.relmsg{color:var(--accent);font-weight:700}
+.dexpanel.confirmbox{width:min(420px,100%);text-align:center}
+.confirmbox h2{margin:0 0 8px}
+.confirmbtns{display:flex;gap:10px;justify-content:center;margin-top:14px}
 .tslot .evoopt{font-size:11px;line-height:1.25;padding:4px 6px;margin-top:2px;border-color:var(--accent);color:var(--accent)}
 .tslot .evoopt:disabled{border-color:var(--line);color:var(--muted)}
 .evoscene{display:flex;flex-direction:column;align-items:center;gap:14px;padding:26px 10px;text-align:center}
@@ -249,6 +332,7 @@ kbd{font-family:var(--body);font-size:11px;background:var(--panel-2);border:1px 
 .pcard .nm{font-weight:500;font-size:13px}
 .pcard .tp{font-size:11px;color:var(--muted)}
 .bigorb{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;border:3px solid rgba(0,0,0,.35);overflow:hidden;margin:0 auto}
+.bigorb img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated;display:block}
 .stepnote{font-size:12px;color:var(--muted)}
 .app.in-menu .layout,.app.in-menu .stats,.app.in-menu .controls{display:none}
 @media (max-width:860px){.layout{grid-template-columns:minmax(0,1fr)}.controls{margin-left:0}}
@@ -259,26 +343,26 @@ kbd{font-family:var(--body);font-size:11px;background:var(--panel-2);border:1px 
 <div id="loadMsg" class="loadmsg" hidden>Getting things ready…</div>
 <div id="wigTip" class="wigtip" hidden>Wigglytuff's club is open! Click the tent to visit.</div>
 <div id="teamModal" class="dexmodal" hidden><div class="dexpanel" role="dialog" aria-modal="true" aria-label="Your team"><div id="teamBody"></div></div></div>
+<div id="setModal" class="dexmodal" hidden><div class="dexpanel setpanel" role="dialog" aria-modal="true" aria-label="Settings"><div id="setBody"></div></div></div>
+<div id="tutModal" class="dexmodal" hidden><div class="dexpanel talkpanel tutpanel" role="dialog" aria-modal="true" aria-label="How to play"><div id="tutBody"></div></div></div>
+<div id="endModal" class="dexmodal" hidden><div class="dexpanel talkpanel" role="dialog" aria-modal="true" aria-label="Congratulations"><div id="endBody"></div></div></div>
 <div id="areaModal" class="dexmodal" hidden><div class="dexpanel" role="dialog" aria-modal="true" aria-label="Friend area"><div id="areaBody"></div></div></div>
 <div id="dexModal" class="dexmodal" hidden><div class="dexpanel" role="dialog" aria-modal="true" aria-label="Pokédex"><div id="dexBody"></div></div></div>
 <div class="app">
   <header class="bar">
     <h1 class="logo">Poké Pop Defense</h1>
     <div class="stats">
-      <div class="stat"><span>Lives</span><b id="lives">100</b></div>
-      <div class="stat"><span>Money</span><b id="money">₽650</b></div>
       <div class="stat"><span>Dungeon</span><b id="dungeon">Tiny Woods</b><span id="dungeonNum">1/20</span></div>
       <div class="stat"><span>Wave</span><b id="wave">0 / 20</b></div>
     </div>
     <div class="controls">
       <button id="menuBtn" title="Back to the dungeon list">Dungeons</button>
-      <button id="startBtn" class="primary">Start wave 1</button>
-      <button id="speedBtn" class="toggle" aria-pressed="false" title="Game speed">Speed 1×</button>
-      <button id="autoBtn" class="toggle" aria-pressed="false" title="Start the next wave automatically">Auto-start</button>
       <button id="cheatBtn" class="toggle" aria-pressed="true" title="Test mode: money never runs out">Unlimited ₽</button>
     </div>
     <button id="wigBtn" class="dexbtn wigbtn" title="Wigglytuff's friend areas" aria-label="Friend areas"><span class="orb"><img id="wigImg" alt=""></span></button>
     <button id="teamBtn" class="dexbtn teambtn" title="Your team" aria-label="Your team"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#fff" stroke="#3a2a2a" stroke-width="1.6"/><path d="M2 12a10 10 0 0 1 20 0z" fill="#e0412f" stroke="#3a2a2a" stroke-width="1.6"/><line x1="2" y1="12" x2="22" y2="12" stroke="#3a2a2a" stroke-width="1.6"/><circle cx="12" cy="12" r="3.2" fill="#fff" stroke="#3a2a2a" stroke-width="1.6"/></svg></button>
+    <button id="setBtn" class="dexbtn setbtn" title="Settings" aria-label="Settings">⚙</button>
+    <button id="tutBtn" class="dexbtn tutbtn" title="How to play" aria-label="How to play">?</button>
     <button id="dexBtn" class="dexbtn" title="Pokédex" aria-label="Pokédex"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="3" y="2" width="18" height="20" rx="3" fill="#e0412f" stroke="#7a1d12" stroke-width="1.5"/><rect x="6" y="5" width="12" height="7" rx="1.5" fill="#bfe8ff" stroke="#143a5a" stroke-width="1"/><circle cx="8.5" cy="16.5" r="1.7" fill="#ffd23f" stroke="#7a1d12" stroke-width=".8"/><rect x="12" y="15.5" width="6" height="2" rx="1" fill="#7a1d12"/></svg></button>
   </header>
 
@@ -286,7 +370,7 @@ kbd{font-family:var(--body);font-size:11px;background:var(--panel-2);border:1px 
 
   <section id="menu" class="menu" hidden>
     <div class="menutop">
-      <div class="dexfilter" role="tablist"><button class="chip" role="tab" id="mtDungeons" aria-selected="true">Dungeons</button><button class="chip" role="tab" id="mtAreas" aria-selected="false">Friend Areas</button></div>
+      <div class="dexfilter" role="tablist" id="menuTabs"><button class="chip" role="tab" id="mtDungeons" aria-selected="true">Dungeons</button><button class="chip" role="tab" id="mtAreas" aria-selected="false">Friend Areas</button></div>
       <span class="wallet" id="wallet" title="Coins earned in dungeons, spent on friend areas and evolutions"></span>
     </div>
     <div class="menupane" id="menuDungeons">
@@ -316,19 +400,22 @@ kbd{font-family:var(--body);font-size:11px;background:var(--panel-2);border:1px 
         <button id="dbgComplete" class="debug-text">Complete wave</button>
         <button id="dbgUnlock" class="debug-text">Unlock all allies</button>
         <button id="dbgStarters" class="debug-text">Unlock all starters</button>
+        <select id="dbgForm" class="debug-text" title="Strength of the test Pokémon"><option value="0">Base form</option><option value="1">Middle form</option><option value="2">Final form</option></select>
+        <button id="dbgTypes" class="debug-text">One of each type</button>
       </div>
     </div>
 
     <aside class="panel">
       <section id="encounter" class="box encounter" hidden></section>
       <section class="box">
-        <div class="boxh">Team</div>
+        <div class="teamhead"><div class="boxh">Team</div><div class="stat"><span>Lives</span><b id="lives">100</b></div><div class="stat"><span>Money</span><b id="money">₽650</b></div>
+        <div class="teamctl"><button id="startBtn" class="primary">Start wave 1</button><button id="speedBtn" class="toggle" aria-pressed="false" title="Game speed">Speed 1×</button><button id="autoBtn" class="toggle" aria-pressed="false" title="Start the next wave automatically">Auto-start</button></div></div>
         <div class="shop" id="shop"></div>
         <div class="legs" id="legs"></div>
         <div class="tip" id="shopTip" hidden></div>
       </section>
       <section class="box" id="info"></section>
-      <p class="credits">Sprites and portraits from the <a href="https://sprites.pmdcollab.org/" target="_blank" rel="noopener">PMD SpriteCollab</a> in the style of Pokémon Mystery Dungeon: Red Rescue Team. Pokémon and Pokémon Mystery Dungeon are © Nintendo, Creatures, Game Freak and Spike Chunsoft. This is an unofficial, free, non-commercial fan project, not affiliated with or endorsed by them.</p>
+      <p class="credits">Sprites and portraits from the <a href="https://sprites.pmdcollab.org/" target="_blank" rel="noopener">PMD SpriteCollab</a> in the style of Pokémon Mystery Dungeon: Red Rescue Team. Pokémon © Nintendo, Creatures, Game Freak. Non-commercial fan prototype.</p>
     </aside>
   </main>
 </div>
@@ -341,8 +428,8 @@ const WILD = {"191":{"fw":24,"fh":40,"rows":8,"dur":[4,6,6,6,6,6,6,6],"ox":2,"oy
 const TILESETS = {"TINY_WOODS":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":5}},"THUNDERWAVE_CAVE":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":7}},"MT_STEEL_01F_05F":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":6}},"SINISTER_WOODS":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":5}},"SILENT_CHASM":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":7}},"MT_THUNDER":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":5}},"MT_THUNDER_PEAK":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":6}},"GREAT_CANYON":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":6}},"LAPIS_CAVE":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":6}},"MT_BLAZE":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":5}},"FROSTY_FOREST":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":5}},"MT_FREEZE":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":6}},"UPROAR_FOREST":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":5}},"MAGMA_CAVERN_08F_17F":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":5}},"MAGMA_CAVERN_18F_23F":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":6}},"SKY_TOWER":{"g":{"wall":0,"wallAlt1":1,"wallAlt2":2,"ground":3,"groundAlt":4,"water":5}}};
 const DEX_PORT = {"1":"data:image/webp;base64,UklGRogCAABXRUJQVlA4THwCAAAvJ8AJAHdgpm2bQBjcwRyMnD37jYbRtm36P9o5O6UnDAaGzUzAJEQgMtGMQoSdfM5//H96pHpWi4xIHB2QAMEVM7YbkGzb2to2Zaa/zPCvMjMzM3itT2WuJFO59mcalodhKRmypFE4UZht/YEHiEdlfIdIv51XiOi/wrZtG2Z1PvI2T/t08uTJ+u//0wWlx82zJ0+++ZPWSkoL80+eRDOtk3b0nH2D3T+G8bb0ImL372F0MAMR/bsPHz6MP77Y4eyhmzlhfEkwdtj5euZNASXlt2EmsVjDqmt/v3z5goh+mElcqryakEcCPbhjxw7EkjsAFPRwbngmcQXucGpsACURObierFD8nPhNh6jJ0jpCMmIcdt0B2boyd8XMFcz2sbZBBj5V+nI97XRYWopVQLMjVDy4Y0dtg56iSPMWqXTVxR07rDIOu4lVqprhc3XGduwwcvNtndsaioJqBATP5M5ZsxrKwra/A71er3YLHkUGW/Zu00yUBZgykCyQAOBR9ZBFs7QoohCYnDzUCzbaNvXuYlIfsXWOTI5OcWjqRWKiY5rdBE5yagOJ2OTAlGSy9zoArMoY7O0iQQdUM9YgOFzxO50EnRAgJVZRSlNcTyODPorzTIETuLmqnFYZJCeCOVYNiwkAIOqroJidJyVhWbSwxGIxFABExnRC9IgKVQZKuQnmhKnPI8T0mR6Is4awJKGicUXiQ+qgWE0wpqkaa3CKdPrrwjQ7X1E0xgzPRuIoj12nLlFHRIbSHF5GgUCr1QbEeFQu8fIChrSqSGnAGiZLprKYIzJp1StPvJ5ZsqQFeUHLs8oV7Wbhz36ppmQRB5lXoCUJb86EITkahwA=","4":"data:image/webp;base64,UklGRgACAABXRUJQVlA4TPMBAAAvJ8AJAHdgJACSSjQyw6nOMjqDSJMpRgIgYYKR6ASi/xc4wSbRaDQSSYo9+RE+ArFpgCUG8mMg5z9+px/ul5FYNtr5iEEJiBII6ytTSxkGudb2r5GSXaBbtxJ399Kldujc3R1Skn9SpJ38B2mT+c85ewF4P3sLOESGQ+6B5JfM4Q6+L6L/Ctu2bZjZccme/4mzOYB9PSsydPMe0DJ889a7XutXw5BvOzPdfcJmAIjF7Fjvrou/uwHAlgY+/dm3G8AmkmdeC5hB+/imSvxsSJ137WRzxe9AAtpZVRxo41Hobi0sImkHqf04Erh2EbmRpB8keRSWR9PctpEsm6/yn6FhKSvbQgD+w3zBtCHftrli7UIRBwujJVIaA04XllRc2jYGLAC+Ow+/5BXZ9QXAKPld/fO56u8o2ZOXTI2yD/iumOShxMdDfRghv6nAVa0Kb+4Iy+YEWvw3DOkVzQJO+kFWzmZoIk8NWSJs9cjW4uilnCPFSic5HA0k/nFL+uYE7gPkAHw55YMGXEU+PN5XAVtpGJJIyll9EInkuFXjuyID7dYXYiWivuDrwgMO1To5rV118cjz2t/4FjW1Wrbwnlt7jA2bj5YsPBimdWffkI/GrJGH3lDd2bB1bNTCvdbx+nNjarTPuhVm1c++4WNnsrA/FEcAAA==","7":"data:image/webp;base64,UklGRhQCAABXRUJQVlA4TAcCAAAvJ8AJAHdgJGCaSSK8f4JHQl4ica9htLaNKorGMvKPojE0L/5oJAASJhD5v4RodIKRCTTnP/5/bTEkgK2mdAjKxBH0maLVkMS3DHKk7V/jRraT1jPybBVeqINdXAXLnT2BKs9/zWU4KdcyqZRjkLEL7AFMfZg5kVkr/N0h+v+lwAl+X0T/Fbhto/iY4Rk3/3cYCYjZ/IMpmhewaV51AwBGaFQAQGteGasD4EBNQOt2HYAAMDUvsoHrQg3+aA6vL3up3hyYV9lWLl8A14HWqEBus4eZ2TelRq8y73P1OgAkEmNUALYwh3v4KuCmbHIfKsvd6lUAmE95nQfqyHYe39julYLtB1dRAaSAMsiq4DLz/KjEioSsy1xidkd7RRBnvHZLnPUyVsUqf9oUXzONwEpKXGSmlP0LQhoVfqGLeZec0dzP9ypF5v1P89OOotELhiczQ3OnabRX6kNjtFkq6pcM7WD6GzmjZq8AAmdTB/YNbXt+monZmRa2GxzRUXwdHa7RNDN/I2Z2mjqwtBn+lrjTmRAUZPtJfLhGzJlU1QGEL+SU4CW5MlFBev2is2YJu/k4JubX80rWDA9v9wo8W1OC5cliNVZ41Fxd48gVp3XgcToiPQqJeTPqndeBFxlr3Rf2Ll5YGfa7VH3SBWATSAf+Qugd1fHc0D5Zqe6Mzyd0vDS0t/nEaR0A","25":"data:image/webp;base64,UklGRgoCAABXRUJQVlA4TP0BAAAvJ8AJAHdgGLKVj9DxYYQTUpj/+A0KxUgAJERmEJngRGcZjc7ghWYCJtnJSQQiG8XPKsQwwvzH/VXgg1FZS569SgKB0RIQM/WNrQE5zra3jQTMDeiZzdGp3By6vNvaN9icg2rDwubKATqAaLgdkZ+gA1g/XG/OiTTmb4RpR5cgLV8hov8TwDybdMpVOcnJrvQSILu9yh+NfLJTqct8cwqQ7f5hZt4uyy6zovKvw4EGnvDOH1ZEVN7MkI8jEBFJEylyypfAROcOyU1yi+JXAsBHiDUg28e7LysNBgPDN4riTwJgiWG+cf3nuYuBAoCciIBRp3X8ON24GgGQMbyyUxQFLa5nAAwrx2b/G40GTXgTkNyYApDH2DhklHPd0+HF8UYDZLXDHuZFq9EAHBhWAGCi8Fi97gl7MgawyKSWx2o1z/svCQAMFBB26nUn/PLlBTACoPF+q1YDrFrCD1nh/ZYQgE18cjAY6CXhHO+/JFja94zmCHtYPjrmS1HV7hUCA64mAyGE4fPV7G4hRFC7U0kGwvtz5kgNqWE2nDXxmzxxHGtpdjsXxD+CG8cx5PCQY99Nq0Aec/rByxlAgIw1kPr+v0wAShViIKfA6f3v9SQojYCRysk4L/+HidFEgYZROVnnZwQYnZOtVM8Ao5yRZ00IcWqeop+BrHJSuy6EAAA=","52":"data:image/webp;base64,UklGRowCAABXRUJQVlA4TH8CAAAvJ8AJAHdgJJKUj0NcIiGJQISX5/goRiJJefnRiUUM5EnkSxxG2kZ6/wpe1jt4Ojg4OP/x/yOE2CllgDdERDA43KhbqrUcSNr/T1HbfW1diP0fnujUveW0z8S50T+nKjKxqXvLqS4c6+7Kqe4tw2Yg7B/2mBOnXD252pvYJRH9n4DR4of39nBRzT28Os2GnelRd/HD+/e2o/KDpSyb/m2PuZxfRL9+19OpU9lG+vBz2MO+YROxfKmi0Ej2L488nblLxOw7Z7INRL+nPX53XbYpmSutKnTTVUp5Xc4R/dZ3z+Ru0+m8Fw085LF7ulRRuHyFvBx6yP0A1pXTuVq4SWXa/QCgBisKAKbtUaQWAAAzUUoCgOU6mE1wF2SoDgDM6dHRYiLR4gdNteDWEqZHHaYk90dkRLoiUtdaDlNMBUEtua1rAUC9Fkz51HAuyEEb9/czANDp5dLUw6NTFARp5GtcMr1cq9TQkAhykxl5Q5aJBDZsiAa56TPyhgYAX7oqbbokB2E4RtrjkDZ3hULRZIufhCNqASAitIxs37TpDkl/hIgYAChiYIURyeQc5m3tQgQKcr8qY4EZtHYhoW7hVttFIkrynGnlmAqEME48RiSE0MSsFGaYQsRjJFb0cs5fPtOpEKJmiIjHKNXCOReU2hmnMGZcGCXBNVFvqJkEhdFT9whxO7ABsX+BUSM94lJw3jKAiHKBAVbIlWkBAEiHsdnHzp9XHhKI2PoWGeqPyI8fPfprraYFukYqKffT169JRMRERC4wIr7UEr3koiQKuFgaoL7el+0warJYNgkRaOrzPaOuy4FyulaLPnvJEUmE5U8QESVhQQDnnTktAGCBLAcA","54":"data:image/webp;base64,UklGRjICAABXRUJQVlA4TCYCAAAvJ8AJAHdgJmCSCjs5iUdcI3jaQKKYqW3DaBThRRBBFFFF+Q0YjUYiSTn58iWS/ineYYlBBOT8x+88fxU6UtlcuGU/AAKyllrkcRQQyLm2bW3bgX1OyswMhnKYpo6Rppxu7qSpzAzKd3Q651UNq/VKp54TbUFJeW1v5ZW5nQKG/5BPn+VE9F+R27YNs3vuKxRFuajQCKlKdKRJm9FIaYlef/zZivK69JNGWlLSJdLUlmapRNTqgaqAiOiRmlYlA8OzeZxwRdicSBuQ4lMG0ZWDG/NqaLhsRbD9ojYofM5gBNc0ggsCkYU40QT98Z+C6b+KGDZyZ35oYMB9WbWwaUXEin2+v99Gv8iJDJG2RwVvvJpKoeC1sakCIu+IG0HB7+9Hs2rdYZvjDmKwbvPckhOcTeJSxupg65gjN+4Ep5MY5C3p4GR4VOAZ3pFEfww4kWHSqTlCDMVDiAHRvVj8CxWXMnxzG3oAFv68cf16bdeNRDXIL3XEQ4B3kjsvv91/Y8ccgb+eSUbv7Ny5M7lrJ7tUzvjrmOnlAaC6UwrGLlWoTagL3j5JLEwmUA7AX9GUO/5vFhr0M++f2hmRBgOv0SgTde9szh1zbaPeC11v/OnYGRGT6yT6wp3V2RVhqk1/u2IMoJqMYMT0r2FB5cau5ruL6Qs6CIt0Iyktj3+2MV2aFn4j48b169cX6BSTWYi4VKYwDjOJVOjaJgBYjgQAMeJborEatsAA","66":"data:image/webp;base64,UklGRhQCAABXRUJQVlA4TAgCAAAvJ8AJAHdgJJKUl8QgBv1TEAG5jipGIkmxH4E4RCEyEd5x8iXSSCQpSOTLl/QvQBUk8uVFmP/42ywALG5X4SGggyKxvBrpttlhkCv/nyIpg7ttijN10WXXK7g7oaZbTG3PSnTatTUhzmmGu0N0N7dGs10Q2gvwBucv0b3DK/x+Ef2fgNMkG0t4NDxm5vXppPNLuGfmZ1ovLv0HZppjZibJgPUCwzNoJpieWQLA+ZnhRpIljeGlMTMzbFyngLj5GN+GHWfTHaejUA617o/NN03lVMdYMiP6v449bZp62hZkQ2YE+X7mqWkWDgn3UylIXtZPiS6HT1YcLEhmgopPsod9Vj2iXdc9JH3GpWuC3SZnteCT3IepMCvio38OWb/0PgApOH7+jazW9xSAvZh0tL+69gLYxppyaNc2p0n0q21tZd360dZZQf4zy5yOicW29ev+9q22sT66HnY1lgEejLouqDRo+5OePVkNRcIO+SjMuAoMDk458FRdc8UH32ZjV70a4pDFULLiyj9VshFlxJAGsNqFelXJhgZC2Vjtdcw/VZAM5V1d8RLWqwq4+1kv9xLuuREp3NVY5SXcoxEp4LHSSXRJBApAGOhUB10S5JAlAt3t0CXaUiEryHi7B0xlhVtSkEzFGzxURNIgK/xUw0NGkMFQ6Og/JOj3bvAEyZu6lLE4nBVMNZYD","104":"data:image/webp;base64,UklGRrwCAABXRUJQVlA4TK8CAAAvJ8AJAHdgpm2bt/yRDMKg7My3nIViJJKUCsQgOnGQSOQ5TiKN1rYhin9UI4qiMV4j/jj/8Xd9iNWXTkUuF8IYHUFAUNsqs80gWdu2NU4SHFbz/8WhluAO6TWzwd2WDnVJkLpMKikuFdylttM5ABxqkemPu9R2npP42wJn8H0R/Z+A/f8zjwEcHAVGA0Ae863JYcZ+sNjB/QBoRkMeW0BFASyjbe7q6P0Ay4Tm6OBCiQgAYK31yNxaUWgx5OEixq7Oid4P2yxZFFRFphwQxdqGuC83lYrCGoWK3KrU6H2I27BtAfFICgwD5q5tiFsx2ZBJ5BqZDvNmx9ZhX/gokRQqcvF7h2nVNZm0sFTCQcVWxKhWI0lXEyvq22cQzowC2GJ4Fb9u1T+HVCIKAE1bAOalKqjqhU9L69plwkUBRAY443EJBhdSUYAm3xqkTUqSXzPKWdmztRIR4M0sCqRJU3VfxcBx9iRVpqJQsywSQosNvcFnDCjsiiFLRMicS/AjWIFCzRggL9DmPBUfIRTA1MEYmBhgtleiotA8PbQD8a1fDzw79uKK7ZOACFlrP3LHVetZebDC1iQA0WOFdCCGpqr3WAOioS+QgApNPzsQsUJFnQEU+jVZAjHzD9d0XPU/1JJQ1b0PpTHxa7l1DO4XeJM0xX/fCaGeYdBsqCjw5mg05yGbSIW1HWgyqCgJFij+42PiHTZlmEHXLi2BQsVKHZNQy2YTz9oOvFJiIyKDCghJvPfQRyPXdqD1oKJkWMd7u8CrY9LcDiwOXHGvcXWpFvP6dfNbB6LT50JpSa+CTgBSVUztQMSWXvddaS8liOevBBl85ipcsHvDCA+gf+7gr7iAEDLMu2t/OvjQQffaFZcMe3bQ5ppYn/uud/1wPVfefe/A5RVOr/sOVwyH5jWjAwEA","133":"data:image/webp;base64,UklGRmgCAABXRUJQVlA4TFwCAAAvJ8AJAHdgJJKUj0EUYhILSQTky3MQxWhtGz/+KIpGMb5ojBc11UgkKR8BSRTiEgNHlZMf4eX8x/2X4bMF7QMCAaEdkWUmPqxqWchuBrnatr1tIsPUQWaKN9n0Dpqs+YsUzNphTaUXlwux9t7bH5ptxUr+lKnLZ5CeEY9hSzsHpF+BQ/jeiP4zcNu2Ebt3e/eLyZnpf4crPf9hoM2W62iocqOidTJ+r9Ak80BrIK96StfAdK4xORC6Mhz0S6exAkAOkPRyk7M3cv0h15uZ5SEvRwAaKwMPJALAaayxe4YAwF+74ksAuOKtDdqk6Fm6pJTAWXGFYsF/KIPzjyVwuebEtY4Fp2r2p34ZkB2H/MWeJWkXxgNSQnzO2lF5pbXUvA7kG0exiIo8SzEO4P1ZRJqZpUNAnpCnJ+Sl1VBpITwhB3hQb4kYzFx26MHzFgr9Pu0l1VCxaWJBse2vvQbrAMo2jR/PEeAJ12vSEdPLgoBh6X5I6dgJ4JdDvVJRv9+a2okEM5cdGq93q2hzgpWskyaedNOZUr7uUJjJKxq/uUIP6lcpz80EbNYYntx4yyV8tWPfOYIzV6oy3kPwDkRQE9UOApy87CT4IhFlfva9axMeSYeQF5VNoTZhoq8j9sv9JkNoZ7kQeud2ENBa9GVS7wvVLDNjVGWJmSFOpPTyhrPcZ5lJXbzvlUBWh6LwLGKZAHQAHKndCxkWdulQ/dLaaqWwOy1MXWFYiUqiPYJM1UzGGEJr9zuECVSzGcUJK53Sin6XnzUBYRpJPW1UD1Q2aaXPVz5ZSoFkmk8IRkID","152":"data:image/webp;base64,UklGRkACAABXRUJQVlA4TDMCAAAvJ8AJAHdgJJIU5EskEYhGbOTLkzhqGIkk5eRH+P6KOC+RREDiMBJJyksk0YhHJGIgXyLPMf/x/y8jbO7ACncYGFuQQSm1i4yhqZZBsrZta5zgbt+kOEzb4FZLBqfubri7OyubM8A1lazQsSVWWXXlsvcx/nKRk8g/Uw7heyP6PwHmtZbPDZbZ4hX8vSXmt0vwGGYLs9dqj4VLnxvE9xZmngjE42kQLfbIxO94jEArgIglLMg912D0dgF/bxHOWl1SDyB+tcLnJABnrVa7Bw2is5snSHq2t5uZbV3dPqcMkVjlHFFinK0sZ7Z1sEmxezuYbeWcSQi6JdFyZg8M0fExk9JTRpcTcNfKBzwwAnnBPTQ2bchJQHS0NI89DcYtPaRRsH/ITcDw7EydPQZXakGNQv0LowQsWpipocEQK5WgRuH+ObZTC50KGyxc6WO2p/8IGF6YmQ6DhcJB25DMqbDBpwhj8REMsVI2KNshSWaO6Ai5ZdGUZBaZDmahU84fy0nAWKXTwe5kldnUKc4UlTepzBluXSHgpUvDSps9XClJFxYrMRy3HkrkstpAw+QcYXFLP++aRE3lg8P6+4fxZVgJ9Qf1gFAoJ4Gg45TKHCzNqT+oC5Pw9hjOflPERpUDSv7BAv3BLkq/1UDBhuXudWpGZV79wQJdI6RbJr22XCkqB3fmH2ToCgFvSwgHc1JUjuTV2whAzVICOEXlW/lxSMe2qFyZf5AL4tuocuXBSan/I6QyAwA=","155":"data:image/webp;base64,UklGRvYBAABXRUJQVlA4TOoBAAAvJ8AJAHdgJJIU+xJ5knjEJQLyHR/HTG0bYrwIRvFEFOONItgYaRvpZJyEl/7srRU+nP/4v7mXxWJZ0RRUM4gSVEHGuK6BJGnb27aRb+CPZasZUr6A2s6jvsuMu7de/ulYikzdEiutHV3A7QDpfUkMb5DGAjkNdwgBUpMbRPSfYdu2Yah0xl559h9xztdbqbLTdY8RBTfV6do3D6Jbqmq5fMhI4/zWYml2cbGiCi7PL4zMJQoizsPKXF4TVSeUl2bSREHAw9W5iRFJpZS+4ObC8IqR3AHGxtFTw11GOwAwUVQmr3S/SDoaDpn2SvfbXAC5dqY/v6kJtLsWMNbz7nXZb2kD3rGygRp/NGCyY/4+jctuKAtoNDZTFz+ISD5/U1ba+KfhnWDf+BVCKIMe22NEgYyFIGUB2n4TOaN5WM4XaUMPvCa8gs0jqbVQU7ug6DoWf2lg1d2YBWEiGMmtOsiecimIaAfwfN83eEW0iolUH/CNAOBgcSsh2dc7VWV9S0/pBOVO8s9CbKsdC+305jvlGBKhy5Tl9di7HWgHA4PYVmjl71wAnp/lonIDjBNYwMDP0s+VywZZjC6w42edRFTvnUBqI/NzfyDqQnuAH63cKuqhsH90cydd42CQTfOd+o+FdrEze/c7qSMA","158":"data:image/webp;base64,UklGRjoCAABXRUJQVlA4TC4CAAAvJ8AJAHdgJJIUJJI4RKC/Qr58iTxHDSORpBCBWMQhEpGQRHh58h1GAiBhBhOMTvKxTiASjcT5j/+NbDfiCBEB5p3NFiHiZLeqMhOdA3K0/VPjRqvSIUnpeKELMzMntX+jjanySIl6rRwzW4/6MMNotP99fAE/PkGYqTKXuoRm4QgR/Z+AKy1vl9TfnOwP5F3fvdpQrwf4RETXGhEMgJzuD/rrXL58uR9w24Ut3fjaZeWRI+/KiKmDd/j9/NQR5eHDMeP/zVlIxKz/cN0IYkP+FcR1Ycs6PzwkG8KvHbyDd4ijKirzJ/rffAf64YizClljU0/013kPEpg6dSj7vob7T/S5/BMIBuwqZT8qPuSr8D2AitmPNfgKBmlj6r/iCZBs/zBevQ1ONuL/my3rYwT4NPf8sQdwAgTtKnz0APhE1AGAA0hnrflMw6u513sVTkMbD2xRCK8B7FhQcUnUp3qwlqoAJyCKbAB+IwAcSX0A0KPiAQPAp8kF4KsqMxED0LuLbEBYGR6EScQAfqq/H9hlZgRRWI0cIOFJkFjmfAcg9n6nsBq5jjNNtMvMHJ1oM75TmBARFU1TsTy8RTO/U0jVoqms2Vju2aUZhSIVoy11GJZ7/muaUXxjvd1Vx8HyuSSnGcZr/U2s6g+wmkrKaVq+7eudLYp7M1hNxQzpmtH29dYulcy4FcppbW8ioQgkO5oKFz7pu07FwlLZSAUDKkSrcZlUZSAD7q68tYVlmiY=","252":"data:image/webp;base64,UklGRjoCAABXRUJQVlA4TC4CAAAvJ8AJAHdgJJIU+xGQH51IREAiz/FRjESSQgzkxyAq0ZDnePkRjESS8vLkR6E5lgjEQH4E5PzHf8cACRbbZFwt65XgFg06ZQku2GOQM+2fIimNsxe5RDiEDqlD6uyGuEvXRlrF4LucdV3E9D+ZInIJdTfGSV1PxpD+Et2zn+H3j+j/BGx3Rz5F20OzY3u7+xXligfkKW4r1JQbjxoUteURINI6pTva2B8QkKt6urqzjdC3SGo6YK23Q3LEPuL1ALbZngUkPtJtANYx8z7lSuuUbljnPhq4qop4Y8a0bmPIWsvMIVUa1pAHbFzLvJSZZdXAIwCSsHIp8xIAQaqH4oAABlYuce4Nknv3h2NtVa1uYPJm0jF8uxY4FnQDi4EJP+mo3R73CBVKVywGupitM49veYQhpANdTtcljwCkg13MM4AJP7175nExcORmAJ3Mv+tDj2uPE20NLehkFsBEidR9jsmphPOSp5MbFeVKXJ2yQQbkFKkAyoMCyck6ZToiM1NMlKSfAUuG/aLoxbKsrSGHySuBuBwZeJoQZxwQ+F2KfvD/BqGi46xOefLD+++eJgwpx0oBTJZ/vsf/uqZ4ngBkxAJY5H183/pmADVDAEYKW8YfWv9LXTxDAJBmQAAT5VMf/g2IzELezBSXFZ16/01lyTxUpyGcar0zKzNMIR8muopXTVyIc65I5o+r8Ui/bOIfKddxU4hyCQ89aeJbkM5z5M0JNbRgstpq4p0k5QA=","255":"data:image/webp;base64,UklGRjwCAABXRUJQVlA4TC8CAAAvJ8AJAHdgtLaNKoqiaHTjiOIb4TdGMRIACZEZzmCyE5zgBB9oNBKNRJJyMZAv6W+wH4EISCK8nP+4nTQ0wq+xmV4FpAiIuyXxsL5DxWYxyLH/z40akXOGNp/AuI8HoHQ2Gad9Tx1vKAZKJGLNUrkizDoHkg5AkvTcZQ9RIlj7v8TM6gy/iej/BJxVW8DHW6dVt7pTmpVqC+L/WVVfmt5FUf1GzFHVVZqbcisndjy5fp2GsOABuL/2P43IPNuao4256XTmz0YmpC3E6TxkFvf6FynVzhzZoZs4fT0pNrxMGElngkUEtDVradoL3T0GZymLh9TfpfaSHYUug8liXSC61QygC2cEBsfNQphlRD1dQDNwTypLWWEMHt1q0p4HunWxDEQtyg3JFZNVZx62KycBA+Aao5iJW8qZrziufiJqMkWQXIGjw0VZUaMpAEcBHrQ3FiHU/A2Y1mf1RcZofpDkyi6Ntzda0CT1J5PKRelUvQVIJV96PMng86RV5yt955Nsl8KEQiVWDIHv0srVX7oos4DjgDP8IMnyz8VyyBMLwKD0GeBz9peAYLdeQRxwphofYEmZ5rv0uaIm/ZZ2kGTAdUl/kS7+FpPkDLt/qb/I0g4aD88jyf08mXJLf/zNE3geTe32jz2vLxBv5HYEYr5r53biAv3Pc57Af87snPhfrrOjjec7GzFn/Rs7Xr3O0PP+jB0yJLaXKRAlhDg/7ri7eaBMd+wDU7vMNeZHv7FUAA==","258":"data:image/webp;base64,UklGRhYCAABXRUJQVlA4TAoCAAAvJ8AJAHdgJJIU+/IlEYhOLORJHB/FSAAkRKY4hWlOcRLRJhOMRiJJsciP8BJJc4hADORFIML8x18nKYtFsOVs5AHwSC3ptKRodJkZBjna/rdtQ8dTeruB61Y5u9urJko6QcBUbhI0ubeJY8bstsoBBD68AJk+NXeboBruEBKUlRv8/hH9N5i0je029oqlxeUxCLi1tKxryVrXMtha05IRrfWNHMiNxpaDKG7coSJTuf+nEi63c3cMT5Ud3QqAqwrHYSKKcysAMEZELgeQKsixNNrNkIWSdqZG4HLYjHCEuGDJEQBTwEY6RMBGfq00NQJcjuxkEJz8OjZGgO9TV+0Npik7eUCOAM+nfK+to0IeiEaAl1N+WHP6DOSkeqLgB2Gb0ZGd4MVXX1RzSlSPg7Bjl6feJO47pS8n3pOmQJC8B2eKUX5B7fvNzmhDAKG3caDAqKDw0RfdYZVCmymXiOKNSAALxwJA0GaHFUZUtqVA2GkGngA6LBMJBB5CAaDqMKLXB0SxADpNAQ+ourZ2YyWCzhOFIKX0nPU6QXeIx0HVF9WXz/Vcf/K793gs2g1RNTN6j3viCY+rG7JxYmo1r6eMb42E4iB1ahLRNaYM4Ar8qMJx6KqFnwpno4YWfpiQv+bNn6142OiHyXmTTjfkUBY2bBb9c6rsyOjDTZySel0460exfKSwYecXMgA=","300":"data:image/webp;base64,UklGRiYCAABXRUJQVlA4TBkCAAAvJ8AJAHdgJGAai0QSgyhv/TqTRDEagEwVRef4/wpRXNRmNGCSygmLnuqZfiCRSJz/+P8sWCzG1Wq0FBQIhnwiMQvhvCBH2z+1jSZwAEsHMPzluAwnHSoTdeG0TFV22mUdYVve7YMHMFXLYWj/AXk8Cv4PMRrJV4jov8K2bRumRnf7h/z4uVHRx89jPxpqJ7/fb+R1e5uCoFELW921blvSx8R+IuvWudM0TH5CqBlcn29AE5PxRk6WVn8M0iDYTIYUVZhnt2H944KiNrCz7bbF2LJwLBmqz6EKhQPN7XYTY8xa8/xQfblXL2nB6SqApbGU0rYe1EvdeAHAsizGsiT8L6+F/5KUAACwLePCh61t4YderwNgDnS3v70jfMGjxAfB/k7xQU1wAHCJCgDBhD1dLZYeldcb5XICAFaoPbdQ0nhvFGwHALiSdr10cEA8D/ICYwbaa6VyWXDHHUTECQPKoHxwMMGdQPco8wDuFT4HB4eHmkRtgPIuXdAAHRoGUdIEDhBdPJ9hRPCeK0SsTSAiptGgOI/g8yXi/JXpyTPhFeIzmjYn+AQm1cDCobGhEs3vR5QnL8yzxp+/Ipti7UrrR8Q5Y252C9oLIroyeqMjNRHf1328kWeG/seVH4jEWE8PJaY22L1GRFQ8TKiHNMtBN6/9TMpOmqUARrlTTeybUpbuee9EgnKaWTkYvcRxleCpRfc9HBGl6RAA"};   // portraits; the starters' first forms are here, the rest arrive with the "portraits" pack
 const DUNGEON_IMG = Array(20).fill(null), AREA_IMG = {};   // filled by the dc-* and areaimg-* packs
-const AREA_HAS_IMG = ["ancient-relic","beau-plains","bountiful-sea","crater","cryptic-cave","decrepit-lab","deep-sea-floor","echo-cave","energetic-forest","final-island","flyaway-forest","frigid-cavern","furnace-desert","ice-floe-beach","jungle","magnetic-quarry","mist-rise-forest","mt-cleft","mt-deepgreen","mt-discipline","mushroom-forest","mystic-lake","overgrown-forest","peanut-swamp","poison-swamp","power-plant","rainbow-peak","ravaged-field","sacred-field","safari","scorched-plains","secretive-forest","serene-sea","southern-island","tadpole-pond","thunder-meadow","transform-forest","treasure-sea","turtleshell-pond","wild-plains"];   // areas that have a picture (the others show a placeholder)
-const SPR_PACK = {"1":"sp-bulbasaur","2":"sp-bulbasaur","3":"sp-bulbasaur","4":"sp-charmander","5":"sp-charmander","6":"sp-charmander","7":"sp-squirtle","8":"sp-squirtle","9":"sp-squirtle","25":"sp-pikachu","26":"sp-pikachu","52":"sp-meowth","53":"sp-meowth","54":"sp-psyduck","55":"sp-psyduck","66":"sp-machop","67":"sp-machop","68":"sp-machop","104":"sp-cubone","105":"sp-cubone","133":"sp-eevee","134":"sp-eevee","135":"sp-eevee","136":"sp-eevee","196":"sp-eevee","197":"sp-eevee","152":"sp-chikorita","153":"sp-chikorita","154":"sp-chikorita","155":"sp-cyndaquil","156":"sp-cyndaquil","157":"sp-cyndaquil","158":"sp-totodile","159":"sp-totodile","160":"sp-totodile","252":"sp-treecko","253":"sp-treecko","254":"sp-treecko","255":"sp-torchic","256":"sp-torchic","257":"sp-torchic","258":"sp-mudkip","259":"sp-mudkip","260":"sp-mudkip","300":"sp-skitty","301":"sp-skitty","81":"sp-legends","359":"sp-legends","145":"sp-legends","146":"sp-legends","144":"sp-legends","151":"sp-legends","150":"sp-legends","82":"sp-a-power-plant","100":"sp-a-power-plant","101":"sp-a-power-plant","125":"sp-a-power-plant","239":"sp-a-power-plant","10":"sp-a-mist-rise-forest","11":"sp-a-mist-rise-forest","12":"sp-a-mist-rise-forest","13":"sp-a-mist-rise-forest","14":"sp-a-mist-rise-forest","15":"sp-a-mist-rise-forest","165":"sp-a-mist-rise-forest","166":"sp-a-mist-rise-forest","193":"sp-a-mist-rise-forest","265":"sp-a-mist-rise-forest","266":"sp-a-mist-rise-forest","267":"sp-a-mist-rise-forest","268":"sp-a-mist-rise-forest","269":"sp-a-mist-rise-forest","19":"sp-a-wild-plains","20":"sp-a-wild-plains","23":"sp-a-wild-plains","24":"sp-a-wild-plains","83":"sp-a-wild-plains","96":"sp-a-wild-plains","97":"sp-a-wild-plains","261":"sp-a-wild-plains","262":"sp-a-wild-plains","263":"sp-a-wild-plains","264":"sp-a-wild-plains","335":"sp-a-wild-plains","336":"sp-a-wild-plains","187":"sp-a-beau-plains","188":"sp-a-beau-plains","189":"sp-a-beau-plains","315":"sp-a-beau-plains","276":"sp-a-beau-plains","277":"sp-a-beau-plains","16":"sp-a-flyaway-forest","17":"sp-a-flyaway-forest","18":"sp-a-flyaway-forest","163":"sp-a-flyaway-forest","164":"sp-a-flyaway-forest","175":"sp-a-flyaway-forest","176":"sp-a-flyaway-forest","177":"sp-a-flyaway-forest","178":"sp-a-flyaway-forest","198":"sp-a-flyaway-forest","333":"sp-a-flyaway-forest","334":"sp-a-flyaway-forest","43":"sp-a-jungle","44":"sp-a-jungle","45":"sp-a-jungle","182":"sp-a-jungle","69":"sp-a-jungle","70":"sp-a-jungle","71":"sp-a-jungle","191":"sp-a-jungle","192":"sp-a-jungle","102":"sp-a-jungle","103":"sp-a-jungle","114":"sp-a-jungle","357":"sp-a-jungle","46":"sp-a-mushroom-forest","47":"sp-a-mushroom-forest","273":"sp-a-mushroom-forest","274":"sp-a-mushroom-forest","275":"sp-a-mushroom-forest","285":"sp-a-mushroom-forest","286":"sp-a-mushroom-forest","60":"sp-a-tadpole-pond","61":"sp-a-tadpole-pond","62":"sp-a-tadpole-pond","186":"sp-a-tadpole-pond","270":"sp-a-tadpole-pond","271":"sp-a-tadpole-pond","272":"sp-a-tadpole-pond","283":"sp-a-tadpole-pond","284":"sp-a-tadpole-pond","118":"sp-a-rub-a-dub-river","119":"sp-a-rub-a-dub-river","313":"sp-a-rub-a-dub-river","314":"sp-a-rub-a-dub-river","29":"sp-a-safari","30":"sp-a-safari","31":"sp-a-safari","32":"sp-a-safari","33":"sp-a-safari","34":"sp-a-safari","84":"sp-a-safari","85":"sp-a-safari","111":"sp-a-safari","112":"sp-a-safari","115":"sp-a-safari","128":"sp-a-safari","231":"sp-a-safari","232":"sp-a-safari","241":"sp-a-safari","352":"sp-a-overgrown-forest","123":"sp-a-overgrown-forest","212":"sp-a-overgrown-forest","127":"sp-a-overgrown-forest","185":"sp-a-overgrown-forest","214":"sp-a-overgrown-forest","74":"sp-a-mt-deepgreen","75":"sp-a-mt-deepgreen","76":"sp-a-mt-deepgreen","207":"sp-a-mt-deepgreen","213":"sp-a-mt-deepgreen","216":"sp-a-mt-deepgreen","217":"sp-a-mt-deepgreen","325":"sp-a-mt-deepgreen","326":"sp-a-mt-deepgreen","327":"sp-a-mt-deepgreen","63":"sp-a-decrepit-lab","64":"sp-a-decrepit-lab","65":"sp-a-decrepit-lab","122":"sp-a-decrepit-lab","132":"sp-a-decrepit-lab","137":"sp-a-decrepit-lab","233":"sp-a-decrepit-lab","374":"sp-a-magnetic-quarry","375":"sp-a-magnetic-quarry","376":"sp-a-magnetic-quarry","21":"sp-a-ravaged-field","22":"sp-a-ravaged-field","228":"sp-a-ravaged-field","229":"sp-a-ravaged-field","227":"sp-a-ravaged-field","161":"sp-a-thunder-meadow","162":"sp-a-thunder-meadow","179":"sp-a-thunder-meadow","180":"sp-a-thunder-meadow","181":"sp-a-thunder-meadow","309":"sp-a-thunder-meadow","310":"sp-a-thunder-meadow","311":"sp-a-thunder-meadow","312":"sp-a-thunder-meadow","351":"sp-a-thunder-meadow","358":"sp-a-thunder-meadow","236":"sp-a-mt-discipline","106":"sp-a-mt-discipline","107":"sp-a-mt-discipline","237":"sp-a-mt-discipline","307":"sp-a-mt-discipline","308":"sp-a-mt-discipline","296":"sp-a-mt-discipline","297":"sp-a-mt-discipline","194":"sp-a-peanut-swamp","195":"sp-a-peanut-swamp","339":"sp-a-peanut-swamp","340":"sp-a-peanut-swamp","131":"sp-a-mystic-lake","147":"sp-a-mystic-lake","148":"sp-a-mystic-lake","149":"sp-a-mystic-lake","129":"sp-a-waterfall-lake","130":"sp-a-waterfall-lake","349":"sp-a-waterfall-lake","350":"sp-a-waterfall-lake","116":"sp-a-treasure-sea","117":"sp-a-treasure-sea","230":"sp-a-treasure-sea","223":"sp-a-treasure-sea","224":"sp-a-treasure-sea","318":"sp-a-treasure-sea","319":"sp-a-treasure-sea","347":"sp-a-treasure-sea","348":"sp-a-treasure-sea","370":"sp-a-treasure-sea","304":"sp-a-mt-cleft","305":"sp-a-mt-cleft","306":"sp-a-mt-cleft","246":"sp-a-mt-cleft","247":"sp-a-mt-cleft","248":"sp-a-mt-cleft","172":"sp-a-energetic-forest","56":"sp-a-energetic-forest","57":"sp-a-energetic-forest","190":"sp-a-energetic-forest","143":"sp-a-energetic-forest","234":"sp-a-energetic-forest","287":"sp-a-energetic-forest","288":"sp-a-energetic-forest","289":"sp-a-energetic-forest","58":"sp-a-scorched-plains","59":"sp-a-scorched-plains","77":"sp-a-scorched-plains","78":"sp-a-scorched-plains","278":"sp-a-shallow-beach","279":"sp-a-shallow-beach","98":"sp-a-shallow-beach","99":"sp-a-shallow-beach","222":"sp-a-shallow-beach","183":"sp-a-turtleshell-pond","184":"sp-a-turtleshell-pond","298":"sp-a-turtleshell-pond","341":"sp-a-turtleshell-pond","342":"sp-a-turtleshell-pond","72":"sp-a-bountiful-sea","73":"sp-a-bountiful-sea","90":"sp-a-bountiful-sea","91":"sp-a-bountiful-sea","120":"sp-a-bountiful-sea","121":"sp-a-bountiful-sea","79":"sp-a-bountiful-sea","80":"sp-a-bountiful-sea","199":"sp-a-bountiful-sea","138":"sp-a-deep-sea-floor","139":"sp-a-deep-sea-floor","140":"sp-a-deep-sea-floor","141":"sp-a-deep-sea-floor","170":"sp-a-deep-sea-floor","171":"sp-a-deep-sea-floor","345":"sp-a-deep-sea-floor","346":"sp-a-deep-sea-floor","366":"sp-a-deep-sea-floor","367":"sp-a-deep-sea-floor","368":"sp-a-deep-sea-floor","369":"sp-a-deep-sea-floor","201":"sp-a-aged-chamber-an","250":"sp-a-rainbow-peak","244":"sp-a-sacred-field","243":"sp-a-sacred-field","245":"sp-a-sacred-field","48":"sp-a-secretive-forest","49":"sp-a-secretive-forest","167":"sp-a-secretive-forest","168":"sp-a-secretive-forest","204":"sp-a-secretive-forest","205":"sp-a-secretive-forest","290":"sp-a-secretive-forest","291":"sp-a-secretive-forest","292":"sp-a-secretive-forest","41":"sp-a-echo-cave","42":"sp-a-echo-cave","169":"sp-a-echo-cave","206":"sp-a-echo-cave","202":"sp-a-echo-cave","360":"sp-a-echo-cave","293":"sp-a-echo-cave","294":"sp-a-echo-cave","295":"sp-a-echo-cave","303":"sp-a-echo-cave","299":"sp-a-echo-cave","240":"sp-a-crater","126":"sp-a-crater","218":"sp-a-crater","219":"sp-a-crater","322":"sp-a-crater","323":"sp-a-crater","324":"sp-a-crater","142":"sp-a-ancient-relic","343":"sp-a-ancient-relic","344":"sp-a-ancient-relic","377":"sp-a-ancient-relic","378":"sp-a-ancient-relic","379":"sp-a-ancient-relic","320":"sp-a-serene-sea","321":"sp-a-serene-sea","211":"sp-a-serene-sea","226":"sp-a-serene-sea","27":"sp-a-furnace-desert","28":"sp-a-furnace-desert","328":"sp-a-furnace-desert","329":"sp-a-furnace-desert","330":"sp-a-furnace-desert","331":"sp-a-furnace-desert","332":"sp-a-furnace-desert","88":"sp-a-poison-swamp","89":"sp-a-poison-swamp","109":"sp-a-poison-swamp","110":"sp-a-poison-swamp","316":"sp-a-poison-swamp","317":"sp-a-poison-swamp","361":"sp-a-frigid-cavern","362":"sp-a-frigid-cavern","220":"sp-a-frigid-cavern","221":"sp-a-frigid-cavern","238":"sp-a-frigid-cavern","124":"sp-a-frigid-cavern","225":"sp-a-frigid-cavern","86":"sp-a-ice-floe-beach","87":"sp-a-ice-floe-beach","363":"sp-a-ice-floe-beach","364":"sp-a-ice-floe-beach","365":"sp-a-ice-floe-beach","380":"sp-a-southern-island","381":"sp-a-southern-island"};
+const AREA_HAS_IMG = ["ancient-relic","beau-plains","bountiful-sea","crater","cryptic-cave","decrepit-lab","deep-sea-floor","echo-cave","energetic-forest","final-island","flyaway-forest","frigid-cavern","furnace-desert","ice-floe-beach","jungle","magnetic-quarry","mist-rise-forest","mt-cleft","mt-deepgreen","mt-discipline","mushroom-forest","mystic-lake","overgrown-forest","peanut-swamp","poison-swamp","power-plant","rainbow-peak","ravaged-field","rub-a-dub-river","sacred-field","safari","scorched-plains","secretive-forest","serene-sea","southern-island","tadpole-pond","thunder-meadow","transform-forest","treasure-sea","turtleshell-pond","wild-plains"];   // areas that have a picture (the others show a placeholder)
+const SPR_PACK = {"1":"sp-bulbasaur","2":"sp-bulbasaur","3":"sp-bulbasaur","4":"sp-charmander","5":"sp-charmander","6":"sp-charmander","7":"sp-squirtle","8":"sp-squirtle","9":"sp-squirtle","25":"sp-pikachu","26":"sp-pikachu","52":"sp-meowth","53":"sp-meowth","54":"sp-psyduck","55":"sp-psyduck","66":"sp-machop","67":"sp-machop","68":"sp-machop","104":"sp-cubone","105":"sp-cubone","133":"sp-eevee","134":"sp-eevee","135":"sp-eevee","136":"sp-eevee","196":"sp-eevee","197":"sp-eevee","152":"sp-chikorita","153":"sp-chikorita","154":"sp-chikorita","155":"sp-cyndaquil","156":"sp-cyndaquil","157":"sp-cyndaquil","158":"sp-totodile","159":"sp-totodile","160":"sp-totodile","252":"sp-treecko","253":"sp-treecko","254":"sp-treecko","255":"sp-torchic","256":"sp-torchic","257":"sp-torchic","258":"sp-mudkip","259":"sp-mudkip","260":"sp-mudkip","300":"sp-skitty","301":"sp-skitty","145":"sp-legends","146":"sp-legends","144":"sp-legends","151":"sp-legends","150":"sp-legends","81":"sp-a-power-plant","82":"sp-a-power-plant","100":"sp-a-power-plant","101":"sp-a-power-plant","125":"sp-a-power-plant","239":"sp-a-power-plant","10":"sp-a-mist-rise-forest","11":"sp-a-mist-rise-forest","12":"sp-a-mist-rise-forest","13":"sp-a-mist-rise-forest","14":"sp-a-mist-rise-forest","15":"sp-a-mist-rise-forest","165":"sp-a-mist-rise-forest","166":"sp-a-mist-rise-forest","193":"sp-a-mist-rise-forest","265":"sp-a-mist-rise-forest","266":"sp-a-mist-rise-forest","267":"sp-a-mist-rise-forest","268":"sp-a-mist-rise-forest","269":"sp-a-mist-rise-forest","19":"sp-a-wild-plains","20":"sp-a-wild-plains","23":"sp-a-wild-plains","24":"sp-a-wild-plains","83":"sp-a-wild-plains","96":"sp-a-wild-plains","97":"sp-a-wild-plains","261":"sp-a-wild-plains","262":"sp-a-wild-plains","263":"sp-a-wild-plains","264":"sp-a-wild-plains","335":"sp-a-wild-plains","336":"sp-a-wild-plains","187":"sp-a-beau-plains","188":"sp-a-beau-plains","189":"sp-a-beau-plains","315":"sp-a-beau-plains","276":"sp-a-beau-plains","277":"sp-a-beau-plains","16":"sp-a-flyaway-forest","17":"sp-a-flyaway-forest","18":"sp-a-flyaway-forest","163":"sp-a-flyaway-forest","164":"sp-a-flyaway-forest","175":"sp-a-flyaway-forest","176":"sp-a-flyaway-forest","177":"sp-a-flyaway-forest","178":"sp-a-flyaway-forest","198":"sp-a-flyaway-forest","333":"sp-a-flyaway-forest","334":"sp-a-flyaway-forest","43":"sp-a-jungle","44":"sp-a-jungle","45":"sp-a-jungle","182":"sp-a-jungle","69":"sp-a-jungle","70":"sp-a-jungle","71":"sp-a-jungle","191":"sp-a-jungle","192":"sp-a-jungle","102":"sp-a-jungle","103":"sp-a-jungle","114":"sp-a-jungle","357":"sp-a-jungle","46":"sp-a-mushroom-forest","47":"sp-a-mushroom-forest","273":"sp-a-mushroom-forest","274":"sp-a-mushroom-forest","275":"sp-a-mushroom-forest","285":"sp-a-mushroom-forest","286":"sp-a-mushroom-forest","60":"sp-a-tadpole-pond","61":"sp-a-tadpole-pond","62":"sp-a-tadpole-pond","186":"sp-a-tadpole-pond","270":"sp-a-tadpole-pond","271":"sp-a-tadpole-pond","272":"sp-a-tadpole-pond","283":"sp-a-tadpole-pond","284":"sp-a-tadpole-pond","118":"sp-a-rub-a-dub-river","119":"sp-a-rub-a-dub-river","313":"sp-a-rub-a-dub-river","314":"sp-a-rub-a-dub-river","29":"sp-a-safari","30":"sp-a-safari","31":"sp-a-safari","32":"sp-a-safari","33":"sp-a-safari","34":"sp-a-safari","84":"sp-a-safari","85":"sp-a-safari","111":"sp-a-safari","112":"sp-a-safari","115":"sp-a-safari","128":"sp-a-safari","231":"sp-a-safari","232":"sp-a-safari","241":"sp-a-safari","352":"sp-a-overgrown-forest","123":"sp-a-overgrown-forest","212":"sp-a-overgrown-forest","127":"sp-a-overgrown-forest","185":"sp-a-overgrown-forest","214":"sp-a-overgrown-forest","74":"sp-a-mt-deepgreen","75":"sp-a-mt-deepgreen","76":"sp-a-mt-deepgreen","207":"sp-a-mt-deepgreen","213":"sp-a-mt-deepgreen","216":"sp-a-mt-deepgreen","217":"sp-a-mt-deepgreen","325":"sp-a-mt-deepgreen","326":"sp-a-mt-deepgreen","327":"sp-a-mt-deepgreen","63":"sp-a-decrepit-lab","64":"sp-a-decrepit-lab","65":"sp-a-decrepit-lab","122":"sp-a-decrepit-lab","132":"sp-a-decrepit-lab","137":"sp-a-decrepit-lab","233":"sp-a-decrepit-lab","374":"sp-a-magnetic-quarry","375":"sp-a-magnetic-quarry","376":"sp-a-magnetic-quarry","21":"sp-a-ravaged-field","22":"sp-a-ravaged-field","228":"sp-a-ravaged-field","229":"sp-a-ravaged-field","227":"sp-a-ravaged-field","359":"sp-a-ravaged-field","161":"sp-a-thunder-meadow","162":"sp-a-thunder-meadow","179":"sp-a-thunder-meadow","180":"sp-a-thunder-meadow","181":"sp-a-thunder-meadow","309":"sp-a-thunder-meadow","310":"sp-a-thunder-meadow","311":"sp-a-thunder-meadow","312":"sp-a-thunder-meadow","351":"sp-a-thunder-meadow","358":"sp-a-thunder-meadow","236":"sp-a-mt-discipline","106":"sp-a-mt-discipline","107":"sp-a-mt-discipline","237":"sp-a-mt-discipline","307":"sp-a-mt-discipline","308":"sp-a-mt-discipline","296":"sp-a-mt-discipline","297":"sp-a-mt-discipline","194":"sp-a-peanut-swamp","195":"sp-a-peanut-swamp","339":"sp-a-peanut-swamp","340":"sp-a-peanut-swamp","131":"sp-a-mystic-lake","147":"sp-a-mystic-lake","148":"sp-a-mystic-lake","149":"sp-a-mystic-lake","129":"sp-a-waterfall-lake","130":"sp-a-waterfall-lake","349":"sp-a-waterfall-lake","350":"sp-a-waterfall-lake","116":"sp-a-treasure-sea","117":"sp-a-treasure-sea","230":"sp-a-treasure-sea","223":"sp-a-treasure-sea","224":"sp-a-treasure-sea","318":"sp-a-treasure-sea","319":"sp-a-treasure-sea","347":"sp-a-treasure-sea","348":"sp-a-treasure-sea","370":"sp-a-treasure-sea","304":"sp-a-mt-cleft","305":"sp-a-mt-cleft","306":"sp-a-mt-cleft","246":"sp-a-mt-cleft","247":"sp-a-mt-cleft","248":"sp-a-mt-cleft","172":"sp-a-energetic-forest","56":"sp-a-energetic-forest","57":"sp-a-energetic-forest","190":"sp-a-energetic-forest","143":"sp-a-energetic-forest","234":"sp-a-energetic-forest","287":"sp-a-energetic-forest","288":"sp-a-energetic-forest","289":"sp-a-energetic-forest","58":"sp-a-scorched-plains","59":"sp-a-scorched-plains","77":"sp-a-scorched-plains","78":"sp-a-scorched-plains","278":"sp-a-shallow-beach","279":"sp-a-shallow-beach","98":"sp-a-shallow-beach","99":"sp-a-shallow-beach","222":"sp-a-shallow-beach","183":"sp-a-turtleshell-pond","184":"sp-a-turtleshell-pond","298":"sp-a-turtleshell-pond","341":"sp-a-turtleshell-pond","342":"sp-a-turtleshell-pond","72":"sp-a-bountiful-sea","73":"sp-a-bountiful-sea","90":"sp-a-bountiful-sea","91":"sp-a-bountiful-sea","120":"sp-a-bountiful-sea","121":"sp-a-bountiful-sea","79":"sp-a-bountiful-sea","80":"sp-a-bountiful-sea","199":"sp-a-bountiful-sea","138":"sp-a-deep-sea-floor","139":"sp-a-deep-sea-floor","140":"sp-a-deep-sea-floor","141":"sp-a-deep-sea-floor","170":"sp-a-deep-sea-floor","171":"sp-a-deep-sea-floor","345":"sp-a-deep-sea-floor","346":"sp-a-deep-sea-floor","366":"sp-a-deep-sea-floor","367":"sp-a-deep-sea-floor","368":"sp-a-deep-sea-floor","369":"sp-a-deep-sea-floor","201":"sp-a-aged-chamber-an","250":"sp-a-rainbow-peak","244":"sp-a-sacred-field","243":"sp-a-sacred-field","245":"sp-a-sacred-field","48":"sp-a-secretive-forest","49":"sp-a-secretive-forest","167":"sp-a-secretive-forest","168":"sp-a-secretive-forest","204":"sp-a-secretive-forest","205":"sp-a-secretive-forest","290":"sp-a-secretive-forest","291":"sp-a-secretive-forest","292":"sp-a-secretive-forest","41":"sp-a-echo-cave","42":"sp-a-echo-cave","169":"sp-a-echo-cave","206":"sp-a-echo-cave","202":"sp-a-echo-cave","360":"sp-a-echo-cave","293":"sp-a-echo-cave","294":"sp-a-echo-cave","295":"sp-a-echo-cave","303":"sp-a-echo-cave","299":"sp-a-echo-cave","240":"sp-a-crater","126":"sp-a-crater","218":"sp-a-crater","219":"sp-a-crater","322":"sp-a-crater","323":"sp-a-crater","324":"sp-a-crater","142":"sp-a-ancient-relic","343":"sp-a-ancient-relic","344":"sp-a-ancient-relic","377":"sp-a-ancient-relic","378":"sp-a-ancient-relic","379":"sp-a-ancient-relic","320":"sp-a-serene-sea","321":"sp-a-serene-sea","211":"sp-a-serene-sea","226":"sp-a-serene-sea","27":"sp-a-furnace-desert","28":"sp-a-furnace-desert","328":"sp-a-furnace-desert","329":"sp-a-furnace-desert","330":"sp-a-furnace-desert","331":"sp-a-furnace-desert","332":"sp-a-furnace-desert","88":"sp-a-poison-swamp","89":"sp-a-poison-swamp","109":"sp-a-poison-swamp","110":"sp-a-poison-swamp","316":"sp-a-poison-swamp","317":"sp-a-poison-swamp","361":"sp-a-frigid-cavern","362":"sp-a-frigid-cavern","220":"sp-a-frigid-cavern","221":"sp-a-frigid-cavern","238":"sp-a-frigid-cavern","124":"sp-a-frigid-cavern","225":"sp-a-frigid-cavern","86":"sp-a-ice-floe-beach","87":"sp-a-ice-floe-beach","363":"sp-a-ice-floe-beach","364":"sp-a-ice-floe-beach","365":"sp-a-ice-floe-beach","380":"sp-a-southern-island","381":"sp-a-southern-island"};
 const WILD_PACK = {"191":"dg-01","265":"dg-01","16":"dg-01","102":"dg-01","150":"dg-01","151":"dg-01","261":"dg-02","19":"dg-02","29":"dg-02","100":"dg-02","239":"dg-02","311":"dg-02","312":"dg-02","236":"dg-03","263":"dg-03","21":"dg-03","307":"dg-03","74":"dg-03","374":"dg-03","343":"dg-03","304":"dg-03","127":"dg-03","227":"dg-03","266":"dg-04","268":"dg-04","194":"dg-04","161":"dg-04","220":"dg-04","163":"dg-04","165":"dg-04","287":"dg-04","285":"dg-04","43":"dg-04","185":"dg-04","264":"dg-04","192":"dg-04","123":"dg-04","103":"dg-04","94":"dg-04","23":"dg-04","308":"dg-04","13":"dg-05","167":"dg-05","46":"dg-05","328":"dg-05","60":"dg-05","228":"dg-05","216":"dg-05","83":"dg-05","269":"dg-05","193":"dg-05","44":"dg-05","15":"dg-05","32":"dg-06","309":"dg-06","331":"dg-06","17":"dg-06","58":"dg-06","207":"dg-06","234":"dg-06","310":"dg-06","125":"dg-06","181":"dg-06","145":"dg-07","84":"dg-08","231":"dg-08","188":"dg-08","168":"dg-08","198":"dg-08","206":"dg-08","164":"dg-08","286":"dg-08","332":"dg-08","128":"dg-08","45":"dg-08","229":"dg-08","214":"dg-08","41":"dg-09","290":"dg-09","371":"dg-09","33":"dg-09","30":"dg-09","314":"dg-09","114":"dg-09","42":"dg-09","218":"dg-10","322":"dg-10","240":"dg-10","324":"dg-10","18":"dg-10","78":"dg-10","213":"dg-10","22":"dg-11","59":"dg-11","146":"dg-11","298":"dg-12","132":"dg-12","361":"dg-12","299":"dg-12","162":"dg-12","262":"dg-12","305":"dg-12","221":"dg-12","111":"dg-13","375":"dg-13","144":"dg-13","204":"dg-14","333":"dg-14","86":"dg-14","247":"dg-14","372":"dg-14","288":"dg-14","358":"dg-14","335":"dg-14","336":"dg-14","289":"dg-14","362":"dg-15","273":"dg-16","48":"dg-16","56":"dg-16","274":"dg-16","190":"dg-16","315":"dg-16","27":"dg-17","88":"dg-17","303":"dg-17","95":"dg-17","75":"dg-17","20":"dg-17","219":"dg-17","24":"dg-17","28":"dg-17","112":"dg-17","76":"dg-17","126":"dg-17","34":"dg-17","31":"dg-17","208":"dg-18","383":"dg-18","292":"dg-19","353":"dg-19","355":"dg-19","109":"dg-19","166":"dg-19","49":"dg-19","284":"dg-19","356":"dg-19","357":"dg-19","337":"dg-19","338":"dg-19","205":"dg-19","334":"dg-19","212":"dg-19","142":"dg-19","330":"dg-19","344":"dg-20","376":"dg-20","373":"dg-20","384":"dg-20"};
 const TS_PACK = {"TINY_WOODS":"dg-01","THUNDERWAVE_CAVE":"dg-02","MT_STEEL_01F_05F":"dg-03","SINISTER_WOODS":"dg-04","SILENT_CHASM":"dg-05","MT_THUNDER":"dg-06","MT_THUNDER_PEAK":"dg-07","GREAT_CANYON":"dg-08","LAPIS_CAVE":"dg-09","MT_BLAZE":"dg-10","FROSTY_FOREST":"dg-12","MT_FREEZE":"dg-14","UPROAR_FOREST":"dg-16","MAGMA_CAVERN_08F_17F":"dg-17","MAGMA_CAVERN_18F_23F":"dg-18","SKY_TOWER":"dg-19"};
 const LINE_DEX = {"bulbasaur":[1,2,3],"charmander":[4,5,6],"squirtle":[7,8,9],"pikachu":[25,26],"meowth":[52,53],"psyduck":[54,55],"machop":[66,67,68],"cubone":[104,105],"eevee":[133,134,135,136,196,197],"chikorita":[152,153,154],"cyndaquil":[155,156,157],"totodile":[158,159,160],"treecko":[252,253,254],"torchic":[255,256,257],"mudkip":[258,259,260],"skitty":[300,301]};   // the dex numbers of each starter line (they share one sprite pack)
@@ -422,9 +509,9 @@ const TIERS = [null,
   {name:'Zebra',  color:'#9a9aa6', speed:1.8, r:16},
   {name:'Ceramic',color:'#b0683a', speed:2.5, r:18}];
 const MAX_TIER = TIERS.length - 1;
-const BASE_SPEED = 55;
+const BASE_SPEED = 61.6;   // 55 before; enemies were made 12% faster
 
-const TYPE_COLORS = {Fire:'#e03020', Water:'#6890f0', Grass:'#78c850', Electric:'#f8d030', Psychic:'#f85888', Ice:'#98d8d8', Normal:'#a8a878', Fighting:'#c03028', Ground:'#e0c068', Dark:'#705848', Bug:'#a8b820', Poison:'#a040a0', Rock:'#b8a038', Steel:'#b8b8d0', Dragon:'#7038f8'};
+const TYPE_COLORS = {Fire:'#e03020', Water:'#6890f0', Grass:'#78c850', Electric:'#f8d030', Psychic:'#f85888', Ice:'#98d8d8', Normal:'#a8a878', Fighting:'#c03028', Ground:'#e0c068', Dark:'#705848', Flying:'#a890f0', Bug:'#a8b820', Poison:'#a040a0', Rock:'#b8a038', Steel:'#b8b8d0', Dragon:'#7038f8'};
 
 // Every starter of a type attacks the same way. lvl is how far along its line it is (0 base, 2 fully evolved),
 // so a two-stage Pokémon's final form lands in between.
@@ -448,6 +535,8 @@ const TYPE_STYLE = {
             make:l => ({kind:'beam', range:220+20*l, rate:1+.4*l, dmg:2+Math.round(l), targets:1+Math.floor(l/2), slow:.6, slowT:1.2, fxR:50+5*l})},
   Dark:    {effect:'Bite', tip:'Always targets the strongest foe on the map and hits it for big damage.', blurb:'Bites the strongest foe on the field for big damage.',
             make:l => ({kind:'beam', strong:true, range:220+20*l, rate:.9+.4*l, dmg:3+Math.round(1.5*l), targets:1})},
+  Flying:  {effect:'Wing Attack', noUnlock:true, tip:'It always strikes the foe closest to your base, from far away. Each strike is light.', blurb:'Long-range wing strikes on the foe closest to your base.',
+            make:l => ({kind:'beam', range:290+25*l, rate:1+.4*l, dmg:1+Math.round(l*.5), targets:1})},
   Bug:     {effect:'Weaken', tip:'Fast stings that make a foe take extra damage from every Pokémon for a few seconds. Bosses are only weakened by half. It does not stack.', blurb:'Quick stings that make foes take extra damage from everyone.',
             make:l => ({kind:'proj', range:110+12*l, rate:1.5+.5*l, dmg:1+Math.round(l*.4), pierce:1, speed:560, shots:1, weak:.2, weakT:2.5, fxR:55+5*l})},
   Poison:  {effect:'Toxic spread', tip:'Slow shots that poison a foe, hurting it every second. When a poisoned foe is beaten, the poison jumps once to the foes around it.', blurb:'Poison that hurts over time and spreads when a foe falls.',
@@ -463,14 +552,23 @@ const TYPE_STYLE = {
 };
 // Price of each stage by type: base form, middle form, fully evolved. Same type and stage, same price.
 // Two-stage lines (lvl 1.6) land between the middle and final price.
+const FORM_GROWTH = .5;   // share of the raw stat growth an evolved form keeps
 const TYPE_COST = {Fire:[330,500,1500], Water:[200,350,1100], Grass:[250,400,1300], Electric:[400,700,1200], Normal:[250,450,1300],
-  Fighting:[300,550,1600], Ground:[330,600,1300], Psychic:[350,600,1700], Dark:[350,600,1700],
+  Fighting:[300,550,1600], Ground:[330,600,1300], Psychic:[370,640,1800], Dark:[350,600,1700], Flying:[280,430,1200],
   Bug:[180,320,900], Poison:[260,450,1300], Rock:[320,580,1500], Ice:[330,550,1500], Steel:[350,600,1600], Dragon:[400,700,1900]};
-function costFor(type, lvl) { const [a, b, c] = TYPE_COST[type]; return Math.round((lvl <= 1 ? a + (b - a) * lvl : b + (c - b) * (lvl - 1)) / 10) * 10; }
+const FORM_PRICE = [1, 1.2, 1.35];   // evolved forms cost more than their raw price table says
+function costFor(type, lvl) { const [a, b, c] = TYPE_COST[type]; return Math.round((lvl <= 1 ? a + (b - a) * lvl : b + (c - b) * (lvl - 1)) * (FORM_PRICE[Math.min(2, lvl)] || 1) / 10) * 10; }
 // Balance knob: how strong each type's damage is (set by the balance bots so every type can carry a dungeon about equally well)
-const TYPE_K = {Fire:.37, Water:.94, Grass:1.49, Electric:1.8, Normal:2.1, Fighting:1.7, Ground:.55, Psychic:1.9, Dark:1.48, Bug:1.5, Poison:.87, Rock:.52, Ice:1, Steel:1.52, Dragon:1};   // set with tools/balance_bot.js: mono-type capacity within about 15% for every early type
+const TYPE_K = {Fire:0.424, Water:0.754, Grass:1.152, Electric:1.832, Normal:2.056, Fighting:0.895, Ground:0.748, Psychic:1.314, Dark:0.872, Flying:1.47, Bug:1.2, Poison:1.098, Rock:0.72, Ice:2.308, Steel:1.837, Dragon:2.64};   // set with tools/balance_bot.js: mono-type capacity within about 15% for every early type
 function mkStage(type, [name, dex, lvl]) {
   const st = TYPE_STYLE[type].make(lvl), k = TYPE_K[type];
+  if (lvl > 0) {   // evolved forms (and recruits that start evolved) grow less than their raw numbers: more Pokémon should beat a few strong ones
+    const b = TYPE_STYLE[type].make(0);
+    for (const f of ['dmg', 'rate', 'range', 'targets', 'chain', 'splash', 'pierce']) if (st[f] != null && b[f] != null) {
+      const v = b[f] + (st[f] - b[f]) * FORM_GROWTH;
+      st[f] = ['targets', 'chain', 'pierce'].includes(f) ? Math.round(v) : Math.round(v * 100) / 100;
+    }
+  }
   st.rate = r1(st.rate); st.range = Math.round(st.range);
   if (k !== 1) for (const f of ['dmg', 'burn', 'pois', 'rageCap']) if (st[f]) st[f] = Math.round(st[f] * k * 100) / 100;
   return {name, dex, cost:costFor(type, lvl), ...st};
@@ -505,13 +603,8 @@ const STARTER_OF = {}; for (const k of STARTERS) STARTER_OF[LINES[k].stages[0].d
 function stagesOf(t) { const L = LINES[t.key]; return L.branches && t.branch != null ? [L.stages[0], L.branches[t.branch]] : L.stages; }
 function stageCount(key) { const L = LINES[key]; return L.stages.length + (L.branches ? 1 : 0); }
 function evoNames(L) { return L.branches ? L.branches.map(b => b.name).join(', ').replace(/, ([^,]*)$/, ' or $1') : L.stages.slice(1).map(x => x.name).join(' then '); }
-// Special allies: one of each on the map at a time. Magnemite and Absol join through the story and are free;
-// the legendary birds can be recruited by beating them again (with a chance) after the story, and cost money to send out. ally: a story partner, not a legendary.
+// Special allies (the legendaries): one of each on the map at a time. The legendary birds can be recruited by beating them again (with a chance) after the story, and cost money to send out.
 const LEGENDS = {
-  magnemite:{effect:"Thunder Wave", tip:"Every 2.5 seconds it sends out a pulse that stuns every foe around it for 0.7 seconds. Bosses are only slowed. It deals very little damage.", unlock:"Joins your team when you clear Mt. Steel.", name:'Magnemite', dex:81, type:'Electric', glyph:'🧲', ally:true, cost:0, scale:1.8,
-             blurb:'Thunder Wave: every few seconds, stuns every foe around it for a moment. Weak damage.', range:115, rate:0.4, kind:'aura', dmg:1, stun:.7},
-  absol:    {effect:"Scary Face", tip:"Every 2 seconds it scares every foe around it, slowing them to half speed for 2.5 seconds. It deals very little damage.", unlock:"Joins your team when you clear Frosty Forest.", name:'Absol', dex:359, type:'Dark', glyph:'🌙', ally:true, cost:0, scale:1.4,
-             blurb:'Scary Face: slows every foe around it to half speed for a while. Weak damage.', range:125, rate:0.5, kind:'aura', dmg:1, slow:.5, slowT:2.5},
   zapdos:   {effect:"Thunder", tip:"Lightning hits one foe, then jumps through up to 14 foes in a chain, more than twice a second.", unlock:"After clearing Sky Tower Summit, may join when you beat it again on Mt. Thunder Peak.", name:'Zapdos', scale:1.5, dex:145,   type:'Electric', glyph:'⚡', cost:2500, blurb:'Thunder that chains through fourteen targets.', range:190, rate:2.5, kind:'chain', dmg:3, chain:14},
   moltres:  {effect:"Fire Blast", tip:"Huge fireballs that explode over a wide area, go through 3 foes and leave everything burning.", unlock:"After clearing Sky Tower Summit, may join when you beat it again on Mt. Blaze Peak.", name:'Moltres', scale:1.4, dex:146,  type:'Fire',     glyph:'🔥', cost:2500, blurb:'Huge fire blasts with an enormous burst that leave foes burning.', range:200, rate:1.6, kind:'proj', dmg:5, pierce:3, splash:110, speed:520, shots:1, burn:3, burnT:2},
   articuno: {effect:"Blizzard", tip:"Hits every foe in range at once and chills them down to about a third of their speed for 2 seconds.", unlock:"After clearing Sky Tower Summit, may join when you beat it again in Frosty Grotto.", name:'Articuno', scale:1.4, dex:144, type:'Ice',      glyph:'❄️', cost:2500, blurb:'Blizzard hits every foe in range and chills them.', range:170, rate:1.1, kind:'aura', dmg:2, slow:.35, slowT:2},
@@ -541,7 +634,7 @@ const DEX_NAMES = ["Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon
 const DUNGEONS = [
   {name:'Tiny Woods',       ts:'TINY_WOODS', mons:[191, 265, 16, 102], intro:"An earthquake shook Tiny Woods, and Butterfree's little Caterpie fell into a fissure. You just woke up as a Pokémon with no memory of how, but you and your new partner promised Butterfree you would bring Caterpie home!", outro:"You and your partner fought through the woods and found Caterpie on the deepest floor. Butterfree thanked you with berries, and that night the two of you formed a rescue team."},
   {name:'Thunderwave Cave', ts:'THUNDERWAVE_CAVE', mons:[261, 19, 29, 100, 239, 311, 312], intro:"Word of the Caterpie rescue spread fast. A Magnemite wrote to your new team: two of its friends are stuck deep in Thunderwave Cave. It's your first real rescue job!", outro:"You found the two Magnemite on the lowest floor and led them safely out. Your rescue team's first job is a success!"},
-  {name:'Mt. Steel',        ts:'MT_STEEL_01F_05F', mons:[236, 263, 21, 307, 74, 374, 343, 304, 127], boss:[[227, 1]], intro:"Dugtrio came to you in a panic. Its son Diglett is trapped at the top of Mt. Steel, and something dangerous is waiting up there.", outro:"Skarmory was guarding the summit, but with help from the Magnemite you rescued, you beat it and brought Diglett home to Dugtrio. One of the Magnemite liked working with you so much that it joined your team!", ally:"magnemite"},
+  {name:'Mt. Steel',        ts:'MT_STEEL_01F_05F', mons:[236, 263, 21, 307, 74, 374, 343, 304, 127], boss:[[227, 1]], intro:"Dugtrio came to you in a panic. Its son Diglett is trapped at the top of Mt. Steel, and something dangerous is waiting up there.", outro:"Skarmory was guarding the summit, but with help from the Magnemite you rescued, you beat it and brought Diglett home to Dugtrio. One of the Magnemite liked working with you so much that it joined your team!", join:{dex:81, area:"power-plant"}},
   {name:'Sinister Woods',   ts:'SINISTER_WOODS', mons:[266, 268, 194, 161, 220, 163, 165, 287, 285, 43, 185, 264, 192, 123, 103], boss:[[94, 0.5], [23, 0.25], [308, 0.25]], intro:"Caterpie came to you in tears: its friend Metapod is lost in Sinister Woods. But Team Meanies, Gengar, Ekans and Medicham, want the job for themselves.", outro:"Team Meanies tried to get in your way, but you beat them and rescued Metapod. Gengar won't forget this."},
   {name:'Silent Chasm',     ts:'SILENT_CHASM', mons:[13, 167, 46, 328, 60, 228, 216, 83, 269, 193, 44, 15], intro:"Shiftry went into Silent Chasm to blow a trapped Jumpluff free with its wind, but it never came back. You head into the chasm to find them both.", outro:"You rescued Jumpluff, then saw a flash of lightning. Zapdos had seized Shiftry and flown off toward Mt. Thunder!"},
   {name:'Mt. Thunder',      ts:'MT_THUNDER', mons:[13, 32, 309, 331, 17, 58, 15, 207, 234, 310, 125, 181], intro:"Team A.C.T., Alakazam, Charizard and Tyranitar, joined you to chase Zapdos up Mt. Thunder. Storm clouds cover the whole mountain.", outro:"You climbed through the storm with thunder crashing overhead. Zapdos and Shiftry must be just above you, at the peak."},
@@ -550,7 +643,7 @@ const DUNGEONS = [
   {name:'Lapis Cave',       ts:'LAPIS_CAVE', mons:[41, 290, 371, 33, 30, 314, 114, 42], onRun:true, intro:"The whole town has turned against you, and the rescue teams are on your trail. You and your partner slip into Lapis Cave to hide.", outro:"You made it through Lapis Cave without getting caught and came out on the far side, heading north, away from the only home you've known."},
   {name:'Mt. Blaze',        ts:'MT_BLAZE', mons:[218, 322, 240, 324, 18, 78, 213], onRun:true, intro:"The road north climbs over Mt. Blaze. The air burns and the slopes glow with lava.", outro:"You reached the upper slopes. Somewhere above, a legendary flame is waiting for anyone who dares to trespass."},
   {name:'Mt. Blaze Peak',   ts:'MT_BLAZE', mons:[22, 324, 18, 78, 59], boss:[[146, 1]], legend:'moltres', waves:7, onRun:true, intro:"Moltres rules the top of Mt. Blaze, and it's furious that you entered its mountain!", outro:"Your team stood its ground and beat Moltres. Past the peak lies the frozen north, where the legend of Ninetales began."},
-  {name:'Frosty Forest',    ts:'FROSTY_FOREST', mons:[298, 132, 361, 299, 162, 262, 305, 221], onRun:true, intro:"Snow covers everything in the far north. The frozen forest is quiet, but you're not alone…", outro:"Deep in the forest you met Absol, a Pokémon that is also blamed for disasters it never caused. It decided to join your team, and warned you that a fierce guardian rules the ice ahead.", ally:"absol"},
+  {name:'Frosty Forest',    ts:'FROSTY_FOREST', mons:[298, 132, 361, 299, 162, 262, 305, 221], onRun:true, intro:"Snow covers everything in the far north. The frozen forest is quiet, but you're not alone…", outro:"Deep in the forest you met Absol, a Pokémon that is also blamed for disasters it never caused. It decided to join your team, and warned you that a fierce guardian rules the ice ahead.", join:{dex:359, area:"ravaged-field", gift:true}},
   {name:'Frosty Grotto',    ts:'FROSTY_FOREST', mons:[111, 262, 375, 305, 221], boss:[[144, 1]], legend:'articuno', waves:7, onRun:true, intro:"Articuno lives in this icy grotto, and it doesn't welcome intruders.", outro:"Articuno blocked the way, furious at the intruders, but your team won. With Absol leading the way, the path to Mt. Freeze is open."},
   {name:'Mt. Freeze',       ts:'MT_FREEZE', mons:[204, 333, 86, 247, 372, 288, 358, 335, 336, 289], onRun:true, intro:"Ninetales, the Pokémon from the old legend, lives at the top of Mt. Freeze. Only it can tell you the truth about who you are.", outro:"You climbed through wind and snow. The peak, and Ninetales, are close now."},
   {name:'Mt. Freeze Peak',  ts:'MT_FREEZE', mons:[247, 372, 335, 336, 362, 289], waves:7, onRun:true, intro:"Team A.C.T. has caught up with you at the peak, and they won't let you reach Ninetales without a fight!", outro:"Then Ninetales appeared: you are not the human from the legend! The earthquakes come from Groudon, waking up deep underground. Team A.C.T. went to stop it, and you headed home with your name cleared."},
@@ -566,7 +659,8 @@ function spikes(d = S.dungeon) { return DUNGEONS.slice(0, d).filter(x => x.legen
 // Every dungeon is a fresh run now (one dungeon at a time, a small starting budget), so wave 1 of a late dungeon must still be playable:
 // the difficulty grows through enemy HP (TOUGH), a slowly growing crowd and a tier shift every five dungeons, not through the old carried-over team.
 function tierShift() { return Math.floor(S.dungeon / 5); }
-function crowd(d = S.dungeon) { return 1 + 0.06 * d; }
+const SHORT_CROWD = 1.4;   // the 7-wave dungeons send bigger crowds, so a few Pokémon cannot clear them
+function crowd(d = S.dungeon) { return (1 + 0.06 * d) * (DUNGEONS[d].waves && DUNGEONS[d].waves < FINAL_WAVE ? SHORT_CROWD : 1); }
 function buildWave(n) {
   const d = S.dungeon, shift = tierShift();
   let spec = WAVES[n];
@@ -606,17 +700,16 @@ function bossHp(n) {
 // Bosses get about half of the damage the team could deal them, rising to 60% at the end, because a boss that escapes costs 50 lives.
 // ₽ the team starts a dungeon with (every dungeon is a fresh run now)
 const START_MONEY = Array.from({length: 20}, (_, d) => Math.round(650 * (1 + .3 * d) / 10) * 10);
-const TOUGH  = [0.46, 0.64, 0.57, 0.78, 1.44, 1.33, 1.22, 1.88, 1.74, 1.95, 0.96, 2.21, 1.14, 2.22, 1.31, 1.93, 2.43, 1.21, 1.96, 0.91];
-const BOSS_K = [0.18, 0.26, 0.33, 0.38, 0.45, 0.35, 0.73, 1.31, 1.33, 1.61, 1.14, 2.02, 0.58, 0.94, 0.61, 1.41, 1.44, 0.76, 1.28, 0.84];
+const TOUGH  = [0.28, 0.531, 0.567, 0.632, 0.909, 1.264, 0.396, 1.161, 0.608, 1.323, 0.386, 1.107, 0.533, 1.45, 0.78, 1.246, 1.159, 0.367, 1.357, 0.595];
+const BOSS_K = [0.13, 0.257, 0.381, 0.389, 0.425, 0.334, 0.405, 0.679, 0.65, 1.247, 0.681, 1.253, 0.485, 0.822, 0.681, 1.283, 0.952, 0.56, 1.339, 0.986];
 const STUN_GRACE = .7;   // seconds after a stun or freeze ends during which the foe can't be stunned or frozen again
 let hpMul = 1, bossMul = 1;   // balance bots scale enemy HP with this (1 in the real game)
 function toughness() { return TOUGH[S.dungeon] * hpMul; }
 
 // ---------- State ----------
 let S;
-const DEBUG = /[?&]debug\b/.test(location.search);
-let unlimited = DEBUG;
-try { if (DEBUG) unlimited = localStorage.getItem('unlimitedMoney') !== 'off'; } catch (e) {}
+let unlimited = true;
+try { unlimited = localStorage.getItem('unlimitedMoney') !== 'off'; } catch (e) {}
 const UNLIMITED = 999999;
 function newGame() {
   S = {
@@ -637,7 +730,8 @@ function newGame() {
 // Levels stay when the Pokémon evolves. Eevee's track follows whatever type it currently is.
 // Two paths: Range, and Attack. Attack replaces the old Attack speed + type effect paths: every starter begins with a plain
 // Tackle/Scratch (no type effect); level 1 unlocks the type's effect with the first real move, levels 2 and 3 make it stronger.
-const UP_MAX = 3, RANGE_UP = .12, SPEED_UP = .15, UP_KEYS = ['range', 'atk'];
+const FX_K = .96;   // how strong control effects are (stun, slow, freeze, weaken, knockback, burn and poison time)
+const UP_MAX = 3, RANGE_UP = .10, SPEED_UP = .12, UP_KEYS = ['range', 'atk'];
 const MOVES = {
   Water:   ['Water Gun', 'Surf', 'Hydro Cannon'],
   Fire:    ['Ember', 'Flamethrower', 'Blast Burn'],
@@ -648,6 +742,7 @@ const MOVES = {
   Ground:  ['Mud-Slap', 'Dig', 'Earthquake'],
   Psychic: ['Confusion', 'Psychic', 'Future Sight'],
   Dark:    ['Bite', 'Crunch', 'Dark Pulse'],
+  Flying:  ['Gust', 'Fly', 'Sky Attack'],
   Bug:     ['Struggle Bug', 'Silver Wind', 'Megahorn'],
   Poison:  ['Poison Sting', 'Sludge', 'Sludge Bomb'],
   Rock:    ['Rock Throw', 'Rock Slide', 'Rock Blast'],
@@ -669,25 +764,27 @@ const UPGRADES = {
   Water:   {name:'Stronger push',    tip:'Pushes foes 40% farther per level.',                         apply:(s, l) => { s.knock = Math.round(s.knock * (1 + .4 * l)); }},
   Grass:   {name:'Stronger slow',    tip:'Slows foes 8% more and 0.4 seconds longer per level.',        apply:(s, l) => { s.slow = r2(Math.max(.2, s.slow - .08 * l)); s.slowT = r2(s.slowT + .4 * l); }},
   Electric:{name:'Longer chain',     tip:'Lightning jumps to 2 more foes per level.',                   apply:(s, l) => { s.chain += 2 * l; }},
-  Normal:  {name:'More targets',     tip:'Hits 1 more foe at once per level.',                          apply:(s, l) => { s.targets += l; }},
+  Normal:  {name:'More targets',     tip:'Hits 1 more foe at once at the first level.',                 apply:(s, l) => { s.targets += Math.ceil(l / 2); }},
   Fighting:{name:'Longer stun',      tip:'Stuns foes 0.15 seconds longer per level.',                   apply:(s, l) => { s.stun = r2(s.stun + .15 * l); }},
   Ground:  {name:'Aftershock',       tip:'Each quake also slows foes by 20% per level for 1 second.',   apply:(s, l) => { s.slow = r2(1 - .2 * l); s.slowT = 1; }},
   Psychic: {name:'Deeper confusion', tip:'Confused foes slow down 10% more and 0.4 seconds longer per level.', apply:(s, l) => { s.slow = r2(Math.max(.2, s.slow - .1 * l)); s.slowT = r2(s.slowT + .4 * l); }},
+  Flying:  {name:'Stronger wings',    tip:'Each strike deals 25% more damage per level.',                apply:(s, l) => { s.dmg = r2(s.dmg * (1 + .25 * l)); }},
   Dark:    {name:'Sharper bite',     tip:'Each bite deals 30% more damage per level.',                  apply:(s, l) => { s.dmg = Math.round(s.dmg * (1 + .3 * l)); }},
   Bug:     {name:'Deeper weakness',  tip:'Weakened foes take 8% more damage per level.',                apply:(s, l) => { s.weak = r2(s.weak + .08 * l); }},
   Poison:  {name:'Stronger poison',  tip:'Poison hurts 0.5 more and lasts 0.5 seconds longer per level.', apply:(s, l) => { s.pois = r2(s.pois + .5 * l); s.poisT = r2(s.poisT + .5 * l); }},
   Rock:    {name:'Bigger blast',     tip:'The splash is 25% wider per level.',                          apply:(s, l) => { s.splash = Math.round(s.splash * (1 + .25 * l)); }},
   Ice:     {name:'Colder shards',    tip:'Foes freeze 6% more often per level.',                        apply:(s, l) => { s.freeze = r2(s.freeze + .06 * l); }},
   Steel:   {name:'Armor piercing',   tip:'Deals 25% more damage to bosses per level.',                  apply:(s, l) => { s.bossMul = r2(s.bossMul + .25 * l); }},
-  Dragon:  {name:'Deeper rage',      tip:'Takes 1% more of the foe\'s HP, and the limit grows 50%, per level.', apply:(s, l) => { s.rage = r2(s.rage + .01 * l); s.rageCap = r2(s.rageCap + .5 * l); }},
+  Dragon:  {name:'Deeper rage',      tip:'Takes 1% more of the foe\'s HP per level, and the limit grows 50% per level.', apply:(s, l) => { s.rage = r2(s.rage + .01 * l); s.rageCap = r2(s.rageCap + .5 * l); }},
 };
 const UP_PRICE = {range:[.35, .7, 1.2], atk:[.7, 1.4, 2.4]}; // share of the line's base price, for level 1, 2 and 3
 function upLevel(t, k) { return (t.up && t.up[k]) || 0; }
 function upCost(t, k) { return Math.round(TYPE_COST[LINES[t.key].type][0] * UP_PRICE[k][upLevel(t, k)] / 10) * 10; }
+const lc = x => x.replace(/^./, c => c.toLowerCase());
 function upTrack(t, k) {
   if (k === 'range') return {name:'Range', tip:`Reaches ${Math.round(RANGE_UP * 100)}% farther per level.`};
   const lv = upLevel(t, 'atk'), ty = typeOf(t), fx = UPGRADES[ty].tip.replace(/ per level/, '').replace(/^./, c => c.toLowerCase());
-  const tip = lv ? `Learns ${moveName(t, lv + 1)}: attacks ${Math.round(SPEED_UP * 100)}% faster and ${fx}` : `Learns ${moveName(t, 1)}: unlocks ${TYPE_STYLE[ty].effect}. ${TYPE_STYLE[ty].tip}`;
+  const tip = lv ? `Learns ${moveName(t, lv + 1)}: attacks ${Math.round(SPEED_UP * 100)}% faster and ${fx}` : (TYPE_STYLE[ty].noUnlock ? `Learns ${moveName(t, 1)}: ${lc(TYPE_STYLE[ty].tip)}` : `Learns ${moveName(t, 1)}: unlocks ${TYPE_STYLE[ty].effect}. ${TYPE_STYLE[ty].tip}`);
   return {name:lv >= UP_MAX ? moveName(t, lv) : `${moveName(t, lv)} → ${moveName(t, lv + 1)}`, tip: lv >= UP_MAX ? '' : tip};
 }
 function statsOf(t) {
@@ -704,6 +801,10 @@ function statsOf(t) {
   s.range = Math.round(s.range * (1 + RANGE_UP * ur));
   s.rate = r1(s.rate * (1 + SPEED_UP * ua));
   if (ua > 1) UPGRADES[base.type || LINES[t.key].type].apply(s, ua - 1);
+  if (!s.plain) {   // effects are a little weaker than the raw numbers, so a few maxed-out Pokémon cannot hold a dungeon alone
+    for (const f of ['stun', 'slowT', 'burnT', 'poisT', 'weakT', 'weak', 'freeze', 'knock']) if (s[f]) s[f] = f === 'knock' ? Math.round(s[f] * FX_K) : r2(s[f] * FX_K);
+    if (s.slow) s.slow = r2(1 - (1 - s.slow) * FX_K);
+  }
   t._sk = key; t._s = s;
   return s;
 }
@@ -715,7 +816,7 @@ function nameOf(t) { return statsOf(t).name; }
 function startWave() {
   if (S.waveActive || S.over || S.between || S.intro) return;
   endDrag(false);
-  S.wave++; S.waveActive = true; S.waveTime = 0; S.spawnQ = buildWave(tmplWave(S.wave));
+  S.wave++; S.waveActive = true; S.waveTime = 0; S.spawnQ = buildWave(tmplWave(S.wave)); sfx('wave');
   // Mew can turn up on any wave (0.1%); once Mew has joined, Mewtwo starts appearing (2%)
   const mid = S.spawnQ.length ? S.spawnQ[Math.floor(S.spawnQ.length / 2)].at : 0;
   if (!legendKnown('mew') && Math.random() < 0.001) S.spawnQ.push({at:mid, tier:'boss', special:'mew'});
@@ -726,7 +827,7 @@ function startWave() {
   refreshAll();
 }
 function endWave() {
-  S.waveActive = false;
+  S.waveActive = false; if (S.wave === finalWave()) sfx('victory'); else sfx('clear');
   const bonus = Math.round((100 + S.wave) * payRate());
   gain(bonus);
   floatText(W/2, 40, `Wave ${S.wave} cleared  +₽${bonus}`, '#ffd23f', 1.6);
@@ -735,14 +836,15 @@ function endWave() {
   const isFinal = S.wave === finalWave(), first = isFinal && S.dungeon + 1 > cleared;
   if (isFinal) markCleared(S.dungeon);
   const saved = isFinal ? payRun(true, first) : 0;
+  const sr = isFinal ? payStars(S.dungeon, S.lives) : null;
   if (S.auto) S.autoTimer = 1.2;
-  const joined = isFinal && D.ally && !team.allies.includes(D.ally) ? D.ally : null;
-  const joinedOn = joined ? gainAlly(joined) : false;
+  const joinR = isFinal ? storyJoin(D) : null;
   if (isFinal) {
     S.between = true; S.autoTimer = 0; S.won = true;
-    showOverlay(`<h2>${last ? 'Sky Tower conquered!' : D.name + ' cleared!'}</h2>${storyBox(D, 'outro')}${joined ? `<p class="joined"><b>${LEGENDS[joined].name} joined your team!</b> ${joinedOn ? 'Send it out for free from your team.' : 'Your team is full, so it waits in your team window until you swap it in.'}</p>` : ''}<p class="small">Your team held off all ${finalWave()} waves with ${S.lives} lives left.</p><p class="small">+🪙 ${saved} coins${first ? ', first clear bonus included' : ''}.</p>${last && first ? '<p class="small">Your Pokémon can evolve now. Open the <b>Team</b> window on the home screen.</p>' : ''}<button class="primary" id="ovHome">Back to the dungeons</button> <button id="ovAgain">Play again</button>`);
+    showOverlay(`<h2>${last ? 'Sky Tower conquered!' : D.name + ' cleared!'}</h2>${starRow(sr.got)}${storyBox(D, 'outro')}${joinR ? `<p class="joined"><b>${DEX_NAMES[D.join.dex - 1]} joined your team!</b> ${joinR.onTeam ? 'You can place it from your team.' : 'Your team is full, so it waits in your team window until you swap it in.'}${D.join.gift ? ' Its friend area is now yours too.' : ''}</p>` : ''}<p class="small">Your team held off all ${finalWave()} waves with ${S.lives} lives left.</p>${unlimited ? '' : `<p class="small">Money left unspent: ₽${Math.max(0, Math.round(S.money)).toLocaleString()} of the ₽${Math.round(START_MONEY[S.dungeon] + (S.earned || 0)).toLocaleString()} you had.</p>`}<p class="small">+🪙 ${saved} coins${sr.coins ? ` <span class="starbonus">+ 🪙 ${sr.coins} (<b>${'★'.repeat(sr.got - sr.prev)}</b>)</span>` : ''}${first ? ', first clear bonus included' : ''}.</p>${last && first ? '<p class="small">Your Pokémon can evolve now. Open the <b>Team</b> window on the home screen.</p>' : ''}<button class="primary" id="ovHome">Back to the dungeons</button> <button id="ovAgain">Play again</button>`);
     $('overlayCard').classList.add('story-card'); typeStory();
     $('ovHome').onclick = showMenu;
+    playStars(sr.got);
     $('ovAgain').onclick = () => startDungeon(S.dungeon);
   }
   refreshAll();
@@ -800,7 +902,8 @@ function spawn(item) {
     bossTeam(tmplWave(S.wave)).forEach(([dex, share], i) => {
       const hp = Math.max(1, Math.round(total * share));
       const recruit = legend && LEGENDS[legend].dex === dex && !legendKnown(legend) && birdsOpen() ? legend : null;
-      S.enemies.push({boss:true, dex, hp, maxHp:hp, share, finale:tmplWave(S.wave) >= FINAL_WAVE, d:-i * 34, x:-30, y:90, slowT:0, slowF:1, r:share >= 1 ? 30 : 22, phase:Math.random() * 60, recruit, chance:BIRD_CHANCE, recruitMon:!recruit && recruitable(dex) ? dex : null, mchance:BOSS_RECRUIT});
+      const canJoin = !recruit && recruitable(dex); if (canJoin) (S.offered = S.offered || new Set()).add(dex);
+      S.enemies.push({boss:true, dex, hp, maxHp:hp, share, finale:tmplWave(S.wave) >= FINAL_WAVE, d:-i * 34, x:-30, y:90, slowT:0, slowF:1, r:share >= 1 ? 30 : 22, phase:Math.random() * 60, recruit, chance:BIRD_CHANCE, recruitMon:canJoin ? dex : null, mchance:tmplWave(S.wave) >= FINAL_WAVE ? BOSS_RECRUIT : MINIBOSS_RECRUIT});
     });
   } else {
     const tough = toughness(); S.enemies.push({tier:item.tier, maxTier:item.tier, tough, lhp:tough, dex:wildFor(item.tier), d:0, x:-30, y:90, slowT:0, slowF:1, phase:Math.random() * 60});
@@ -821,15 +924,54 @@ const incomeMul = d => 1 + .3 * d;
 const payRate = () => .6 * incomeMul(S.dungeon);
 function pay(n) { S.payAcc = (S.payAcc || 0) + n * payRate(); const w = Math.floor(S.payAcc); S.payAcc -= w; gain(w); }
 
+// Type matchups, kept mild: super effective x1.5, not very effective x0.67, nothing is immune. Only direct hits count, not burn or poison ticks.
+const TYPE_BEATS = {Normal:[], Fire:['Grass','Ice','Bug','Steel'], Water:['Fire','Ground','Rock'], Electric:['Water','Flying'], Grass:['Water','Ground','Rock'], Ice:['Grass','Ground','Dragon','Flying'],
+  Fighting:['Normal','Ice','Rock','Dark','Steel'], Poison:['Grass'], Ground:['Fire','Electric','Poison','Rock','Steel'], Psychic:['Fighting','Poison'], Bug:['Grass','Psychic','Dark'],
+  Rock:['Fire','Ice','Bug','Flying'], Dark:['Psychic'], Steel:['Ice','Rock'], Dragon:['Dragon'], Flying:['Grass','Fighting','Bug']};
+const TYPE_RESISTED = {Normal:['Rock','Steel'], Fire:['Fire','Water','Rock','Dragon'], Water:['Water','Grass','Dragon'], Electric:['Electric','Grass','Dragon','Ground'], Grass:['Fire','Grass','Poison','Bug','Dragon','Steel','Flying'],
+  Ice:['Fire','Water','Ice','Steel'], Fighting:['Poison','Bug','Psychic','Flying'], Poison:['Poison','Ground','Rock','Steel'], Ground:['Grass','Bug','Flying'], Psychic:['Psychic','Steel','Dark'],
+  Bug:['Fire','Fighting','Poison','Steel','Flying'], Rock:['Fighting','Ground','Steel'], Dark:['Fighting','Dark','Steel'], Steel:['Fire','Water','Electric','Steel'], Dragon:['Steel'], Flying:['Electric','Rock','Steel']};
+const MATCH_UP = 1.5, MATCH_DOWN = 1 / 1.5;
+// the few dungeon Pokémon that are not in the recruit table
+const EXTRA_TYPE = {94:'Poison', 95:'Rock', 144:'Ice', 145:'Electric', 146:'Fire', 151:'Psychic', 208:'Steel', 337:'Rock', 338:'Rock', 353:'Dark', 355:'Dark', 356:'Dark', 371:'Dragon', 372:'Dragon', 373:'Dragon', 383:'Ground', 384:'Dragon'};
+const dexType = d => (SPECIES[d] && SPECIES[d][0]) || EXTRA_TYPE[d] || 'Normal';
+const matchup = (atk, def) => TYPE_BEATS[atk] && TYPE_BEATS[atk].includes(def) ? MATCH_UP : TYPE_RESISTED[atk] && TYPE_RESISTED[atk].includes(def) ? MATCH_DOWN : 1;
+function towerType(t) {   // cached; a Pokémon's plain Tackle/Scratch (no attack upgrade yet) is always Normal, whatever its own type
+  if (t.legendary) return typeOf(t);
+  const ua = upLevel(t, 'atk') ? 1 : 0, k = (t.stage || 0) + ':' + (t.branch ?? '') + ':' + ua;
+  if (t._tyk !== k) { t._tyk = k; t._ty = ua ? typeOf(t) : 'Normal'; }
+  return t._ty;
+}
+function dungeonTypes(D, withBoss) {   // the types of the wild Pokémon found in a dungeon, most common first
+  const n = {};
+  for (const d of D.mons) { const t = dexType(d); if (t === 'Normal') continue; n[t] = (n[t] || 0) + 1; }
+  if (withBoss && D.boss) for (const b of D.boss) { const t = dexType(b[0]); if (t === 'Normal') continue; n[t] = (n[t] || 0) + .5; }
+  return Object.keys(n).sort((a, b) => n[b] - n[a]);
+}
+// Types whose damage is spread out (area, chain, burn, poison) hit a boss with much less than they do a crowd, so they get extra damage against bosses: every type can help finish one.
+const FINALE_LEAK = 99;
+const BOSS_CC = .7;   // how much of a slow or weaken a boss takes (the rest it shrugs off)
+const BOSS_MUL = {Grass:2.2, Electric:2.25, Fire:3.38, Ground:5.06, Rock:1.5, Poison:2.0, Steel:1.5, Psychic:1.6, Bug:1.6, Ice:1.6, Fighting:1.4, Water:1.3};
 function damage(e, amt, tw, dot) {
   if (e.dead) return;
-  if (e.vulnT > 0) amt *= 1 + e.vuln * (e.boss ? .5 : 1);              // Bug: Weaken
+  if (e.boss && tw) amt *= BOSS_MUL[towerType(tw)] || 1;
+  if (!dot && tw) {
+    const m = matchup(towerType(tw), dexType(e.dex));
+    if (m !== 1) {
+      amt *= m;
+      if (!window.__BALANCE && !(e.effT > S.time) && !(S.effAt > S.time - .15)) {   // a hint for players new to types, at most once a second and a half per foe
+        e.effT = S.time + 1.5; S.effAt = S.time;
+        floatText(e.x, e.y - 28, m > 1 ? 'Super effective!' : 'Not very effective…', m > 1 ? '#ffb04a' : '#b9c4e6', 1);
+      }
+    }
+  }
+  if (e.vulnT > 0) amt *= 1 + e.vuln * (e.boss ? BOSS_CC : 1);              // Bug: Weaken
   if (e.frozen && !dot) { amt *= e.boss ? 1.5 : 2; e.frozen = false; }   // Ice: the next hit on a frozen foe lands harder
   if (e.boss) {
     const d = Math.min(amt, e.hp);
-    e.hp -= amt; tw.pops += d;
+    e.hp -= amt; if (tw) tw.pops += d;
     if (e.hp <= 0) {
-      e.dead = true; S.kos = (S.kos || 0) + 1; pay((e.share ?? 1) * (e.finale || e.recruit ? 500 : 200));
+      e.dead = true; sfx('bossdown'); S.kos = (S.kos || 0) + 1; pay((e.share ?? 1) * (e.finale || e.recruit ? 500 : 200));
       if (e.poisT > 0) spreadPoison(e);
       boom(e.x, e.y, 70, '#ffd23f');
       floatText(e.x, e.y - 40, `${WILD[e.dex].name} fainted!`, '#ffd23f', 1.6);
@@ -843,12 +985,12 @@ function damage(e, amt, tw, dot) {
   }
   // Each tier is a layer worth e.tough HP; later dungeons make every layer tougher
   const T = e.tough || 1, color = TIERS[e.tier].color;
-  tw.pops += Math.min(amt, enemyHp(e));
+  if (tw) tw.pops += Math.min(amt, enemyHp(e));
   e.lhp -= amt;
   let popped = 0;
   while (e.lhp <= 0 && e.tier > 0) { e.tier--; e.lhp += T; popped++; }
   if (popped) S.fx.push({k:'pop', x:e.x, y:e.y, color, t:0, life:.25});
-  if (e.tier <= 0) { e.dead = true; S.kos = (S.kos || 0) + 1; pay(e.maxTier / crowd() / (1 + .1 * tierShift())); if (e.poisT > 0) spreadPoison(e); }
+  if (e.tier <= 0) { e.dead = true; sfx('pop'); S.kos = (S.kos || 0) + 1; pay(e.maxTier / crowd() / (1 + .1 * tierShift())); if (e.poisT > 0) spreadPoison(e); }
 }
 // Poison (Poison type): hurts every 0.8 s. When a poisoned foe falls, the poison jumps once to the foes around it
 function applyPoison(e, dmg, time, src, spread) {
@@ -864,7 +1006,7 @@ function spreadPoison(e) {
 const typeOfStats = s => s.slow && s.freeze ? 'Ice' : s.freeze ? 'Ice' : s.weak ? 'Bug' : s.stun ? 'Fighting' : 'Grass';
 function applySlow(e, slow, time) {
   if (!slow || e.dead) return;
-  const f = e.boss ? 1 - (1 - slow) * 0.5 : slow;
+  const f = e.boss ? 1 - (1 - slow) * BOSS_CC : slow;
   e.slowF = e.slowT > 0 ? Math.min(e.slowF, f) : f;
   e.slowT = Math.max(e.slowT, time);
 }
@@ -905,7 +1047,7 @@ function fire(t) {
   else cands.sort((a,b) => b.d - a.d);
   const tg = cands[0];
   t.angle = Math.atan2(tg.y - t.y, tg.x - t.x);
-  t.punchAt = S.time;
+  t.punchAt = S.time; sfx('shoot');
   const ty = s.plain ? 'Normal' : typeOf(t), color = TYPE_COLORS[ty];
   const T = t.legendary ? 0 : upLevel(t, 'atk'), vs = fxScale(T), burst = (x, y) => { if (T >= 3) addFx({k:'tierburst', x, y, color, t:0, life:.3}); };
   if (t.legendary) {
@@ -957,11 +1099,14 @@ function fire(t) {
       } else if (ty === 'Dark') {
         S.fx.push({k:'line', x1:t.x, y1:t.y, x2:e.x, y2:e.y, color:'#3a1c52', glow:'#a070ff', t:0, life:.2, w:6 * vs});
         addFx({k:'chomp', x:e.x, y:e.y, vs, t:0, life:.32});
+      } else if (ty === 'Flying') {
+        S.fx.push({k:'line', x1:t.x, y1:t.y, x2:e.x, y2:e.y, color:'#f1eeff', glow:'#a890f0', t:0, life:.18, w:4 * vs});
+        addFx({k:'feather', x:e.x, y:e.y, a:Math.random() * 6.28, vs, t:0, life:.4});
       } else if (ty === 'Dragon') {
         S.fx.push({k:'dragonbeam', x1:t.x, y1:t.y, x2:e.x, y2:e.y, w:5 * vs, t:0, life:.25});
         addFx({k:'rings', x:e.x, y:e.y, color:'#9a6cff', vs, t:0, life:.4});
       } else S.fx.push({k:'line', x1:t.x, y1:t.y, x2:e.x, y2:e.y, color, t:0, life:.15, w: (t.legendary ? 5 : 3) * vs});
-      damage(e, s.dmg + (s.rage ? Math.min(s.rage * enemyHp(e), s.rageCap * s.dmg) : 0), t); hitFx(e, s, t); if (!s.plain) burst(e.x, e.y);
+      damage(e, (s.dmg + (s.rage ? Math.min(s.rage * enemyHp(e), s.rageCap * s.dmg) : 0)) * (e.boss && s.bossMul != null ? s.bossMul : 1), t); hitFx(e, s, t); if (!s.plain) burst(e.x, e.y);
     }
   } else if (s.kind === 'aura') {
     for (const e of cands) { damage(e, s.dmg, t); hitFx(e, s, t); }
@@ -996,7 +1141,17 @@ function impact(p, x, y) {
   else if (p.type === 'Ice') addFx({k:'iceburst', x, y, vs:p.vs, t:0, life:.32});
   if (p.tier >= 3) addFx({k:'tierburst', x, y, color:p.color, t:0, life:.3});
 }
-function floatText(x, y, text, color, life = 1) { S.fx.push({k:'text', x, y, text, color, t:0, life}); }
+// the little purple skull of the poisoned status in Mystery Dungeon (s = half its width)
+function drawSkull(c, x, y, s) {
+  c.save(); c.translate(x, y); c.lineJoin = 'round'; c.lineWidth = Math.max(1, s * .24); c.strokeStyle = '#3a0f4a'; c.fillStyle = '#d9bdf2';
+  c.beginPath(); c.arc(0, -s * .15, s, Math.PI * .92, Math.PI * 2.08); c.lineTo(s * .62, s * .6); c.lineTo(s * .62, s); c.lineTo(-s * .62, s); c.lineTo(-s * .62, s * .6); c.closePath(); c.fill(); c.stroke();
+  c.fillStyle = '#3a0f4a';
+  c.beginPath(); c.arc(-s * .4, -s * .1, s * .3, 0, Math.PI * 2); c.arc(s * .4, -s * .1, s * .3, 0, Math.PI * 2); c.fill();
+  c.beginPath(); c.moveTo(0, s * .15); c.lineTo(-s * .12, s * .4); c.lineTo(s * .12, s * .4); c.closePath(); c.fill();
+  c.lineWidth = Math.max(.8, s * .12); c.beginPath(); c.moveTo(-s * .2, s * .62); c.lineTo(-s * .2, s); c.moveTo(s * .2, s * .62); c.lineTo(s * .2, s); c.stroke();
+  c.restore();
+}
+function floatText(x, y, text, color, life = 1, size = 20, rise = 20) { if (COLLECT) SEEN.set(text, (SEEN.get(text) || 0) + 1); S.fx.push({k:'text', x, y, text:trText(text), color, t:0, life, size, rise}); }
 
 // ---------- Update ----------
 function update(dt) {
@@ -1029,9 +1184,14 @@ function update(dt) {
     }
     e.d += enemySpeed(e) * dt;
     if (e.d >= PATH_LEN) {
-      e.dead = true;
-      S.lives -= e.boss ? (e.leak ?? 50) : e.tier;
+      sfx('leak'); S.lives -= e.boss ? (e.leak ?? (e.finale ? FINALE_LEAK : 50)) : e.tier;   // a dungeon boss that gets through costs 99 lives, a mini boss 50
       if (e.boss) S.bossLeaks = (S.bossLeaks || 0) + 1;
+      if (e.boss && e.finale && S.lives > 0) {   // a dungeon's boss has to be defeated: if it gets through it costs lives and comes round the path again
+        e.d = 0; const p0 = posAt(0); e.x = p0.x; e.y = p0.y;
+        floatText(W - 120, 400, `${WILD[e.dex].name} is still standing! Defeat it to clear the dungeon.`, '#ff9c9c', 2.6);
+        continue;
+      }
+      e.dead = true;
       if (e.recruit || e.mevent) floatText(W - 120, 400, `${WILD[e.dex].name} got away…`, '#ff9c9c', 2);
       continue;
     }
@@ -1076,7 +1236,7 @@ function update(dt) {
   S.fx = S.fx.filter(f => f.t < f.life);
 
   if (S.lives <= 0 && !S.over) {
-    S.lives = 0; S.over = true;
+    S.lives = 0; S.over = true; sfx('defeat');
     if (window.__BALANCE) return;
     const earned = payRun(false, false);
     showOverlay(`<h2>${DUNGEONS[S.dungeon].name} was overrun</h2><p>The wild Pokémon made it ${DUNGEONS[S.dungeon].onRun ? 'past your team' : 'to your rescue team base'} on wave ${S.wave} of dungeon ${S.dungeon + 1}. Your team defeated ${(S.kos || 0).toLocaleString()} wild Pokémon.</p><p class="small">+🪙 ${earned} coins for the waves you survived.</p><button class="primary" id="ovRestart">Try again</button> <button id="ovMenu">Dungeons</button>`);
@@ -1380,9 +1540,9 @@ function render() {
         ctx.beginPath(); path.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
       }
     } else if (f.k === 'text') {
-      ctx.font = "700 20px 'Pixelify Sans', monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = `700 ${f.size || 20}px 'Pixelify Sans', monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,.6)';
-      const y = f.y - k * 20;
+      const y = f.y - k * (f.rise ?? 20);
       ctx.strokeText(f.text, f.x, y); ctx.fillStyle = f.color; ctx.fillText(f.text, f.x, y);
     }
     ctx.globalAlpha = 1;
@@ -1407,9 +1567,9 @@ function render() {
     ctx.fillStyle = 'rgba(20,26,46,.82)';
     roundRect(W/2 - 250, H/2 - 40, 500, 80, 12); ctx.fill();
     ctx.fillStyle = '#ffd23f'; ctx.font = "700 20px 'Pixelify Sans', monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('Pick a Pokémon from your team', W/2, H/2 - 12);
+    ctx.fillText(trText('Pick a Pokémon from your team'), W/2, H/2 - 12);
     ctx.fillStyle = '#eef1ff'; ctx.font = "15px 'Rubik', system-ui, sans-serif";
-    ctx.fillText('Place it beside the path, then press Start wave.', W/2, H/2 + 16);
+    ctx.fillText(trText('Place it beside the path, then press Start wave.'), W/2, H/2 + 16);
   }
 }
 function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
@@ -1473,14 +1633,24 @@ function drawWild(e) {
     ctx.fillStyle = 'rgba(176,76,200,.9)'; ctx.strokeStyle = 'rgba(60,15,74,.8)'; ctx.lineWidth = 1;
     for (let i = 0; i < 3; i++) { const ph = (S.time * 1.6 + i / 3 + e.phase) % 1; ctx.beginPath(); ctx.arc(e.x + (i - 1) * 8, top + 4 - ph * 16, 2.4 * (1 - ph * .4), 0, Math.PI * 2); ctx.fill(); ctx.stroke(); }
   }
-  if (e.vulnT > 0) { ctx.fillStyle = '#ff5a3a'; ctx.strokeStyle = '#5a1408'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(e.x - 5, top - 17); ctx.lineTo(e.x + 5, top - 17); ctx.lineTo(e.x, top - 10); ctx.closePath(); ctx.fill(); ctx.stroke(); }
   // health bar
   const frac = Math.max(0, enemyHp(e) / (e.boss ? e.maxHp : e.maxTier * (e.tough || 1)));
   const bw = e.boss ? (e.r >= 30 ? 56 : 40) : 24, by = top - 8;
   ctx.fillStyle = 'rgba(20,16,10,.85)'; ctx.fillRect(e.x - bw/2 - 1, by - 1, bw + 2, 5);
   ctx.fillStyle = frac > .5 ? '#5fd38a' : frac > .25 ? '#f3d23a' : '#e8443a';
   ctx.fillRect(e.x - bw/2, by, bw * frac, 3);
-  if (e.mevent) { ctx.fillStyle = '#ff7aa8'; ctx.font = 'bold 15px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.fillText('♥', e.x, by - 4); }
+  // status icons sit small just above the health bar (skull and shield side by side when a foe has both)
+  const hasP = e.poisT > 0, hasW = e.vulnT > 0, iy = by - 9;
+  if (hasP) drawSkull(ctx, e.x - (hasW ? 6 : 0), iy, 4.5);   // Poison: the skull from Mystery Dungeon
+  if (hasW) {   // Bug: Weaken, a cracked shield
+    const sx = e.x + (hasP ? 6 : 0), sy = iy - 5.5, k = .75;
+    ctx.fillStyle = '#e6b447'; ctx.strokeStyle = '#4a2c06'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(sx - 6 * k, sy); ctx.lineTo(sx + 6 * k, sy); ctx.lineTo(sx + 6 * k, sy + 7 * k); ctx.quadraticCurveTo(sx + 5 * k, sy + 11 * k, sx, sy + 14 * k); ctx.quadraticCurveTo(sx - 5 * k, sy + 11 * k, sx - 6 * k, sy + 7 * k); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = '#a3200f'; ctx.lineWidth = 1.4; ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(sx + k, sy); ctx.lineTo(sx - 2 * k, sy + 4 * k); ctx.lineTo(sx + 2 * k, sy + 8 * k); ctx.lineTo(sx - k, sy + 14 * k); ctx.stroke();
+    ctx.lineJoin = 'miter';
+  }
+  if (e.mevent) { ctx.fillStyle = '#ff7aa8'; ctx.strokeStyle = '#7a1740'; ctx.lineWidth = 2; ctx.font = 'bold 24px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.strokeText('♥', e.x, by - 17); ctx.fillText('♥', e.x, by - 17); }   // recruit candidate: a big heart well above the foe
 }
 
 // ---------- Attack visuals ----------
@@ -1647,6 +1817,12 @@ function drawFx(f, k, a) {
         for (let i = 0; i < 3; i++) { const r = ((k * 30 + i * 10) % 30) + 4; ctx.beginPath(); ctx.ellipse(f.x, f.y, r, r * .6, 0, 0, TAU); ctx.stroke(); }
       }
       return true;
+    case 'feather': {
+      // a few white-lilac feathers flutter off the foe that was struck
+      ctx.fillStyle = '#f4f0ff'; ctx.strokeStyle = '#8f7bd8'; ctx.lineWidth = 1;
+      for (let i = 0; i < 4; i++) { const an = f.a + i * 1.57, d = 5 + k * 18, v = f.vs || 1; ctx.save(); ctx.translate(f.x + Math.cos(an) * d, f.y + Math.sin(an) * d - k * 8); ctx.rotate(an + k * 3); ctx.beginPath(); ctx.ellipse(0, 0, 5.5 * v, 2.2 * v, 0, 0, TAU); ctx.fill(); ctx.stroke(); ctx.restore(); }
+      return true;
+    }
     case 'chomp': {
       // jaws closing on the foe
       const c = Math.min(1, k * 2.5), gap = 22 * (1 - c) + 3;
@@ -1711,6 +1887,7 @@ function drawFx(f, k, a) {
       const r = (f.r || 20) * (.35 + k * .65);
       ctx.fillStyle = 'rgba(160,64,176,.45)'; ctx.strokeStyle = 'rgba(60,15,74,.7)'; ctx.lineWidth = 1.5;
       for (let i = 0; i < 5; i++) { const an = i * 1.26 + k, d = r * .55; ctx.beginPath(); ctx.arc(f.x + Math.cos(an) * d, f.y + Math.sin(an) * d - k * 8, r * .38, 0, TAU); ctx.fill(); ctx.stroke(); }
+      ctx.globalAlpha = k < .6 ? 1 : (1 - k) / .4; drawSkull(ctx, f.x, f.y - 12 - k * 14, 7); ctx.globalAlpha = 1;   // a skull floats up out of the cloud
       return true;
     }
     case 'rockhit':
@@ -1815,7 +1992,8 @@ cv.addEventListener('pointerdown', ev => {
       S.money -= cost;
       S.towers.push({key:pl.key, legendary:false, stage:f.stage, branch:f.branch, x:p.x, y:p.y, cd:0, angle:Math.PI/2, pops:0, spent:cost});
     }
-    S.selected = S.towers[S.towers.length - 1];
+    S.selected = S.towers[S.towers.length - 1]; sfx('place');
+    if (!S.upHint) { S.upHint = true; floatText(Math.max(170, Math.min(W - 170, S.selected.x)), S.selected.y >= 100 ? S.selected.y - 64 : S.selected.y + 40, 'Attack and Range upgrades available!', '#ffe14a', 4.5, 15, 0); }   // first Pokémon of the dungeon: say it can be upgraded (above its name label, or below it at the top edge)
     S.placing = null; refreshAll(); return;
   }
   S.selected = towerAt(p.x, p.y) || null;
@@ -1842,8 +2020,8 @@ window.addEventListener('keydown', ev => {
   if (inMenu) return;
   if (ev.key === 'Escape') { cancelPlacing(); S.selected = null; refreshAll(); }
   if (ev.key === ' ') { ev.preventDefault(); startWave(); }
-  if (DEBUG && ev.key === '[') gotoDungeon(S.dungeon - 1);
-  if (DEBUG && ev.key === ']') gotoDungeon(S.dungeon + 1);
+  if (ev.key === '[') gotoDungeon(S.dungeon - 1);
+  if (ev.key === ']') gotoDungeon(S.dungeon + 1);
   const idx = Number(ev.key) - 1;
   const keys = ownedKeys();
   if (idx >= 0 && idx < keys.length) choose(keys[idx]);
@@ -1903,7 +2081,7 @@ function buildShop() {
     b.className = 'mon'; b.id = 'buy-' + key;
     b.onpointerenter = ev => { if (ev.pointerType === 'mouse') showShopTip(b, key, i); };
     b.onpointerleave = hideShopTip;
-    b.innerHTML = `<span class="orb" style="background:${TYPE_COLORS[f.type]}">${portrait(f.dex)}</span><span class="nm">${f.name}</span><span class="pr">₽${f.cost}</span>`;
+    b.innerHTML = `<span class="orb" style="background:${TYPE_COLORS[f.type]}">${portrait(f.dex)}</span><span class="nm">${f.name}</span><span class="type" style="background:${TYPE_COLORS[f.type]}">${f.type}</span><span class="pr">₽${f.cost}</span>`;
     b.onclick = () => choose(key);
     shopEl.appendChild(b);
   });
@@ -1918,7 +2096,7 @@ function showShopTip(b, key, i) {
     : `<p class="muted">Evolves into ${L.stages.slice(f.stage + 1).map(x => x.name).join(' then ')}.</p>`;
   tip.innerHTML = `<b>${f.name}</b> · ₽${f.cost}
     <p>Type: <span class="type" style="background:${TYPE_COLORS[f.type]}">${f.type}</span></p>
-    <p>Starts with a plain ${SCRATCHERS.has(key) ? 'Scratch' : 'Tackle'}. Its first upgrade teaches <b>${MOVES[f.type][0]}</b> and unlocks <b style="font-size:13px">${st.effect}:</b> ${st.tip}</p>${evo}${i < 9 ? `<p class="muted">Shortcut: key ${i + 1}</p>` : ''}`;
+    <p>Starts with a plain ${SCRATCHERS.has(key) ? 'Scratch' : 'Tackle'}. Its first upgrade teaches <b>${MOVES[f.type][0]}</b>${st.noUnlock ? ': ' + lc(st.tip) : ` and unlocks <b style="font-size:13px">${st.effect}:</b> ${st.tip}`}</p>${evo}${i < 9 ? `<p class="muted">Shortcut: key ${i + 1}</p>` : ''}`;
   placeTip(b);
 }
 function placeTip(b) {
@@ -1936,7 +2114,7 @@ function showDiscovered() {
   S.intro = true; S.autoTimer = 0;
   showOverlay(`<h2>${D.name} discovered!</h2>${storyBox(D, 'intro')}<p class="small">Dungeon ${S.dungeon + 1} of ${DUNGEONS.length} · ${finalWave()} waves${D.boss ? ` · a boss waits on the last wave` : ''}.</p><button class="primary" id="ovEnter">Enter ${D.name}</button>`);
   $('overlayCard').classList.add('story-card'); typeStory();
-  $('ovEnter').onclick = () => { S.intro = false; hideOverlay(); if (S.auto) S.autoTimer = 1.5; refreshAll(); };
+  $('ovEnter').onclick = () => { S.intro = false; hideOverlay(); if (S.auto) S.autoTimer = 1.5; refreshAll(); if (S.dungeon === 0 && !tutSeen) setTimeout(offerTut, 450); };
   refreshAll();
 }
 // Same hover card for Special allies: what it does, or how to unlock it
@@ -1966,6 +2144,7 @@ function refreshAll() {
   $('dbgWavePrev').disabled = busy || S.wave === 0 || (S.waveActive && S.wave === 1); $('dbgWaveNext').disabled = busy || S.wave >= finalWave() - 1;
   $('dbgComplete').disabled = busy; $('dbgUnlock').disabled = Object.keys(LEGENDS).every(k => S.caught.has(k));
   startBtn.disabled = S.waveActive || S.over || S.between || S.intro;
+  startBtn.classList.toggle('go', !startBtn.disabled && S.wave === 0 && S.towers.length > 0);   // placed a Pokémon, no wave yet: point at the button
   startBtn.textContent = S.between ? 'Dungeon cleared' : S.waveActive ? `Wave ${S.wave} in progress` : `Start wave ${S.wave + 1}`;
   speedBtn.textContent = `Speed ${S.speed}×`; speedBtn.setAttribute('aria-pressed', S.speed > 1);
   autoBtn.setAttribute('aria-pressed', S.auto);
@@ -1999,7 +2178,7 @@ function renderAllies() {
     b.className = 'ally got';
     b.disabled = out || S.money < (L.cost || 0) || S.over || !spriteReady(L.dex);
     b.setAttribute('aria-pressed', !!(S.placing && S.placing.key === k));
-    b.innerHTML = `<span class="orb" style="background:${TYPE_COLORS[L.type]}">${portrait(L.dex)}</span><span class="nm">${L.name}</span><span class="pr">${out ? 'Placed' : L.cost ? '₽' + L.cost : 'Free'}</span>`;
+    b.innerHTML = `<span class="orb" style="background:${TYPE_COLORS[L.type]}">${portrait(L.dex)}</span><span class="nm">${L.name}</span><span class="type" style="background:${TYPE_COLORS[L.type]}">${L.type}</span><span class="pr">${out ? 'Placed' : L.cost ? '₽' + L.cost : 'Free'}</span>`;
     b.onpointerenter = ev => { if (ev.pointerType === 'mouse') showAllyTip(b, k); };
     b.onpointerleave = hideShopTip;
     b.onclick = () => chooseAlly(k);
@@ -2098,7 +2277,7 @@ function renderInfo() {
     const k = ub.dataset.k, cost = upCost(t, k);
     if (upLevel(t, k) >= UP_MAX || S.money < cost) return;
     t.up = t.up || {range:0, atk:0};
-    S.money -= cost; t.spent += cost; t.up[k]++;
+    S.money -= cost; t.spent += cost; t.up[k]++; sfx('upgrade');
     floatText(t.x, t.y - 34, k === 'atk' ? `Learned ${moveName(t, t.up[k])}!` : `Range ${t.up[k]}`, '#9fe7ff', 1.1);
     refreshAll();
   });
@@ -2110,11 +2289,11 @@ function renderInfo() {
 
 function showOverlay(html) { $('overlayCard').classList.remove('story-card'); $('overlayCard').innerHTML = html; $('overlay').hidden = false; }
 // What happened in the story in the dungeon just cleared, typed out like a PMD text box. A click shows it all at once.
-function storyBox(D, kind) { const txt = D[kind]; return txt ? `<div class="story-box" id="storyBox" data-kind="${kind}"><span class="who">${D.name}</span><span class="story-body"><span class="ghost">${txt}</span><span id="storyText"></span></span><span class="arrow" hidden>▼</span></div>` : ''; }
+function storyBox(D, kind) { const txt = D[kind]; return txt ? `<div class="story-box" id="storyBox" data-kind="${kind}"><span class="who">${D.name}</span><span class="story-body"><span class="ghost">${trText(txt)}</span><span id="storyText"></span></span><span class="arrow" hidden>▼</span></div>` : ''; }
 let storyTimer = null;
 function typeStory() {
   const box = $('storyBox'); if (!box) return;
-  const full = DUNGEONS[S.dungeon][box.dataset.kind], out = $('storyText');
+  const full = trText(DUNGEONS[S.dungeon][box.dataset.kind]), out = $('storyText');
   let n = 0; clearInterval(storyTimer);
   const done = () => { clearInterval(storyTimer); out.textContent = full; box.querySelector('.arrow').hidden = false; };
   storyTimer = setInterval(() => { n += 2; out.textContent = full.slice(0, n); if (n >= full.length) done(); }, 22);
@@ -2130,7 +2309,7 @@ let last = performance.now(), lastMoney = -1, lastLives = -1;
 const EVO_LEN = 5.2;
 let evo = null;
 const evoCv = document.createElement('canvas'), evoCtx = evoCv.getContext('2d');
-function startEvo(from, to) { evo = {from:from.dex, to:to.dex, fromName:from.name, toName:to.name, t:0}; }
+function startEvo(from, to) { sfx('evolve'); evo = {from:from.dex, to:to.dex, fromName:from.name, toName:to.name, t:0}; }
 function endEvo() { evo = null; }
 function skipEvo(ev) {
   if (!evo) return;
@@ -2201,21 +2380,37 @@ function drawEvo() {
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillStyle = '#eef1ff'; ctx.font = "700 20px 'Pixelify Sans', monospace";
   const line = t < DONE ? `What? ${evo.fromName} is evolving!` : `Congratulations! ${evo.fromName} evolved into ${evo.toName}!`;
-  ctx.fillText(line, cx, by + bh / 2);
+  ctx.fillText(trText(line), cx, by + bh / 2);
   ctx.fillStyle = `rgba(200,210,255,${.55 + .35 * Math.sin(t * 4)})`; ctx.font = "14px 'Rubik', system-ui, sans-serif";
-  ctx.fillText('Click anywhere to skip', cx, by + bh + 26);
+  ctx.fillText(trText('Click anywhere to skip'), cx, by + bh + 26);
 }
 
+// An error in one frame must not stop the game: log it, tell the player briefly (so it can be reported), and keep going.
+let lastErrAt = 0;
+function reportError(err) {
+  console.error(err);
+  if (Date.now() - lastErrAt < 5000) return;
+  lastErrAt = Date.now();
+  try {
+    let t = document.getElementById('errToast');
+    if (!t) { t = document.createElement('div'); t.id = 'errToast'; t.style.cssText = 'position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:200;max-width:min(92vw,520px);background:#5a1d1d;color:#fff;border:2px solid #ff8a80;border-radius:10px;padding:10px 14px;font-size:13px;line-height:1.35;box-shadow:0 6px 20px rgba(0,0,0,.5)'; document.body.appendChild(t); }
+    t.textContent = 'Something went wrong (' + (err && err.message ? err.message : err) + '). The game kept going; if it looks stuck, reload the page. Please tell the maker what you were doing.';
+    t.hidden = false; setTimeout(() => { t.hidden = true; }, 12000);
+  } catch (e2) {}
+}
+window.addEventListener('error', ev => reportError(ev.error || ev.message));
 function frame(now) {
-  const dt = Math.min(0.05, (now - last) / 1000); last = now;
-  if (inMenu || dexOpen || teamOpen) { requestAnimationFrame(frame); return; }
-  if (unlimited) S.money = UNLIMITED;
-  if (evo) evo.t += dt;
-  else if (!S.over) for (let i = 0; i < S.speed; i++) update(dt);
-  if (unlimited) S.money = UNLIMITED;
-  render();
-  if (evo) { drawEvo(); if (evo.t >= EVO_LEN) endEvo(); }
-  if (S.money !== lastMoney || S.lives !== lastLives) { lastLives = S.lives; refreshAll(); }
+  try {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (inMenu || dexOpen || teamOpen || tutOpen || setOpen) { requestAnimationFrame(frame); return; }
+    if (unlimited) S.money = UNLIMITED;
+    if (evo) evo.t += dt;
+    else if (!S.over) for (let i = 0; i < S.speed; i++) update(dt);
+    if (unlimited) S.money = UNLIMITED;
+    render();
+    if (evo) { drawEvo(); if (evo.t >= EVO_LEN) endEvo(); }
+    if (S.money !== lastMoney || S.lives !== lastLives) { lastLives = S.lives; refreshAll(); }
+  } catch (err) { reportError(err); lastLives = S.lives; lastMoney = S.money; }
   requestAnimationFrame(frame);
 }
 
@@ -2239,11 +2434,11 @@ const QUIZ = [
   ['You hear a strange noise in a cave.', [['Investigate!','curious','bold'], ['Hold your ground and listen','calm','tough'], ['Step back and wait for friends','shy','kind'], ['Shout "Who is there?"','bold','playful']]],
   ['What matters most to you?', [['Looking after my friends','kind','calm'], ['Never giving up','tough','bold'], ['Having fun','playful','curious'], ['Being free to do my own thing','sly','shy']]],
 ];
-let team = {hero:null, partner:null, owned:[], allies:[], members:[], evo:{}, recruits:[], rid:0};   // members = the (up to 5) Pokémon on the team; owned = starters collected; allies = special allies collected
+let team = {hero:null, partner:null, owned:[], allies:[], members:[], evo:{}, recruits:[], rid:0, released:[]};   // members = the (up to 5) Pokémon on the team; owned = starters collected; allies = special allies collected
 try {
   const t = JSON.parse(localStorage.getItem(TEAM_KEY) || 'null');
   if (t && LINES[t.hero] && LINES[t.partner] && t.hero !== t.partner) team = {hero:t.hero, partner:t.partner, owned:(t.owned || []).filter(k => LINES[k] || /^r\d+$/.test(k)), allies:(t.allies || []).filter(k => LEGENDS[k]), members:(t.members || []).filter(k => LINES[k] || LEGENDS[k] || /^r\d+$/.test(k)), evo:{},
-    recruits:(t.recruits || []).filter(r => r && /^r\d+$/.test(r.id) && +r.dex > 0), rid:+t.rid || 0};   // recruits are checked against SPECIES once it exists (registerRecruits)
+    recruits:(t.recruits || []).filter(r => r && /^r\d+$/.test(r.id) && +r.dex > 0), rid:+t.rid || 0, released:(t.released || []).map(Number).filter(n => n > 0)};   // recruits are checked against SPECIES once it exists (registerRecruits)
   for (const [k, e] of Object.entries(t && t.evo || {})) if ((LINES[k] || /^r\d+$/.test(k)) && e && e.stage > 0 && (!LINES[k] || e.stage < stageCount(k))) team.evo[k] = {stage:e.stage, branch:e.branch};   // evolutions are permanent
   if (team.hero && !team.owned.length) team.owned = [team.hero, team.partner];
   if (team.hero && !team.members.length) team.members = [team.hero, team.partner];   // saves from before the team window
@@ -2255,9 +2450,35 @@ function formOf(key) {
   return {name:st.name, dex:st.dex, type:st.type || L.type, cost:st.cost, stage:e.stage, branch:e.branch};
 }
 function saveEvo(t) { if (t.stage > 0) { team.evo[t.key] = {stage:t.stage, branch:t.branch}; saveTeam(); buildShop(); } }
-function ownedKeys() { return Object.keys(LINES).filter(k => team.members.includes(k)); }
+const DBG_TYPES = new Set();   // debug only: test Pokémon, one per type, never saved
+function ownedKeys() { return Object.keys(LINES).filter(k => team.members.includes(k) || DBG_TYPES.has(k)); }
+// Magnemite (Mt. Steel) and Absol (Frosty Forest) join through the story, once. After that they are ordinary recruits: they cost ₽, upgrade and evolve like the others.
+function storyJoin(D) {
+  const j = D.join;
+  if (!j || !SPECIES[j.dex] || team.recruits.some(r => r.dex === j.dex && r.story) || (team.released || []).includes(j.dex)) return null;
+  const id = 'r' + (++team.rid);
+  team.recruits.push({id, dex:j.dex, area:j.area, story:1}); team.owned.push(id); LINES[id] = recruitLine(j.dex);
+  if (j.gift) { boughtAreas.add(j.area); saveAreas(); }
+  const onTeam = team.members.length < TEAM_MAX; if (onTeam) team.members.push(id);
+  saveTeam(); dexMark(j.dex, true); buildShop(); prefetchArt();
+  return {id, onTeam};
+}
+// saves from before: the story allies were special towers. Turn them into the ordinary recruits they are now, keeping their team slot.
+const OLD_ALLY = {magnemite:81, absol:359};
+function migrateStoryAllies() {
+  DUNGEONS.forEach((D, i) => {
+    if (!D.join || i >= cleared) return;
+    const old = Object.keys(OLD_ALLY).find(k => OLD_ALLY[k] === D.join.dex), slot = old ? team.members.indexOf(old) : -1;
+    const r = storyJoin(D); if (!r) return;
+    if (old && team.allies.includes(old)) team.allies = team.allies.filter(k => k !== old);
+    if (slot >= 0) { const n = team.members.indexOf(r.id); if (n >= 0) team.members.splice(n, 1); team.members = team.members.filter(k => k !== old); team.members.splice(Math.min(slot, team.members.length), 0, r.id); }
+  });
+  for (const k of Object.keys(OLD_ALLY)) { team.allies = team.allies.filter(a => a !== k); team.members = team.members.filter(m => m !== k); }
+  saveTeam();
+}
 // a special ally joins: it is collected for good and takes a team slot if one is free. Returns whether it is on the team
 function gainAlly(k) {
+  sfx('join');
   if (!team.allies.includes(k)) team.allies.push(k);
   if (!team.members.includes(k) && team.members.length < TEAM_MAX) team.members.push(k);
   const on = team.members.includes(k);
@@ -2372,14 +2593,14 @@ function pickStarter(which) {
   $('qBack').onclick = which === 'hero' || !quiz.picks.length ? startIntro : showResult;
 }
 function finishIntro(hero, partner) {
-  team = {hero, partner, owned:[hero, partner], allies:[], members:[hero, partner], evo:{}, recruits:[], rid:0}; saveTeam(); dexSync();
+  team = {hero, partner, owned:[hero, partner], allies:[], members:[hero, partner], evo:{}, recruits:[], rid:0, released:[]}; saveTeam(); dexSync();
   introEl.hidden = true; bgStop(); buildShop(); refreshAll(); prefetchArt(); showMenu();
 }
 function resetAll() {
-  if (!confirm('Start over? This forgets your Pokémon and which dungeons you have cleared.')) return;
+  if (!confirm(trText('Start over? This forgets your Pokémon and which dungeons you have cleared.'))) return;
   for (const r of team.recruits) delete LINES[r.id];
-  team = {hero:null, partner:null, owned:[], allies:[], members:[], evo:{}, recruits:[], rid:0}; cleared = 0; dexSeen = new Set(); dexGot = new Set(); boughtAreas = new Set(); wallet = 0; wigSeen = false; menuTab = 'dungeons';
-  try { localStorage.removeItem(TEAM_KEY); localStorage.removeItem(PROG_KEY); localStorage.removeItem(DEX_KEY); localStorage.removeItem(AREA_KEY); localStorage.removeItem(WALLET_KEY); localStorage.removeItem(WIG_KEY); } catch (e) {}
+  team = {hero:null, partner:null, owned:[], allies:[], members:[], evo:{}, recruits:[], rid:0, released:[]}; cleared = 0; dexSeen = new Set(); dexGot = new Set(); boughtAreas = new Set(); wallet = 0; wigSeen = false; menuTab = 'dungeons';
+  try { localStorage.removeItem(TEAM_KEY); localStorage.removeItem(PROG_KEY); localStorage.removeItem(DEX_KEY); localStorage.removeItem(AREA_KEY); localStorage.removeItem(WALLET_KEY); localStorage.removeItem(WIG_KEY); localStorage.removeItem(END_KEY); localStorage.removeItem(STAR_KEY); stars = {}; endSeen = false; localStorage.removeItem(TUT_KEY); tutSeen = false; } catch (e) {}
   buildShop(); startIntro();
 }
 
@@ -2458,7 +2679,7 @@ function dexDetail(n) {
 function openDex() { dexOpen = true; $('dexModal').hidden = false; dexList(); ensure(['portraits']); }
 function closeDex() { dexOpen = false; $('dexModal').hidden = true; saveDex(); }
 $('dexBtn').onclick = openDex;
-$('wigImg').src = 'data:image/png;base64,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';   // the Wigglytuff Club tent cut from the PMD Red screenshot (assets/wigglytuff/icon.png)
+$('wigImg').src = 'data:image/png;base64,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';   // the Wigglytuff Club tent cut from the PMD Red screenshot (assets/wigglytuff/icon.png)
 $('dexModal').onclick = ev => { if (ev.target.id === 'dexModal') closeDex(); };
 
 // SPECIES-DATA-START
@@ -2478,13 +2699,13 @@ const SPECIES = {"1":["Grass",[2],0],
   "13":["Bug",[14],0],
   "14":["Bug",[15],1],
   "15":["Bug",[],2],
-  "16":["Normal",[17],0],
-  "17":["Normal",[18],1],
-  "18":["Normal",[],2],
+  "16":["Flying",[17],0],
+  "17":["Flying",[18],1],
+  "18":["Flying",[],2],
   "19":["Normal",[20],0],
   "20":["Normal",[],1.6],
-  "21":["Normal",[22],0],
-  "22":["Normal",[],1.6],
+  "21":["Flying",[22],0],
+  "22":["Flying",[],1.6],
   "23":["Poison",[24],0],
   "24":["Poison",[],1.6],
   "25":["Electric",[26],1],
@@ -2537,9 +2758,9 @@ const SPECIES = {"1":["Grass",[2],0],
   "80":["Water",[],1.6],
   "81":["Electric",[82],0],
   "82":["Electric",[],1.6],
-  "83":["Normal",[],1],
-  "84":["Normal",[85],0],
-  "85":["Normal",[],1.6],
+  "83":["Flying",[],1],
+  "84":["Flying",[85],0],
+  "85":["Flying",[],1.6],
   "86":["Water",[87],0],
   "87":["Water",[],1.6],
   "88":["Poison",[89],0],
@@ -2608,8 +2829,8 @@ const SPECIES = {"1":["Grass",[2],0],
   "160":["Water",[],2],
   "161":["Normal",[162],0],
   "162":["Normal",[],1.6],
-  "163":["Normal",[164],0],
-  "164":["Normal",[],1.6],
+  "163":["Flying",[164],0],
+  "164":["Flying",[],1.6],
   "165":["Bug",[166],0],
   "166":["Bug",[],1.6],
   "167":["Bug",[168],0],
@@ -2619,7 +2840,7 @@ const SPECIES = {"1":["Grass",[2],0],
   "171":["Water",[],1.6],
   "172":["Electric",[25],0],
   "175":["Normal",[176],0],
-  "176":["Normal",[],1.6],
+  "176":["Flying",[],1.6],
   "177":["Psychic",[178],0],
   "178":["Psychic",[],1.6],
   "179":["Electric",[180],0],
@@ -2709,8 +2930,8 @@ const SPECIES = {"1":["Grass",[2],0],
   "273":["Grass",[274],0],
   "274":["Grass",[275],1],
   "275":["Grass",[],2],
-  "276":["Normal",[277],0],
-  "277":["Normal",[],1.6],
+  "276":["Flying",[277],0],
+  "277":["Flying",[],1.6],
   "278":["Water",[279],0],
   "279":["Water",[],1.6],
   "283":["Bug",[284],0],
@@ -2762,7 +2983,7 @@ const SPECIES = {"1":["Grass",[2],0],
   "330":["Ground",[],2],
   "331":["Grass",[332],0],
   "332":["Grass",[],1.6],
-  "333":["Normal",[334],0],
+  "333":["Flying",[334],0],
   "334":["Dragon",[],1.6],
   "335":["Normal",[],1],
   "336":["Poison",[],1],
@@ -2782,6 +3003,7 @@ const SPECIES = {"1":["Grass",[2],0],
   "352":["Normal",[],1],
   "357":["Grass",[],1],
   "358":["Psychic",[],1],
+  "359":["Dark",[],1],
   "360":["Psychic",[202],0],
   "361":["Ice",[362],0],
   "362":["Ice",[],1.6],
@@ -2821,7 +3043,7 @@ const FRIEND_AREAS = [["power-plant","Power Plant",0,2,[81,82,100,101,125,239],1
   ["mt-deepgreen","Mt. Deepgreen",130,0,[74,75,76,104,105,207,213,216,217,325,326,327],24],
   ["decrepit-lab","Decrepit Lab",1000,0,[63,64,65,122,132,137,233],14],
   ["magnetic-quarry","Magnetic Quarry",1000,0,[374,375,376],6],
-  ["ravaged-field","Ravaged Field",1000,0,[21,22,228,229,227],10],
+  ["ravaged-field","Ravaged Field",1000,0,[21,22,228,229,227,359],12],
   ["thunder-meadow","Thunder Meadow",1000,0,[161,162,179,180,181,309,310,311,312,351,358],22],
   ["mt-discipline","Mt. Discipline",1200,0,[66,67,68,236,106,107,237,307,308,296,297],22],
   ["peanut-swamp","Peanut Swamp",2500,0,[258,259,260,194,195,339,340],14],
@@ -2852,6 +3074,9 @@ const FRIEND_AREAS = [["power-plant","Power Plant",0,2,[81,82,100,101,125,239],1
   ["ice-floe-beach","Ice Floe Beach",9500,1,[86,87,363,364,365],10],
   ["southern-island","Southern Island",9500,1,[380,381],4]];
 // AREA-DATA-END
+// Friend area prices are the data's price times a factor: early areas x2 (about the coins of one first playthrough, so a few replays are needed), late areas x0.6 (they open after the whole story and are bought with replay coins). Gifts stay free.
+const AREA_PRICE_MUL = {early:2, late:.6};
+FRIEND_AREAS.forEach(a => { if (a[2] > 0) a[2] = Math.max(50, Math.round(a[2] * (a[3] === 1 ? AREA_PRICE_MUL.late : AREA_PRICE_MUL.early) / 50) * 50); });
 const AREA_KEY = 'ppdAreas', WALLET_KEY = 'ppdWallet';
 const AREA_EARLY_AT = DUNGEONS.findIndex(D => D.name === 'Mt. Steel') + 1;
 const AREA_LATE_AT = DUNGEONS.length;
@@ -2865,6 +3090,35 @@ const waveCoins = d => 4 + 2 * d;
 const clearCoins = (d, first) => first ? 150 + 75 * d : 60 + 30 * d;
 const EVO_COIN_RATE = .8;   // evolving costs this share of the evolved form's price, in coins
 const evoCoinCost = next => Math.round(next.cost * EVO_COIN_RATE / 10) * 10;
+// Star rating for a clear, by the lives left: 11-49 one star, 50-99 two, all 100 three. Each star pays coins once (150, 150, 200); replaying can only add the stars not earned yet.
+const STAR_KEY = 'ppdStars', STAR_COINS = [150, 150, 200];
+let stars = {};
+try { stars = JSON.parse(localStorage.getItem(STAR_KEY) || '{}') || {}; } catch (e) {}
+const saveStars = () => { try { localStorage.setItem(STAR_KEY, JSON.stringify(stars)); } catch (e) {} };
+const starsFor = lives => lives >= 100 ? 3 : lives >= 50 ? 2 : lives >= 11 ? 1 : 0;
+const bestStars = d => Math.max(0, Math.min(3, +stars[d] || 0));
+function payStars(d, lives) {
+  const got = starsFor(lives), prev = bestStars(d); let coins = 0;
+  for (let i = prev; i < got; i++) coins += STAR_COINS[i];
+  if (got > prev) { stars[d] = got; saveStars(); }
+  if (coins) addWallet(coins);
+  return {got, prev, coins};
+}
+function starRow(n) { return `<div class="starrow" id="starRow" role="img" aria-label="${n} of 3 stars">${[0, 1, 2].map(i => `<span class="starslot" data-i="${i}"><span class="star">★</span></span>`).join('')}</div>`; }
+// the stars fill one by one; three stars throw sparkles
+function playStars(n) {
+  const row = $('starRow'); if (!row) return;
+  const slots = row.querySelectorAll('.starslot');
+  for (let i = 0; i < n; i++) setTimeout(() => { if (!row.isConnected) return; slots[i].classList.add('on'); sfx('upgrade'); }, 450 + i * 450);
+  if (n === 3) {
+    const burst = () => { if (!row.isConnected) return; for (let k = 0; k < 16; k++) {
+      const s = document.createElement('span'), a = Math.random() * 6.28, r = 40 + Math.random() * 70;
+      s.className = 'spark'; s.style.setProperty('--dx', Math.round(Math.cos(a) * r * 1.6) + 'px'); s.style.setProperty('--dy', Math.round(Math.sin(a) * r * .8) + 'px'); s.style.animationDelay = (Math.random() * .25) + 's';
+      row.appendChild(s); setTimeout(() => s.remove(), 1500);
+    } };
+    setTimeout(() => { if (!row.isConnected) return; row.classList.add('perfect'); sfx('join'); burst(); setTimeout(burst, 700); setTimeout(burst, 1400); }, 450 + 3 * 450);
+  }
+}
 function payRun(won, first) {
   if (S.paid) return S.coins || 0;
   S.paid = true;
@@ -2914,6 +3168,377 @@ document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('area
 function updateWallet() { $('wallet').innerHTML = `<small>Coins</small>🪙 ${wallet.toLocaleString()}`; }
 // the first visit to Wigglytuff after clearing Mt. Steel: two welcome gifts, plus the Magnemite you helped brings its home along
 const GIFT_AREAS = ['mist-rise-forest', 'wild-plains', 'power-plant'];
+// ---------- Sound: everything is synthesized here (no audio files). Music and effects have their own volume and mute. ----------
+const SET_KEY = 'ppdSettings';
+const SETTINGS = {music:.5, sfx:.7, musicMute:false, sfxMute:false, lang:''};
+try { Object.assign(SETTINGS, JSON.parse(localStorage.getItem(SET_KEY) || '{}')); } catch (e) {}
+const saveSettings = () => { try { localStorage.setItem(SET_KEY, JSON.stringify(SETTINGS)); } catch (e) {} };
+const AUD = {ctx:null, mus:null, sfx:null, track:null, want:null, timer:0, step:0, next:0, last:{}};
+window.__aud = AUD;
+let setOpen = false;
+const mf = m => 440 * Math.pow(2, (m - 69) / 12);
+function applyVolumes() {
+  if (!AUD.ctx) return;
+  AUD.mus.gain.value = SETTINGS.musicMute ? 0 : Math.pow(SETTINGS.music, 2) * .5;
+  AUD.sfx.gain.value = SETTINGS.sfxMute ? 0 : Math.pow(SETTINGS.sfx, 2) * .9;
+}
+function audioInit() {
+  if (AUD.ctx) { if (AUD.ctx.state === 'suspended') AUD.ctx.resume(); return; }
+  try {
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+    AUD.ctx = new C(); AUD.mus = AUD.ctx.createGain(); AUD.sfx = AUD.ctx.createGain();
+    AUD.mus.connect(AUD.ctx.destination); AUD.sfx.connect(AUD.ctx.destination); applyVolumes();
+    if (AUD.want) musicStart(AUD.want);
+  } catch (e) {}
+}
+['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, audioInit));
+function tone(f, d, o = {}) {
+  const c = AUD.ctx; if (!c) return;
+  const t = c.currentTime + (o.at || 0), os = c.createOscillator(), g = c.createGain();
+  os.type = o.type || 'square'; os.frequency.setValueAtTime(f, t); if (o.to) os.frequency.exponentialRampToValueAtTime(o.to, t + d);
+  const v = o.vol ?? .2; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(v, t + .012); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+  os.connect(g); g.connect(o.dest || AUD.sfx); os.start(t); os.stop(t + d + .03);
+}
+function noise(d, vol = .15, at = 0, dest) {
+  const c = AUD.ctx; if (!c) return;
+  const n = Math.floor(c.sampleRate * d), buf = c.createBuffer(1, n, c.sampleRate), data = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / n);
+  const src = c.createBufferSource(), g = c.createGain(), t = c.currentTime + at; src.buffer = buf; g.gain.value = vol; src.connect(g); g.connect(dest || AUD.sfx); src.start(t);
+}
+const SFX_GAP = {shoot:.09, pop:.05, leak:.25, click:.04};
+const SFX = {
+  click: () => tone(660, .05, {type:'triangle', vol:.14}),
+  place: () => { tone(300, .08, {vol:.16}); tone(450, .12, {at:.07, vol:.16}); },
+  shoot: () => tone(480 + Math.random() * 120, .06, {vol:.05, to:260}),
+  pop: () => { noise(.09, .12); tone(240, .1, {type:'triangle', to:90, vol:.12}); },
+  bossdown: () => { noise(.3, .2); tone(200, .35, {type:'sawtooth', to:50, vol:.2}); tone(400, .3, {at:.1, to:100, vol:.12}); },
+  wave: () => [392, 494, 587].forEach((f, i) => tone(f, .12, {at:i * .09, vol:.16, type:'triangle'})),
+  clear: () => [523, 659, 784].forEach((f, i) => tone(f, .16, {at:i * .1, vol:.16, type:'triangle'})),
+  leak: () => tone(180, .28, {type:'sawtooth', to:80, vol:.16}),
+  upgrade: () => [440, 587, 784].forEach((f, i) => tone(f, .1, {at:i * .07, vol:.15, type:'triangle'})),
+  join: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, .16, {at:i * .09, vol:.14, type:'triangle'})),
+  evolve: () => { tone(300, .9, {to:900, vol:.14, type:'triangle'}); [784, 988, 1175].forEach((f, i) => tone(f, .3, {at:.9 + i * .12, vol:.14})); },
+  victory: () => [523, 659, 784, 659, 784, 1047].forEach((f, i) => tone(f, .2, {at:i * .13, vol:.16, type:'triangle'})),
+  defeat: () => [392, 349, 311, 262].forEach((f, i) => tone(f, .3, {at:i * .2, vol:.16, type:'sawtooth'}))
+};
+function sfx(name) {
+  if (!AUD.ctx || SETTINGS.sfxMute || SETTINGS.sfx <= 0 || !SFX[name]) return;
+  const now = performance.now(), gap = (SFX_GAP[name] || 0) * 1000; if (AUD.last[name] && now - AUD.last[name] < gap) return;
+  AUD.last[name] = now; try { SFX[name](); } catch (e) {}
+}
+// Original music, written for this game (not from any game). Every track is 8 bars of 8th notes: a lead melody (phrases A A B A), an arpeggio, a bass and light drums.
+// Melodies are scale degrees (0 = the root, 7 = one octave up, negative = below); R = rest, T = hold the note. Chords are the scale degree of each bar's root.
+const R = null, T = 't';
+const MODES = {major:[0,2,4,5,7,9,11], minor:[0,2,3,5,7,8,10], dorian:[0,2,3,5,7,9,10], phrygian:[0,1,3,5,7,8,10], lydian:[0,2,4,6,7,9,11], mixo:[0,2,4,5,7,9,10]};
+const TRACKS = {
+  menu:    {bpm:92,  root:60, mode:'major',    drums:0, lead:'triangle', chords:[0,4,5,3, 0,4,3,4],
+            A:[4,T,2,4, 7,T,4,R, 5,T,4,2, 1,T,T,R], B:[2,4,5,7, 9,T,7,5, 4,T,2,4, 0,T,T,R]},
+  forest:  {bpm:116, root:62, mode:'major',    drums:1, lead:'square',   chords:[0,4,5,3, 0,4,3,4],
+            A:[4,T,2,4, 7,T,4,R, 5,T,4,2, 3,T,T,R], B:[2,4,5,7, 9,T,7,5, 4,T,2,4, 0,T,T,R]},
+  cave:    {bpm:98,  root:57, mode:'minor',    drums:1, lead:'square',   chords:[0,5,3,4, 0,5,4,0],
+            A:[0,T,2,R, 4,T,2,0, 3,T,2,R, 1,T,T,R], B:[4,T,5,4, 2,T,0,R, 3,2,1,2, 0,T,T,R]},
+  dark:    {bpm:90,  root:52, mode:'phrygian', drums:1, lead:'square',   chords:[0,1,0,3, 0,1,6,0],
+            A:[4,R,4,3, 1,T,0,R, 4,R,4,5, 3,T,1,R], B:[0,1,0,R, 3,4,3,1, 0,T,1,0, R,R,0,R]},
+  mountain:{bpm:108, root:55, mode:'dorian',   drums:2, lead:'square',   chords:[0,0,3,4, 0,5,3,4],
+            A:[0,2,4,2, 5,T,4,R, 3,5,7,5, 4,T,2,R], B:[7,T,5,4, 2,4,5,T, 3,T,2,0, 1,T,T,R]},
+  thunder: {bpm:138, root:59, mode:'minor',    drums:2, lead:'square',   chords:[0,0,5,4, 0,3,5,4],
+            A:[0,2,0,4, 2,0,-1,0, 5,4,2,4, 5,T,4,R], B:[7,6,4,2, 4,2,0,2, 3,4,5,4, 2,T,0,R]},
+  fire:    {bpm:124, root:57, mode:'phrygian', drums:2, lead:'square',   chords:[0,0,1,0, 0,3,1,0],
+            A:[4,T,3,4, 5,4,3,1, 4,T,3,4, 7,T,5,R], B:[0,1,3,4, 5,T,4,3, 1,3,1,0, R,0,1,R]},
+  ice:     {bpm:84,  root:64, mode:'lydian',   drums:0, lead:'triangle', chords:[0,4,5,1, 0,4,1,0],
+            A:[2,T,4,T, 6,T,4,R, 5,T,4,2, 4,T,T,R], B:[7,T,6,4, 2,T,4,R, 5,4,2,1, 0,T,T,R]},
+  magma:   {bpm:130, root:50, mode:'minor',    drums:2, lead:'square',   chords:[0,0,5,5, 3,3,4,4],
+            A:[0,T,0,2, 3,T,2,0, 5,T,4,2, 3,T,T,R], B:[4,5,7,5, 4,2,0,2, 3,2,0,-1, 0,T,T,R]},
+  sky:     {bpm:104, root:65, mode:'mixo',     drums:1, lead:'triangle', chords:[0,4,5,2, 3,0,4,0],
+            A:[0,2,4,7, 9,T,7,4, 5,7,9,7, 4,T,2,R], B:[7,9,11,9, 7,T,4,R, 5,4,2,4, 0,T,T,R]},
+  boss:    {bpm:152, root:55, mode:'minor',    drums:2, lead:'square',   chords:[0,0,5,6, 0,0,3,4],
+            A:[0,0,7,0, 6,0,5,0, 4,4,7,4, 3,T,2,R], B:[7,6,7,9, 7,6,4,2, 3,4,5,4, 2,T,0,R]},
+  bossB:   {bpm:144, root:52, mode:'phrygian', drums:2, lead:'square',   chords:[0,1,0,6, 0,1,3,4],
+            A:[4,4,3,4, 7,4,3,1, 4,4,3,4, 5,T,3,R], B:[0,1,3,4, 5,4,3,1, 0,0,1,0, R,3,1,R]}
+};
+// which track each dungeon (0-based) plays; the peaks, grottos and the last dungeon of each arc are boss tracks
+// Real recorded loops (CC0 music from OpenGameArt, see README credits) are loaded one at a time from music/; the generated tracks above play if a file cannot be loaded.
+const MUSIC_FILE = {adventure:'music/adventure.mp3', battles:'music/battles.mp3', bossfairy:'music/bossfairy.mp3', jazz:'music/jazz.mp3', song:'music/song.mp3', boss:'music/boss.mp3', village:'music/village.mp3', stooge:'music/stooge.mp3'};
+const MUSIC_FALLBACK = {adventure:'forest', battles:'mountain', bossfairy:'boss', jazz:'thunder', song:'cave', boss:'bossB', village:'dark', stooge:'sky'};
+// which music each dungeon (0-based) plays: the peaks and summits with a boss play the boss theme, Great Canyon, Magma Cavern and Sky Tower the Stooge theme
+const DUNGEON_THEME = ['battles','village','jazz','stooge','song','adventure','boss','stooge','village','song','boss','battles','bossfairy','jazz','boss','village','stooge','boss','adventure','bossfairy'];
+const musBuf = {};
+function loadMusic(name) {
+  return musBuf[name] || (musBuf[name] = fetch(MUSIC_FILE[name]).then(r => { if (!r.ok) throw new Error('music'); return r.arrayBuffer(); }).then(b => new Promise((ok, bad) => AUD.ctx.decodeAudioData(b, ok, bad))));
+}
+function musicStop() {
+  clearInterval(AUD.timer);
+  if (AUD.src) { const s = AUD.src, g = AUD.srcGain, now = AUD.ctx.currentTime; AUD.src = null; try { g.gain.setTargetAtTime(0, now, .12); s.stop(now + .7); } catch (e) {} }
+}
+function musicStart(name) {
+  if (!TRACKS[name] && !MUSIC_FILE[name]) name = 'adventure';
+  AUD.want = name; if (!AUD.ctx || AUD.track === name) return;
+  musicStop(); AUD.track = name;
+  if (MUSIC_FILE[name]) {
+    loadMusic(name).then(buf => {
+      if (AUD.track !== name) return;
+      const c = AUD.ctx, s = c.createBufferSource(), g = c.createGain(); s.buffer = buf; s.loop = true;
+      g.gain.value = 0; g.gain.setTargetAtTime(1, c.currentTime, .2); s.connect(g); g.connect(AUD.mus); s.start(); AUD.src = s; AUD.srcGain = g;
+    }).catch(() => { delete musBuf[name]; if (AUD.track === name) { AUD.track = null; musicStart(MUSIC_FALLBACK[name] || 'forest'); } });
+    return;
+  }
+  AUD.step = 0; AUD.next = AUD.ctx.currentTime + .1; AUD.timer = setInterval(musicTick, 100);
+}
+function degMidi(tr, d) { const m = MODES[tr.mode]; return tr.root + m[((d % 7) + 7) % 7] + 12 * Math.floor(d / 7); }
+function musicTick() {
+  const c = AUD.ctx, tr = TRACKS[AUD.track]; if (!c || !tr) return;
+  const d = 60 / tr.bpm / 2, dest = AUD.mus;
+  while (AUD.next < c.currentTime + .45) {
+    const s = AUD.step % 64, bar = s >> 3, i = s & 7, ph = bar >> 1, line = (ph === 2 ? tr.B : tr.A), n = line[((bar & 1) << 3) + i], at = Math.max(0, AUD.next - c.currentTime);
+    const chord = tr.chords[bar];
+    // lead: a note lasts until the next one starts (T holds it)
+    if (n !== R && n !== T) {
+      let len = 1; const base = (bar & 1) << 3;
+      for (let k = i + 1; k < 8 && line[base + k] === T; k++) len++;
+      tone(mf(degMidi(tr, n + 7)), d * (len - .15), {type:tr.lead, vol:tr.lead === 'triangle' ? .2 : .085, at, dest});
+    }
+    // arpeggio on the chord notes, quiet
+    if (tr.drums > 0 || i % 2 === 0) tone(mf(degMidi(tr, chord + [0, 2, 4, 2][i & 3] + 7)), d * .7, {type:'triangle', vol:.07, at, dest});
+    // bass on beats 1 and 3
+    if (i === 0 || i === 4) tone(mf(degMidi(tr, chord - 7) - 12 + 12), d * 3.6, {type:'triangle', vol:.26, at, dest});
+    // drums: hat on the off-beats, kick on 1 and 3, snare on 3 (full kit only)
+    if (tr.drums >= 1 && i % 2 === 1) noise(.03, .035, at, dest);
+    if (tr.drums >= 2) {
+      if (i === 0 || i === 4 || (tr.bpm > 125 && i === 6)) tone(130, .12, {type:'sine', to:45, vol:.3, at, dest});
+      if (i === 2 || i === 6) noise(.07, .07, at, dest);
+    }
+    AUD.next += d; AUD.step++;
+  }
+}
+document.addEventListener('click', ev => { if (ev.target.closest && ev.target.closest('button')) sfx('click'); });
+// ---------- Languages ----------
+// The game's own text is English. A language pack (packs/i18n-xx.js) holds exact phrases, patterns for phrases with numbers or names, and the names of Pokémon, types and moves.
+// Text is translated where it is drawn: every text node (and title/aria-label) in the page goes through trText, so no other code has to change.
+const LANGS = [['en', 'English'], ['es', 'Español'], ['fr', 'Français'], ['de', 'Deutsch'], ['it', 'Italiano']];
+let LANG = 'en';
+const L10N = {};
+const COLLECT = /[?&]i18n=collect/.test(location.search), SEEN = new Map();
+window.__seen = SEEN;
+window.ppdLang = (code, data) => {
+  const D = {p:data.p || {}, r:(data.r || []).map(([re, tpl]) => [new RegExp(re, 'u'), tpl]), n:data.n || {}, h:data.h || {}, hr:(data.hr || []).map(([re, tpl]) => [new RegExp(re, 'u'), tpl])};
+  const keys = Object.keys(D.n).sort((x, y) => y.length - x.length);
+  D.nameRe = keys.length ? new RegExp('(^|[^\\p{L}\\p{N}])(' + keys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')(?=$|[^\\p{L}\\p{N}])', 'gu') : null;
+  D.cache = new Map(); L10N[code] = D;
+  if (code === LANG) applyLang();
+};
+function trText(src) {
+  if (LANG === 'en' || typeof src !== 'string') return src;
+  const D = L10N[LANG]; if (!D) return src;
+  const m = src.match(/^(\s*)([\s\S]*?)(\s*)$/), core = m[2]; if (!core) return src;
+  let out = D.cache.get(core);
+  if (out === undefined) {
+    out = D.p[core];
+    if (out === undefined) {
+      for (const [re, tpl] of D.r) { const mm = core.match(re); if (mm) { out = tpl.replace(/\$(L?)(\d)/g, (_, l, i) => l ? trList(mm[+i] ?? '') : trText(mm[+i] ?? '')); break; } }
+    }
+    if (out === undefined) out = D.nameRe ? core.replace(D.nameRe, (_, pre, name) => pre + (D.n[name] || name)) : core;
+    D.cache.set(core, out);
+  }
+  return m[1] + out + m[3];
+}
+function trList(str) { const D = L10N[LANG], or = (D && D.p.or) || 'or'; return str.split(/(, | or )/).map(x => x === ', ' ? x : x === ' or ' ? ' ' + or + ' ' : trText(x)).join(''); }
+const SKIP_TR = 'script,style,canvas,.story-body,.debug,[data-notr],input,textarea,select';
+function trNode(n) {
+  const par = n.parentElement; if (!par || par.closest(SKIP_TR) || par.closest('[data-tr-done]')) return;
+  const prev = n.__i; if (prev && n.nodeValue === prev.out) { const o = trText(prev.src); if (o !== prev.out) { prev.out = o; n.nodeValue = o; } return; }
+  const src = n.nodeValue; if (!/[A-Za-z]/.test(src)) return;
+  if (COLLECT) SEEN.set(src.trim(), (SEEN.get(src.trim()) || 0) + 1);
+  const out = trText(src); n.__i = {src, out}; if (out !== src) n.nodeValue = out;
+}
+const TR_ATTRS = ['title', 'aria-label', 'placeholder'];
+function trAttrs(el) {
+  if (!el.getAttribute || el.closest(SKIP_TR)) return;
+  for (const a of TR_ATTRS) {
+    const v = el.getAttribute(a); if (!v) continue;
+    const st = el.__a || (el.__a = {}), prev = st[a];
+    if (prev && v === prev.out) { const o = trText(prev.src); if (o !== v) { prev.out = o; el.setAttribute(a, o); } continue; }
+    if (COLLECT) SEEN.set(v.trim(), (SEEN.get(v.trim()) || 0) + 1);
+    const out = trText(v); st[a] = {src:v, out}; if (out !== v) el.setAttribute(a, out);
+  }
+}
+// A paragraph with inline tags (<b>, <span>) is translated as a whole when the pack has it, so word order can change: the key is its innerHTML
+function trHtml(el) {
+  if (el.hasAttribute('data-tr-done')) { const h = el.__h; if (h && LANG !== 'en' && el.innerHTML === h.out) { const o = htmlOut(h.src); if (o !== h.out) { h.out = o; el.innerHTML = o; } return true; } if (h && el.innerHTML === h.out) el.innerHTML = h.src; el.removeAttribute('data-tr-done'); el.__h = null; }
+  if (LANG === 'en') return false;
+  const D = L10N[LANG]; if (!D) return false;
+  const html = el.innerHTML; if (html.length > 700 || html.indexOf('<') < 0) return false;
+  const o = htmlOut(html); if (o === null || o === html) return false;
+  el.__h = {src:html, out:o}; el.setAttribute('data-tr-done', ''); el.innerHTML = o; return true;
+}
+function htmlOut(html) {
+  const D = L10N[LANG], key = html.trim(); if (D.h[key] !== undefined) return D.h[key];
+  for (const [re, tpl] of D.hr) { const m = key.match(re); if (m) return tpl.replace(/\$(L?)(\d)/g, (_, l, i) => l ? trList(m[+i] ?? '') : trText(m[+i] ?? '')); }
+  return null;
+}
+function trTree(root) {
+  if (!root) return;
+  if (root.nodeType === 3) return trNode(root);
+  if (root.nodeType !== 1) return;
+  if (root.closest(SKIP_TR) || root.closest('[data-tr-done]') && !root.hasAttribute('data-tr-done')) return;
+  trAttrs(root);
+  if ((root.children.length || root.hasAttribute('data-tr-done')) && trHtml(root)) return;
+  for (let c = root.firstChild; c; c = c.nextSibling) { if (c.nodeType === 3) trNode(c); else if (c.nodeType === 1) trTreeIn(c); }
+}
+function trTreeIn(el) {   // below a root that was already checked
+  if (el.matches(SKIP_TR)) return;
+  trAttrs(el);
+  if ((el.children.length || el.hasAttribute('data-tr-done')) && trHtml(el)) return;
+  for (let c = el.firstChild; c; c = c.nextSibling) { if (c.nodeType === 3) trNode(c); else if (c.nodeType === 1) trTreeIn(c); }
+}
+let trBusy = false;
+new MutationObserver(list => {
+  if (trBusy) return; trBusy = true;
+  try { for (const m of list) { if (m.type === 'childList') m.addedNodes.forEach(trTree); else if (m.type === 'characterData') trNode(m.target); else if (m.type === 'attributes') trAttrs(m.target); } } finally { trBusy = false; }
+}).observe(document.documentElement, {subtree:true, childList:true, characterData:true, attributes:true, attributeFilter:TR_ATTRS});
+function applyLang() { document.documentElement.lang = LANG; trBusy = true; try { trTree(document.body); } finally { trBusy = false; } }
+function setLang(code, done) {
+  const go = () => { LANG = code; SETTINGS.lang = code; saveSettings(); applyLang(); if (done) done(); };
+  if (code === 'en' || L10N[code]) return go();
+  const sc = document.createElement('script'); sc.src = 'packs/i18n-' + code + '.js'; sc.onload = () => { sc.remove(); go(); }; sc.onerror = () => { sc.remove(); if (done) done(); };
+  document.head.appendChild(sc);
+}
+// the first time, follow the browser's language when we have it
+if (!SETTINGS.lang) { const b = (navigator.language || 'en').slice(0, 2).toLowerCase(); SETTINGS.lang = LANGS.some(l => l[0] === b) ? b : 'en'; }
+setTimeout(() => { if (SETTINGS.lang !== 'en') setLang(SETTINGS.lang); }, 0);
+
+// ---------- Settings window: language, then music and sound effects each with an Enabled box and a Volume slider ----------
+let langOpen = false;
+function renderSettings() {
+  const chk = (id, on) => `<button class="chk ${on ? 'on' : ''}" id="${id}" role="switch" aria-checked="${on}" aria-label="Enabled"></button>`;
+  const audio = (id, label, key, mkey) => `<div class="setsec">${label}</div>
+    <div class="setrow click" id="row_${id}"><span>Enabled</span>${chk('chk_' + id, !SETTINGS[mkey])}</div>
+    <div class="setrow ${SETTINGS[mkey] ? 'dim' : ''}"><span>Volume</span><input type="range" id="vol_${id}" min="0" max="100" step="1" value="${Math.round(SETTINGS[key] * 100)}" aria-label="Volume"></div>`;
+  $('setBody').innerHTML = `<div class="sethead"><span>Settings</span><button class="setx" id="setClose" aria-label="Close">✕<kbd>ESC</kbd></button></div>
+    <div class="setbody"><div class="setsec">Language</div>
+    <div class="setrow click langsel ${langOpen ? 'open' : ''}" id="langBtn" role="button" aria-haspopup="listbox" aria-expanded="${langOpen}"><span data-notr>${(LANGS.find(l => l[0] === (SETTINGS.lang || 'en')) || LANGS[0])[1]}</span><span class="caret" aria-hidden="true">▾</span></div>
+    ${langOpen ? `<div class="langlist" role="listbox">${LANGS.map(([c, nm]) => `<div class="setrow click opt ${(SETTINGS.lang || 'en') === c ? 'cur' : ''}" role="option" data-lang="${c}" aria-selected="${(SETTINGS.lang || 'en') === c}"><span data-notr>${nm}</span></div>`).join('')}</div>` : ''}
+    ${audio('music', 'Music', 'music', 'musicMute')}${audio('sfx', 'Sound effects', 'sfx', 'sfxMute')}</div>
+    <div class="setfoot"><button id="setHow">How to play</button></div>`;
+  [['music', 'music', 'musicMute'], ['sfx', 'sfx', 'sfxMute']].forEach(([id, key, mkey]) => {
+    const toggle = () => { audioInit(); SETTINGS[mkey] = !SETTINGS[mkey]; if (!SETTINGS[mkey] && SETTINGS[key] <= 0) SETTINGS[key] = .5; saveSettings(); applyVolumes(); renderSettings(); if (id === 'sfx') sfx('click'); };
+    $('row_' + id).onclick = ev => { if (ev.target.id !== 'chk_' + id) toggle(); }; $('chk_' + id).onclick = toggle;
+    $('vol_' + id).oninput = ev => { audioInit(); SETTINGS[key] = +ev.target.value / 100; if (SETTINGS[key] > 0 && SETTINGS[mkey]) { SETTINGS[mkey] = false; $('chk_' + id).classList.add('on'); $('chk_' + id).setAttribute('aria-checked', 'true'); ev.target.closest('.setrow').classList.remove('dim'); } saveSettings(); applyVolumes(); };
+    $('vol_' + id).onchange = () => { if (id === 'sfx') sfx('place'); };
+  });
+  $('langBtn').onclick = () => { langOpen = !langOpen; renderSettings(); };
+  $('setBody').querySelectorAll('[data-lang]').forEach(r => r.onclick = () => { langOpen = false; setLang(r.dataset.lang, () => { renderSettings(); if (typeof refreshLangUi === 'function') refreshLangUi(); }); });
+  $('setClose').onclick = closeSettings; $('setHow').onclick = () => { closeSettings(); openTut(); };
+}
+function openSettings() { audioInit(); setOpen = true; $('setModal').hidden = false; renderSettings(); }
+function closeSettings() { setOpen = false; langOpen = false; $('setModal').hidden = true; }
+// the game text built from English sources is redone in the new language
+function refreshLangUi() { try { buildShop(); refreshAll(); if (inMenu) { buildMenu(); buildAreas(); } if (!$('teamModal').hidden) renderTeam(); } catch (e) {} }
+$('setBtn').onclick = openSettings;
+$('setModal').onclick = ev => { if (ev.target.id === 'setModal') closeSettings(); };
+document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && setOpen) closeSettings(); });
+
+// ---------- Tutorial: an offer on the first visit to Tiny Woods, then three animated slides with the player's own Pokémon ----------
+const TUT_KEY = 'ppdTut';
+let tutSeen = false, tutOpen = false, tutPage = 0, tutRaf = 0;
+try { tutSeen = localStorage.getItem(TUT_KEY) === '1'; } catch (e) {}
+function tutDone() { tutSeen = true; try { localStorage.setItem(TUT_KEY, '1'); } catch (e) {} }
+function closeTut() { cancelAnimationFrame(tutRaf); tutOpen = false; $('tutModal').hidden = true; tutDone(); }
+const ease = x => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2, lerp = (a, b, x) => a + (b - a) * Math.max(0, Math.min(1, x)), seg = (p, a, b) => Math.max(0, Math.min(1, (p - a) / (b - a)));
+const tutMons = () => team.members.slice(0, 5).map(k => memberInfo(k));
+const tutPic = n => `<img src="${dexPortrait(n)}" alt="">`;
+function offerTut() {
+  if (tutSeen || !team.partner || !LINES[team.partner]) return;
+  const pn = starterName(team.partner), L = LINES[team.partner];
+  tutOpen = true; $('tutModal').hidden = false;
+  $('tutBody').innerHTML = `<div class="talk"><span class="orb" style="background:${TYPE_COLORS[L.type]}"><img src="${dexPortrait(L.stages[0].dex)}" alt="" style="width:100%;height:100%;border-radius:50%;image-rendering:pixelated"></span><div>
+    <h2>${pn}</h2><p>This is our first dungeon! Do you want a quick tutorial on how to play?</p>
+    <div class="confirmbtns" style="justify-content:flex-start"><button class="primary" id="tutYes">Show me</button><button id="tutNo">No thanks</button></div></div></div>`;
+  $('tutYes').onclick = () => openTut();
+  $('tutNo').onclick = closeTut;
+}
+function openTut() {
+  tutOpen = true; tutPage = 0; $('tutModal').hidden = false; ensure(['portraits']).then(() => { if (!$('tutModal').hidden) showTut(); }); showTut();
+}
+function tutSlides() {
+  const mons = tutMons(), hero = mons[0] || {dex:4}, wildDex = DUNGEONS[0].mons[0];
+  const icons = mons.map((m, i) => `<span class="ttok" data-q="t${i}" title="${m.name}">${tutPic(m.dex)}</span>`).join('');
+  const atk = upCost({key:team.hero, legendary:false, stage:0, up:{range:0, atk:0}}, 'atk'), rng = upCost({key:team.hero, legendary:false, stage:0, up:{range:0, atk:0}}, 'range');
+  return [
+    {title:'Place your Pokémon', text:'Tap a Pokémon in your team, then tap the grass beside the path. Pokémon stand on the grass, never on the path.', len:5200,
+     html:`<div class="tpath"></div><div class="ttok" data-q="ghost" style="opacity:0">${tutPic(hero.dex)}</div><div class="tring" data-q="ring"></div><div class="tbox">${icons}<span>Your team</span></div><div class="thand" data-q="hand">👆</div>`,
+     tick(p, q, W) {
+       const ic = q('t0'), sr = q('scene').getBoundingClientRect(), r = ic.getBoundingClientRect(), x0 = r.left - sr.left, y0 = r.top - sr.top, tx = W * .55, ty = 28;
+       const m = ease(seg(p, .2, .58)), x = lerp(x0, tx, m), y = lerp(y0, ty, m);
+       q('hand').style.left = (x + 14) + 'px'; q('hand').style.top = (y + 22 + (p > .58 && p < .66 ? 5 : 0) + (p < .2 ? (p > .1 && p < .16 ? 5 : 0) : 0)) + 'px'; q('hand').style.opacity = p > .9 ? 1 - seg(p, .9, 1) : 1;
+       ic.style.transform = p < .2 ? `scale(${1 + .15 * Math.sin(p * 40)})` : 'none';
+       const g = q('ghost'); g.style.left = x + 'px'; g.style.top = y + 'px'; g.style.opacity = p < .2 ? 0 : p < .58 ? .75 : 1;
+       const rg = q('ring'), a = seg(p, .58, .78); rg.style.left = (tx - 8) + 'px'; rg.style.top = (ty - 8) + 'px'; rg.style.opacity = a > 0 && a < 1 ? 1 - a : 0; rg.style.transform = `scale(${.6 + a})`;
+     }},
+    {title:'Range and attack', text:'The dashed circle is its range. Wild Pokémon walk the path, and your Pokémon attack the ones inside the circle.', len:6000,
+     html:`<div class="tpath"></div><div class="trng" data-q="rng"></div><div class="ttok" data-q="tower">${tutPic(hero.dex)}</div><div class="ttok" data-q="wild" style="width:34px;height:34px;top:101px">${tutPic(wildDex)}</div><svg data-q="line" style="position:absolute;left:0;top:0;width:100%;height:100%;z-index:5;pointer-events:none"><line stroke="#ff6b3a" stroke-width="5" stroke-linecap="round"/></svg><span class="ttag" style="left:12px;top:10px">Range</span><span class="ttag" style="right:12px;top:10px">Attack</span>`,
+     tick(p, q, W) {
+       const cx = W * .5, d = 190, tw = q('tower'); tw.style.left = (cx - 20) + 'px'; tw.style.top = '26px';
+       const rg = q('rng'), grow = ease(seg(p, 0, .15)); rg.style.width = rg.style.height = d + 'px'; rg.style.left = (cx - d / 2) + 'px'; rg.style.top = (46 - d / 2) + 'px'; rg.style.transform = `scale(${grow})`; rg.style.opacity = grow;
+       const wx = lerp(-40, W + 40, seg(p, .1, 1)), w = q('wild'), faint = seg(p, .62, .72); w.style.left = (wx - 17) + 'px'; w.style.opacity = 1 - faint; w.style.transform = `scale(${1 + faint * .8})`;
+       const inside = Math.abs(wx - cx) < d / 2 - 8, hit = inside && p > .4 && p < .64 && Math.floor(p * 40) % 2 === 0;
+       const ln = q('line').firstElementChild; ln.setAttribute('x1', cx); ln.setAttribute('y1', 46); ln.setAttribute('x2', wx); ln.setAttribute('y2', 112); ln.style.opacity = hit ? 1 : 0;
+     }},
+    {title:'Start the wave and upgrade', text:`Press Start wave when your Pokémon are placed. Tap a placed Pokémon to upgrade its Attack (₽${atk}) or Range (₽${rng}) with the money you earn.`, len:6200,
+     html:`<div class="tpath"></div><div class="tstart" data-q="start">Start wave 1</div><div class="ttok" data-q="tower">${tutPic(hero.dex)}</div><div class="tcard" data-q="card" style="opacity:0"><b>${hero.name}</b><div data-q="ua"><span>Attack</span><span>₽${atk}</span></div><div data-q="ur"><span>Range</span><span>₽${rng}</span></div></div><div class="thand" data-q="hand">👆</div>`,
+     tick(p, q, W) {
+       const sb = q('start'), s = p < .3 ? 1 + .08 * Math.sin(p * 60) : 1; sb.style.transform = `scale(${s})`; sb.style.boxShadow = p < .3 ? '0 0 14px rgba(255,210,63,.9)' : 'none';
+       const tx = W * .55, ty = 120; const tw = q('tower'); tw.style.left = tx + 'px'; tw.style.top = '40px';
+       const h = q('hand'); let hx, hy;
+       if (p < .3) { hx = 84; hy = 38 + (p > .18 ? 5 : 0); } else if (p < .5) { const m = ease(seg(p, .3, .45)); hx = lerp(84, tx + 16, m); hy = lerp(38, 62, m); } else { hx = tx + 16; hy = 62; }
+       h.style.left = hx + 'px'; h.style.top = hy + 'px';
+       const c = q('card'); c.style.left = (tx + 52) + 'px'; c.style.top = '8px'; c.style.opacity = seg(p, .5, .58);
+       const a = Math.floor(p * 8) % 2; q('ua').style.background = p > .6 && a ? '#4a5cc0' : '#2a3262'; q('ur').style.background = p > .6 && !a ? '#4a5cc0' : '#2a3262';
+     }}
+  ];
+}
+function showTut() {
+  cancelAnimationFrame(tutRaf);
+  const sl = tutSlides(), last = tutPage >= sl.length - 1, cur = sl[tutPage];
+  $('tutBody').innerHTML = `<h2>${cur.title}</h2><p>${cur.text}</p><div class="tscene" id="tutScene" data-q="scene">${cur.html}</div>
+    <div class="tfoot"><button id="tutSkip">${last ? 'Close' : 'Skip'}</button><div class="tdots">${sl.map((_, i) => `<i class="${i === tutPage ? 'on' : ''}"></i>`).join('')}</div><span>${tutPage > 0 ? '<button id="tutBack">Back</button> ' : ''}<button class="primary" id="tutNext">${last ? 'Let\'s play!' : 'Next'}</button></span></div>`;
+  $('tutSkip').onclick = closeTut;
+  if ($('tutBack')) $('tutBack').onclick = () => { tutPage--; showTut(); };
+  $('tutNext').onclick = () => { if (last) closeTut(); else { tutPage++; showTut(); } };
+  const scene = $('tutScene'), q = name => name === 'scene' ? scene : scene.querySelector(`[data-q="${name}"]`);
+  const t0 = performance.now();
+  const loop = now => { if ($('tutModal').hidden) return; const W = scene.clientWidth, p = ((now - t0) % cur.len) / cur.len; try { cur.tick(p, q, W); } catch (e) {} tutRaf = requestAnimationFrame(loop); };
+  tutRaf = requestAnimationFrame(loop);
+}
+$('tutBtn').onclick = () => openTut();
+$('tutModal').onclick = ev => { if (ev.target.id === 'tutModal') closeTut(); };
+
+// After the whole story has been cleared for the first time, the partner thanks the player and hints at what to do next (shown once, on the start page)
+const END_KEY = 'ppdEnd';
+let endSeen = false, endPage = 0;
+try { endSeen = localStorage.getItem(END_KEY) === '1'; } catch (e) {}
+const endPages = () => {
+  const pn = starterName(team.partner);
+  return [
+    `<p>We did it! You cleared every dungeon and brought the whole story to its end. Congratulations, and thank you so much for playing <b>Poké Pop Defense</b>!</p>`,
+    `<p>But this is not the end. <b>More content is coming soon</b>, so keep your team ready.</p>`,
+    `<p>Until then, why not go back into the dungeons and <b>recruit more Pokémon</b>? Every friend area has more friends waiting for you, and now you can evolve the ones you already have.</p>`,
+    `<p>Something has changed in the legendary dungeons. <b>The legendary birds can be recruited now!</b> Zapdos, Moltres and Articuno may ask to join you if you beat them again.</p>`,
+    `<p>And keep your eyes open on every wave... I heard rumours of a tiny <b class="hintpink">pink</b> Pokémon that loves to play hide-and-seek, and of something much, much stronger that was <b class="hintpurple">made in a lab</b>. They say both are <b>roaming the dungeons</b> right now. Who knows when they will show up?</p>`
+  ];
+};
+function showEnd() {
+  if (!team.partner || !LINES[team.partner]) return;
+  const pages = endPages(), last = endPage >= pages.length - 1, pn = starterName(team.partner);
+  $('endBody').innerHTML = `<div class="talk"><span class="orb" style="background:${TYPE_COLORS[LINES[team.partner].type]}"><img src="${dexPortrait(LINES[team.partner].stages[0].dex)}" alt="" style="width:100%;height:100%;border-radius:50%;image-rendering:pixelated"></span><div>
+    <h2>${pn}</h2>${pages[endPage]}
+    <button class="primary" id="endOk">${last ? 'Let\'s go!' : 'Next'}</button></div></div>`;
+  $('endModal').hidden = false;
+  $('endOk').onclick = () => {
+    if (!last) { endPage++; showEnd(); return; }
+    endPage = 0; endSeen = true; $('endModal').hidden = true;
+    try { localStorage.setItem(END_KEY, '1'); } catch (e) {}
+  };
+}
 const WIG_KEY = 'ppdWig';
 let wigSeen = false;
 try { wigSeen = localStorage.getItem(WIG_KEY) === '1'; } catch (e) {}
@@ -2925,7 +3550,7 @@ const WIG_PAGES = [
 ];
 let wigPage = 0;
 function showWigWelcome() {
-  if (!wigPage) { GIFT_AREAS.forEach(g => boughtAreas.add(g)); wigSeen = true; saveAreas(); prefetchArt(); try { localStorage.setItem(WIG_KEY, '1'); } catch (e) {} hideWigHint(); }
+  if (!wigPage) { GIFT_AREAS.forEach(g => boughtAreas.add(g)); wigSeen = true; updateAreaTab(); saveAreas(); prefetchArt(); try { localStorage.setItem(WIG_KEY, '1'); } catch (e) {} hideWigHint(); }
   const last = wigPage >= WIG_PAGES.length - 1;
   $('areaBody').innerHTML = `<div class="talk"><span class="orb"><img src="${dexPortrait(40)}" alt="" style="width:100%;height:100%;border-radius:50%;image-rendering:pixelated"></span><div>
     <h2>Wigglytuff</h2>${WIG_PAGES[wigPage]}
@@ -2943,8 +3568,13 @@ function showWigHint() {
 }
 function hideWigHint() { $('wigBtn').classList.remove('pulse'); $('wigTip').hidden = true; }
 window.addEventListener('resize', () => { if (!$('wigTip').hidden) showWigHint(); });
+// the Friend Areas tab only appears once the player has been inside Wigglytuff's club; the tent itself only after Mt. Steel
+function updateAreaTab() {
+  $('menuTabs').hidden = !wigSeen;
+  $('wigBtn').classList.toggle('gone', cleared < AREA_EARLY_AT);
+}
 function setMenuTab(tab) {
-  menuTab = tab;
+  menuTab = tab; updateAreaTab();
   $('menuDungeons').hidden = tab !== 'dungeons'; $('menuAreas').hidden = tab !== 'areas';
   $('mtDungeons').setAttribute('aria-selected', tab === 'dungeons'); $('mtAreas').setAttribute('aria-selected', tab === 'areas');
   updateWallet(); if (tab === 'dungeons') buildMenu(); else { ensure(['areaimg-early', 'portraits']); dexSync(); buildAreas(); if (!wigSeen && cleared >= AREA_EARLY_AT) showWigWelcome(); }
@@ -2958,9 +3588,10 @@ $('wigBtn').onclick = () => { if (inMenu) setMenuTab('areas'); };
 // evolution state, so two of the same species evolve separately. Their sprites come from recruits.js, which is loaded once Mt. Steel is cleared.
 const RECRUIT_CHECK = .66;   // chance that a recruit turns up at a check wave (waves 5, 10, 15, 20; the last wave of a short dungeon)
 const BOSS_RECRUIT = .10;    // chance that a dungeon boss asks to join after it faints
+const MINIBOSS_RECRUIT = .25; // chance that the wave 10 mini boss asks to join (wave 10 has no separate recruit walker)
 const RECRUIT_BUFF = 1.25;   // a recruit on the wave has 25% more HP and moves 25% faster than a plain one
 const RECRUIT_JOIN = 1;      // chance that a recruit that was beaten joins
-const TYPE_GLYPH = {Fire:'🔥', Water:'💧', Grass:'🌿', Electric:'⚡', Normal:'⭐', Fighting:'👊', Ground:'🦴', Psychic:'🌀', Dark:'🌙', Bug:'🐛', Poison:'☠️', Rock:'🪨', Ice:'❄️', Steel:'⚙️', Dragon:'🐉'};
+const TYPE_GLYPH = {Fire:'🔥', Water:'💧', Grass:'🌿', Electric:'⚡', Normal:'⭐', Fighting:'👊', Ground:'🦴', Psychic:'🌀', Dark:'🌙', Flying:'🕊️', Bug:'🐛', Poison:'☠️', Rock:'🪨', Ice:'❄️', Steel:'⚙️', Dragon:'🐉'};
 // ---------- Art that downloads when it is needed ----------
 // index.html only carries the geometry of every sheet. The pixels live in packs/*.js and are fetched shortly before the player needs them:
 //   at start-up  the first dungeon and its card pictures (while the personality test is going on)
@@ -3050,17 +3681,17 @@ function registerRecruits() {
     if (!team.owned.includes(r.id)) team.owned.push(r.id);
   }
 }
-// everyone living in an area: the hero and partner in their own areas, Magnemite in the Power Plant, and the recruits placed there
+// everyone living in an area: the hero and partner in their own areas, and the recruits placed there
 function areaMons(a) {
   const out = [];
   for (const k of [team.hero, team.partner]) if (k && a[4].includes(LINES[k].stages[0].dex)) out.push(LINES[k].stages[0].dex);
-  if (a[0] === 'power-plant' && team.allies.includes('magnemite')) out.push(81);
   for (const r of team.recruits) if (r.area === a[0]) out.push(r.dex);
   return out;
 }
 const areaX = a => areaMons(a).length;
 const areaFor = d => FRIEND_AREAS.find(a => areaStatus(a) === 'owned' && a[4].includes(d) && areaX(a) < a[5]);
 const recruitable = d => { const sp = SPECIES[d]; return cleared >= AREA_EARLY_AT && !!sp && !!TYPE_STYLE[sp[0]] && spriteReady(d) && !!areaFor(d); };
+const miniBossWave = () => finalWave() >= FINAL_WAVE && S.wave === 10;   // on wave 10 the mini boss is the recruit candidate, so no second Pokémon walks in
 function recruitWave() { const n = finalWave(); return n >= 20 ? S.wave % 5 === 0 : S.wave === n; }
 // at a check wave: maybe one recruitable Pokémon from this dungeon's wild list (and an owned friend area with room) walks the path
 // a species that is already evolved (the later stage of a line) is much rarer than its base form
@@ -3072,15 +3703,18 @@ function preDepth(d) {
 }
 const EVOLVED_RECRUIT_WEIGHT = [1, .2, .08];   // base form, middle stage, final stage
 function recruitPick() {
-  if (!recruitWave() || Math.random() >= RECRUIT_CHECK) return null;
-  const list = (DUNGEONS[S.dungeon].mons || []).filter(recruitable);
+  if (!recruitWave() || miniBossWave() || Math.random() >= RECRUIT_CHECK) return null;
+  S.offered = S.offered || new Set();   // species already offered in this run (as a walker or as the wave 10 mini boss): never the same one twice
+  const list = (DUNGEONS[S.dungeon].mons || []).filter(d => recruitable(d) && !S.offered.has(d));
   if (!list.length) return null;
   const w = list.map(d => EVOLVED_RECRUIT_WEIGHT[Math.min(2, preDepth(d))]);
-  let r = Math.random() * w.reduce((a, b) => a + b, 0);
-  for (let i = 0; i < list.length; i++) { r -= w[i]; if (r <= 0) return list[i]; }
-  return list[list.length - 1];
+  let r = Math.random() * w.reduce((a, b) => a + b, 0), pick = list[list.length - 1];
+  for (let i = 0; i < list.length; i++) { r -= w[i]; if (r <= 0) { pick = list[i]; break; } }
+  S.offered.add(pick);
+  return pick;
 }
 function recruitMon(d) {
+  sfx('join');
   const a = areaFor(d); if (!a) return null;
   const id = 'r' + (++team.rid);
   team.recruits.push({id, dex:d, area:a[0]}); team.owned.push(id); LINES[id] = recruitLine(d);
@@ -3101,7 +3735,7 @@ function memberInfo(k) {
 const teamReserve = () => [...team.owned.filter(k => LINES[k]), ...team.allies].filter(k => !team.members.includes(k));
 function teamCard(k, btn) {
   const m = memberInfo(k);
-  return `<div class="tslot"><span class="orb" style="background:${TYPE_COLORS[m.type]}">${portrait(m.dex)}</span><span class="nm">${m.name}</span><span class="role">${m.role}</span>${btn}${inMenu ? evolveHtml(k) : ''}</div>`;
+  return `<div class="tslot"><span class="orb" style="background:${TYPE_COLORS[m.type]}">${portrait(m.dex)}</span><span class="nt"><span class="nm">${m.name}</span><span class="type" style="background:${TYPE_COLORS[m.type]}">${m.type}</span></span><span class="role">${m.role}</span>${btn}${inMenu ? evolveHtml(k) : ''}</div>`;
 }
 // Evolving: only on the home screen, only after the story is cleared, paid in coins. It is permanent.
 function evoOptions(k) {
@@ -3110,8 +3744,8 @@ function evoOptions(k) {
   return L.branches && f.stage === 0 ? L.branches : stagesOf({key:k, branch:f.branch}).slice(f.stage + 1, f.stage + 2);
 }
 function evolveHtml(k) {
-  const opts = evoOptions(k); if (!opts.length) return '';
-  const un = evoUnlocked();
+  const opts = evoOptions(k); if (!opts.length || !evoUnlocked()) return '';   // nothing about evolving is shown until Sky Tower Summit has been cleared
+  const un = true;
   return opts.map((n, i) => `<button class="evoopt" data-evo="${k}" data-i="${i}" ${!un || wallet < evoCoinCost(n) ? 'disabled' : ''}>${un ? `Evolve → ${n.name}<br>🪙 ${evoCoinCost(n)}` : `🔒 Evolves into ${n.name}`}</button>`).join('');
 }
 function evolveMember(k, i) {
@@ -3142,14 +3776,40 @@ function renderTeam() {
     <div class="tgrid">${slots.join('')}</div>
     ${cleared < DUNGEONS.length ? '<p class="teamnote">You and your partner stay on the team until you clear Sky Tower for the first time.</p>' : ''}
     ${!edit ? '<p class="teamnote">You can change your team on the start page.</p>' : ''}
-    ${reserve.length ? `<div class="teamsub">Not on the team</div><div class="tgrid">${reserve.map(k => teamCard(k, edit ? `<button data-add="${k}" ${full ? 'disabled' : ''}>Add</button>` : '')).join('')}</div>` : ''}`;
+    ${relMsg ? `<p class="teamnote relmsg">${relMsg}</p>` : ''}
+    ${reserve.length && edit ? `<div class="teamsub">Not on the team</div><div class="tgrid">${reserve.map(k => teamCard(k, edit ? `<span class="btnrow"><button data-add="${k}" ${full ? 'disabled title="Your team is full: remove someone first"' : ''}>Add</button>${/^r\d+$/.test(k) ? `<button class="rel" data-rel="${k}">Release</button>` : ''}</span>` : '')).join('')}</div>` : ''}`;
   $('teamClose').onclick = closeTeam;
   $('teamBody').querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { team.members = team.members.filter(k => k !== b.dataset.rm); saveTeam(); buildShop(); renderTeam(); });
   $('teamBody').querySelectorAll('[data-evo]').forEach(b => b.onclick = () => evolveMember(b.dataset.evo, +b.dataset.i));
+  $('teamBody').querySelectorAll('[data-rel]').forEach(b => b.onclick = () => askRelease(b.dataset.rel));
   $('teamBody').querySelectorAll('[data-add]').forEach(b => b.onclick = () => { if (team.members.length < TEAM_MAX) { team.members.push(b.dataset.add); saveTeam(); buildShop(); renderTeam(); } });
 }
+// Releasing a recruit sends it away for good. Always asks first.
+const RELEASE_COINS = 85;   // coins paid for each released Pokémon
+let relMsg = '';
+function askRelease(k) {
+  const m = memberInfo(k), box = document.createElement('div');
+  box.className = 'dexmodal'; box.style.zIndex = 70;
+  box.innerHTML = `<div class="dexpanel confirmbox" role="alertdialog" aria-modal="true"><h2>Release ${m.name}?</h2><p>${m.name} will leave your friend area and your team for good. This cannot be undone.</p><p class="muted">You get 🪙 ${RELEASE_COINS} for it.</p><div class="confirmbtns"><button id="relNo">Keep ${m.name}</button><button class="reldo" id="relYes">Release</button></div></div>`;
+  document.body.appendChild(box);
+  const close = () => box.remove();
+  box.querySelector('#relNo').onclick = close;
+  box.onclick = ev => { if (ev.target === box) close(); };
+  box.querySelector('#relYes').onclick = () => { close(); releaseRecruit(k); };
+}
+function releaseRecruit(k) {
+  const r = team.recruits.find(x => x.id === k); if (!r) return;
+  const nm = memberInfo(k).name;   // read before the line is deleted
+  team.recruits = team.recruits.filter(x => x.id !== k);
+  team.owned = team.owned.filter(x => x !== k); team.members = team.members.filter(x => x !== k);
+  delete team.evo[k]; delete LINES[k];
+  if (r.story) { team.released = team.released || []; if (!team.released.includes(r.dex)) team.released.push(r.dex); }   // Magnemite and Absol do not come back by themselves
+  addWallet(RELEASE_COINS); updateWallet();
+  relMsg = `${nm} was released. +🪙 ${RELEASE_COINS}`;
+  saveTeam(); buildShop(); renderTeam();
+}
 function openTeam() { teamOpen = true; $('teamModal').hidden = false; renderTeam(); ensure(['portraits']); }
-function closeTeam() { teamOpen = false; $('teamModal').hidden = true; }
+function closeTeam() { relMsg = ''; teamOpen = false; $('teamModal').hidden = true; }
 $('teamBtn').onclick = openTeam;
 $('teamModal').onclick = ev => { if (ev.target.id === 'teamModal') closeTeam(); };
 
@@ -3173,33 +3833,48 @@ function buildMenu() {
       <span class="dinfo"><span class="dname">????</span></span></button>`;
     }
     return `<button class="dcard ${st}" data-i="${i}">
-      <span class="dimg">${pic ? `<img class="pic${HUD_PICS.has(n) ? ' hud' : ''}" src="${pic}" alt="">` : '<span class="pic noimg"></span>'}<span class="num">${n}</span><span class="state">${label}</span></span>
-      <span class="dinfo"><span class="dname">${D.name}</span><span class="dmeta">${D.waves || FINAL_WAVE} waves${bossName ? ' · Boss: ' + bossName : ''}</span></span></button>`;
+      <span class="dimg">${pic ? `<img class="pic${HUD_PICS.has(n) ? ' hud' : ''}" src="${pic}" alt="">` : '<span class="pic noimg"></span>'}<span class="num">${n}</span><span class="state">${label}</span>${st === 'cleared' ? `<span class="dstars" role="img" aria-label="${bestStars(i)} of 3 stars">${[0, 1, 2].map(k => `<i class="${k < bestStars(i) ? 'on' : ''}">★</i>`).join('')}</span>` : ''}</span>
+      <span class="dinfo"><span class="dname">${D.name}</span><span class="dmeta">${D.waves || FINAL_WAVE} waves${bossName ? ' · Boss: ' + bossName : ''}</span><span class="dtypes"><span class="dlab">Enemy types:</span>${dungeonTypes(D, st === 'cleared').map(t => `<span class="type" style="background:${TYPE_COLORS[t]}">${t}</span>`).join('')}</span></span></button>`;
   }).join('');
   $('dgrid').querySelectorAll('.dcard').forEach(b => b.onclick = () => { if (!b.disabled) startDungeon(+b.dataset.i); });
 }
-function showMenu() { inMenu = true; hideOverlay(); introEl.hidden = true; bgStop(); appEl.classList.remove('in-intro'); appEl.classList.add('in-menu'); menuEl.hidden = false; setMenuTab(menuTab); window.scrollTo(0, 0); showWigHint(); }
+function showMenu() { inMenu = true; hideOverlay(); introEl.hidden = true; bgStop(); appEl.classList.remove('in-intro'); appEl.classList.add('in-menu'); menuEl.hidden = false; setMenuTab(menuTab); window.scrollTo(0, 0); showWigHint(); musicStart('adventure'); if (cleared >= DUNGEONS.length && !endSeen) setTimeout(showEnd, 350); }
 function hideMenu() { hideWigHint(); inMenu = false; appEl.classList.remove('in-menu'); menuEl.hidden = true; }
 function startDungeon(i) {
   menuTab = 'dungeons';
-  withArt([...packsForDungeon(i), ...packsForTeam()], () => { hideMenu(); newGame(); buildShop(); if (i > 0) gotoDungeon(i); S.money = START_MONEY[i]; showDiscovered(); prefetchArt(); });
+  withArt([...packsForDungeon(i), ...packsForTeam()], () => { hideMenu(); newGame(); buildShop(); musicStart(DUNGEON_THEME[i]); if (i > 0) gotoDungeon(i); S.money = START_MONEY[i]; showDiscovered(); prefetchArt(); });
 }
-$('menuBtn').onclick = () => { if (S.waveActive && !confirm('Leave this dungeon? The wave in progress will be lost.')) return; showMenu(); };
+$('menuBtn').onclick = () => { if (S.waveActive && !confirm(trText('Leave this dungeon? The wave in progress will be lost.'))) return; showMenu(); };
 $('menuUnlock').onclick = () => { cleared = DUNGEONS.length; setMenuTab(menuTab); };
 $('menuCash').onclick = () => { addWallet(5000); updateWallet(); };
 $('menuReset').onclick = resetAll;
+// debug: one Pokémon of every type, at the chosen strength, ready to place (not saved)
+function dbgPickDex(type, lvl) {
+  const all = Object.keys(SPECIES).map(Number).filter(d => SPECIES[d][0] === type && SPR_PACK[d]);
+  return all.find(d => SPECIES[d][2] === lvl) || all.find(d => SPECIES[d][2] <= lvl) || all[0];
+}
+$('dbgTypes').onclick = () => {
+  const lvl = +$('dbgForm').value, picks = [];
+  for (const type of Object.keys(TYPE_STYLE)) { if (!TYPE_COST[type]) continue; const d = dbgPickDex(type, lvl); if (d) picks.push([type, d]); }
+  withArt(sprPacks(picks.map(p => p[1])), () => {
+    for (const k of DBG_TYPES) delete LINES[k];
+    DBG_TYPES.clear();
+    for (const [type, d] of picks) { const k = 'dbg_' + type; LINES[k] = mkLine(type, TYPE_GLYPH[type], [[DEX_NAMES[d - 1], d, lvl]], null, false); DBG_TYPES.add(k); }
+    buildShop(); refreshAll();
+  });
+};
 $('dbgStarters').onclick = () => { team.owned = STARTERS.slice(); team.members = STARTERS.slice(); buildShop(); refreshAll(); };  // debug only, not saved  // debug only: opens every dungeon for this visit, not saved
 
 buildShop();
 registerRecruits(); buildShop();
 artReady = true; prefetchArt();
-// saves from before the team window: story allies for the dungeons already cleared are collected
-if (team.hero) DUNGEONS.forEach((D, i) => { if (i < cleared && D.ally && !team.allies.includes(D.ally)) gainAlly(D.ally); });
+// story recruits for the dungeons already cleared (and old saves with special Magnemite/Absol) are brought up to date
+if (team.hero) migrateStoryAllies();
 newGame();
 if (team.hero) showMenu(); else startIntro();
 drawBackground();
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawBackground);
-window.__game = { TYPE_K, snap, newGame, gotoDungeon, upCost, upLevel, UP_MAX, formOf, START_MONEY, TILE, setHpMul(v) { hpMul = v; }, setBossMul(v) { bossMul = v; }, TOUGH, BOSS_K, get hpMul() { return hpMul; }, setUnlimited(v) { unlimited = v; }, mkLine, TYPE_STYLE, TYPE_COST, UPGRADES, damage, recruitMon, recruitable, areaX, areaFor, get team() { return team; }, loadPack, ensure, spriteReady, get packState() { return packState; }, get S() { return S; }, get evo() { return evo; }, buildable, get COLS() { return COLS; }, get ROWS() { return ROWS; }, TOUGH, BOSS_K, bossHp, get PATH_LEN() { return PATH_LEN; }, posAt, update, statsOf, stagesOf, onMap, placementOk, startWave, LINES, LEGENDS, endWave, gotoDungeon, finalWave };
+window.__game = { BOSS_MUL, matchup, dexType, towerType, TYPE_K, snap, newGame, gotoDungeon, upCost, upLevel, UP_MAX, formOf, START_MONEY, TILE, setHpMul(v) { hpMul = v; }, setBossMul(v) { bossMul = v; }, TOUGH, BOSS_K, get hpMul() { return hpMul; }, setUnlimited(v) { unlimited = v; }, mkLine, TYPE_STYLE, TYPE_COST, UPGRADES, damage, recruitMon, recruitable, areaX, areaFor, get team() { return team; }, loadPack, ensure, spriteReady, get packState() { return packState; }, get S() { return S; }, get evo() { return evo; }, buildable, get COLS() { return COLS; }, get ROWS() { return ROWS; }, TOUGH, BOSS_K, bossHp, get PATH_LEN() { return PATH_LEN; }, posAt, update, statsOf, stagesOf, onMap, placementOk, startWave, LINES, LEGENDS, endWave, gotoDungeon, finalWave };
 requestAnimationFrame(frame);
 })();
 </script>
