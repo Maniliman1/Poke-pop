@@ -1,6 +1,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Poke-TD</title>
+<link rel="canonical" href="https://poke-td.com/">
+<meta property="og:url" content="https://poke-td.com/">
+<meta name="description" content="A free fan-made tower defense game: place Pokémon beside the path, recruit new friends, evolve them and teach them stronger moves, and defend your base through 20 Mystery Dungeon dungeons.">
+<meta property="og:title" content="Poke-TD">
+<meta property="og:description" content="Pokémon Tower Defense">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://poke-td.com/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Poke-TD: Pokémon defend a path against waves of wild Pokémon">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://poke-td.com/share.jpg">
+<style>html:not(.x7q3k9w2m5v8z1c4b6n0r) .debug, html:not(.x7q3k9w2m5v8z1c4b6n0r) #cheatBtn, html:not(.x7q3k9w2m5v8z1c4b6n0r) .dbgOnly { display: none !important; }</style>
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -138,6 +151,8 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:960/600;border-radius:1
 .orb img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated;display:block}
 .credits{font-size:11px;color:var(--muted);margin:0;line-height:1.5}
 .credits a{color:var(--muted)}
+.adbox{display:block;box-sizing:border-box;border-radius:12px;overflow:hidden;position:relative}.adbox:has(ins[data-ad-status=filled]){background:rgba(255,255,255,.03);border:1px solid var(--line)}.adbox:has(ins[data-ad-status=filled])::before{content:'Ad';position:absolute;top:2px;left:8px;font-size:9px;color:var(--muted);letter-spacing:.06em}.adbox .adsbygoogle{display:inline-block}.adbox{text-align:center}.panel .adbox{margin-top:12px}
+.dgrid .adbox{margin:0;display:flex;align-items:center;justify-content:center;min-height:240px}
 kbd{font-family:var(--body);font-size:11px;background:var(--panel-2);border:1px solid var(--line);border-radius:4px;padding:0 4px}
 .menu{display:flex;flex-direction:column;gap:14px}
 .menu h2{font-family:var(--display);font-size:26px;margin:0;color:var(--accent)}
@@ -179,14 +194,15 @@ kbd{font-family:var(--body);font-size:11px;background:var(--panel-2);border:1px 
 @media (pointer:coarse),(max-width:640px){.app button:not(.chk):not(.setx):not(.x),.dexpanel button:not(.chk):not(.setx):not(.x){min-height:44px}}
 .tagline{margin:0 0 10px;font-size:13px;color:#cfd6ff;line-height:1.5}
 .sitefoot{max-width:1100px;margin:10px auto 0;padding:8px 14px 16px;font-size:12px;color:var(--muted);text-align:center}.sitefoot a{color:var(--link,#8ea2d8)}
-.sitefoot{width:100%;box-sizing:border-box}.soc{display:inline-flex;gap:10px}.soc a{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.08);color:#c9d3f5}.soc a:hover{background:rgba(255,255,255,.18);color:#fff}.soc .socdc{color:#8c98ff}
-.commrow{display:flex;gap:10px;flex-wrap:wrap}.commlink{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;background:#2a2a3a;color:#e8ecff;text-decoration:none;font-size:14px}.commlink:hover{background:#34344a}.commlink svg{flex:none}.commlink.dc svg{color:#8c98ff}
+.sitefoot{width:100%;box-sizing:border-box}.soc{display:inline-flex;gap:10px}.soc a{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--panel-2);color:#e8ecff}.soc .socdc{color:#7f8cff}.soc a:hover{filter:brightness(1.25)}
+.commrow{display:flex;gap:10px;flex-wrap:wrap}.commlink{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;background:#2a2a3a;color:#e8ecff;text-decoration:none;font-size:14px}.commlink:hover{background:#34344a}.commlink svg{flex:none}
 .app.in-intro .sitefoot{position:fixed;left:0;right:0;bottom:0;margin:0;max-width:none;padding:8px 14px;background:rgba(14,18,48,.78);color:#e8ecff;z-index:5}.app.in-intro .sitefoot a{color:#ffd23f}
 .dexbtn{padding:6px 8px;line-height:0;margin-left:8px}
 .app.in-menu .bar .dexbtn{margin-left:8px}
 .wigbtn{display:none}
 .app.in-menu .bar .wigbtn.gone{display:none}
-.app.in-menu .bar .wigbtn{display:inline-block;margin-left:auto}
+.app.in-menu .bar .wigbtn{display:inline-block}
+.app.in-menu .bar .logo{flex:1 1 200px;font-size:clamp(30px,5.2vw,56px);text-shadow:3px 3px 0 #b5381f}
 .wigbtn .orb{display:block;width:22px;height:22px}
 .wigbtn .orb img{width:22px;height:22px;display:block}
 .menupane{display:flex;flex-direction:column;gap:14px}
@@ -417,7 +433,7 @@ table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}.cmp t
   <section id="menu" class="menu" hidden>
     <div class="menutop">
       <div class="dexfilter" role="tablist" id="menuTabs"><button class="chip" role="tab" id="mtDungeons" aria-selected="true">Dungeons</button><button class="chip" role="tab" id="mtAreas" aria-selected="false">Friend Areas</button></div>
-      <div class="walletcol"><span class="wallet" id="wallet" title="Coins earned in dungeons, spent on friend areas and evolutions"></span><span class="soc"><a class="socdc" href="https://discord.gg/tBcQ5wbggg" target="_blank" rel="noopener noreferrer" title="Join the Discord" aria-label="Join the Discord"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6l-4 3.5V17H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" fill="currentColor"/><circle cx="8.6" cy="10.5" r="1.7" fill="#0e1228"/><circle cx="15.4" cy="10.5" r="1.7" fill="#0e1228"/></svg></a><a class="socx" href="https://x.com/LindaColito" target="_blank" rel="noopener noreferrer" title="Follow on X" aria-label="Follow on X"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4.5 4.5l15 15M19.5 4.5l-15 15" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" fill="none"/></svg></a></span></div>
+      <div class="walletcol"><span class="wallet" id="wallet" title="Coins earned in dungeons, spent on friend areas and evolutions"></span><span class="soc"><a class="socdc" href="https://discord.gg/tBcQ5wbggg" target="_blank" rel="noopener noreferrer" title="Join the Discord" aria-label="Join the Discord"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.608 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z" fill="currentColor"/></svg></a><a class="socx" href="https://x.com/LindaColito" target="_blank" rel="noopener noreferrer" title="Follow on X" aria-label="Follow on X"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" fill="currentColor"/></svg></a></span></div>
     </div>
     <div class="menupane" id="menuDungeons">
       <div><h2>Choose a dungeon</h2></div>
@@ -427,7 +443,7 @@ table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}.cmp t
       <div><h2>Friend areas</h2><p>Wigglytuff sells areas where Pokémon live. Playing dungeons earns coins to buy them with.</p></div>
       <div class="dgrid" id="agrid"></div>
     </div>
-    <div class="menuFoot"><button id="menuReset">Start over…</button><button id="menuUnlock" class="dbgOnly">Unlock all dungeons (debug)</button><button id="menuCash" class="dbgOnly">+🪙5000 (debug)</button></div>
+    <div class="menuFoot"><button id="menuUnlock" class="dbgOnly">Unlock all dungeons (debug)</button><button id="menuCash" class="dbgOnly">+🪙5000 (debug)</button></div>
   </section>
 
   <main class="layout">
@@ -461,7 +477,7 @@ table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}.cmp t
         <div class="tip" id="shopTip" hidden></div>
       </section>
       <section class="box" id="info"></section>
-      <p class="credits">Sprites and portraits from the <a href="https://sprites.pmdcollab.org/" target="_blank" rel="noopener">PMD SpriteCollab</a> in the style of Pokémon Mystery Dungeon: Red Rescue Team. Pokémon © Nintendo, Creatures, Game Freak. Non-commercial fan prototype.</p>
+      <p class="credits">Sprites and portraits from the <a href="https://sprites.pmdcollab.org/" target="_blank" rel="noopener">PMD SpriteCollab</a> in the style of Pokémon Mystery Dungeon: Red Rescue Team. Pokémon and Pokémon Mystery Dungeon are © Nintendo, Creatures, Game Freak and Spike Chunsoft. This is an unofficial, free, non-commercial fan project, not affiliated with or endorsed by them. Music: free (CC0) tracks by MintoDog and Spring Spring from OpenGameArt.</p>
     </aside>
   </main>
   <footer class="sitefoot"><span>A free fan-made game, not affiliated with Nintendo.</span> · <a href="privacy.html" target="_blank" rel="noopener">Privacy</a></footer>
@@ -487,7 +503,7 @@ const LINE_DEX = {"bulbasaur":[1,2,3],"charmander":[4,5,6],"squirtle":[7,8,9],"p
 <script>
 (() => {
 // Added to the address of every pack and music file, so a new upload never reuses cached copies of the old ones. The release script replaces this line with a short hash of the build; while developing it is the current time.
-const BUILD = String(Date.now());
+const BUILD = '056655bb0e';
 const W = 960, H = 600;
 // Map tiles are drawn 10% bigger than PMD's native 24px; the last column and row are partly off screen
 const TILE = 26.4, COLS = Math.ceil(W / TILE), ROWS = Math.ceil(H / TILE);
@@ -770,9 +786,8 @@ function toughness() { return TOUGH[S.dungeon] * hpMul; }
 
 // ---------- State ----------
 let S;
-let DEBUG = true, DEBUG_GATED = false, DEBUG_CLASS = 'debug';   // the release build gates the debug tools: they only exist for the accounts on the allow list (see debugCheck)
-let unlimited = true;
-try { unlimited = localStorage.getItem('unlimitedMoney') !== 'off'; } catch (e) {}
+let DEBUG = false, DEBUG_GATED = false, DEBUG_CLASS = 'x7q3k9w2m5v8z1c4b6n0r';   // the release build gates the debug tools: they only exist for the accounts on the allow list (see debugCheck)
+let unlimited = false;
 const UNLIMITED = 999999;
 function newGame() {
   S = {
@@ -2122,8 +2137,8 @@ window.addEventListener('keydown', ev => {
   if (inMenu) return;
   if (ev.key === 'Escape') { cancelPlacing(); S.selected = null; refreshAll(); }
   if (ev.key === ' ') { ev.preventDefault(); tryStartWave(); }
-  if (ev.key === '[') gotoDungeon(S.dungeon - 1);
-  if (ev.key === ']') gotoDungeon(S.dungeon + 1);
+  if (DEBUG && ev.key === '[') gotoDungeon(S.dungeon - 1);
+  if (DEBUG && ev.key === ']') gotoDungeon(S.dungeon + 1);
   const idx = Number(ev.key) - 1;
   const keys = ownedKeys();
   if (idx >= 0 && idx < keys.length) choose(keys[idx]);
@@ -2710,11 +2725,11 @@ function finishIntro(hero, partner) {
   introEl.hidden = true; bgStop(); buildShop(); refreshAll(); prefetchArt(); showMenu();
 }
 function resetAll() {
-  if (!confirm(trText('Start over? This forgets your Pokémon and which dungeons you have cleared.'))) return;
+  if (!confirm(trText('Start over? This forgets your Pokémon and which dungeons you have cleared.'))) return false;
   for (const r of team.recruits) delete LINES[r.id];
   team = {hero:null, partner:null, owned:[], allies:[], members:[], evo:{}, recruits:[], rid:0, released:[]}; cleared = 0; dexSeen = new Set(); dexGot = new Set(); boughtAreas = new Set(); wallet = 0; wigSeen = false; menuTab = 'dungeons';
   try { localStorage.removeItem(TEAM_KEY); localStorage.removeItem(PROG_KEY); localStorage.removeItem(DEX_KEY); localStorage.removeItem(AREA_KEY); localStorage.removeItem(WALLET_KEY); localStorage.removeItem(WIG_KEY); localStorage.removeItem(END_KEY); localStorage.removeItem(STAR_KEY); stars = {}; endSeen = false; localStorage.removeItem(TUT_KEY); tutSeen = false; } catch (e) {}
-  buildShop(); startIntro();
+  buildShop(); startIntro(); return true;
 }
 
 // ---------- Start page: pick a dungeon ----------
@@ -3548,7 +3563,7 @@ function renderSettings() {
     <div class="setbody"><div class="setsec">Language</div>
     <div class="setrow click langsel ${langOpen ? 'open' : ''}" id="langBtn" role="button" aria-haspopup="listbox" aria-expanded="${langOpen}"><span data-notr>${(LANGS.find(l => l[0] === (SETTINGS.lang || 'en')) || LANGS[0])[1]}</span><span class="caret" aria-hidden="true">▾</span></div>
     ${langOpen ? `<div class="langlist" role="listbox">${LANGS.map(([c, nm]) => `<div class="setrow click opt ${(SETTINGS.lang || 'en') === c ? 'cur' : ''}" role="option" data-lang="${c}" aria-selected="${(SETTINGS.lang || 'en') === c}"><span data-notr>${nm}</span></div>`).join('')}</div>` : ''}
-    ${audio('music', 'Music', 'music', 'musicMute')}${audio('sfx', 'Sound effects', 'sfx', 'sfxMute')}${acctHtml()}<div class="setsec">Community</div><div class="commrow"><a class="commlink dc" href="https://discord.gg/tBcQ5wbggg" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6l-4 3.5V17H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" fill="currentColor"/><circle cx="8.6" cy="10.5" r="1.7" fill="#0e1228"/><circle cx="15.4" cy="10.5" r="1.7" fill="#0e1228"/></svg><span>Join the Discord</span></a><a class="commlink" href="https://x.com/LindaColito" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4.5 4.5l15 15M19.5 4.5l-15 15" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" fill="none"/></svg><span>Follow on X</span></a></div></div>
+    ${audio('music', 'Music', 'music', 'musicMute')}${audio('sfx', 'Sound effects', 'sfx', 'sfxMute')}${acctHtml()}<div class="setsec">Community</div><div class="commrow"><a class="commlink dc" href="https://discord.gg/tBcQ5wbggg" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.608 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z" fill="currentColor"/></svg><span>Join the Discord</span></a><a class="commlink" href="https://x.com/LindaColito" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" fill="currentColor"/></svg><span>Follow on X</span></a></div></div>
     <div class="setfoot"><button id="setHow">How to play</button></div>`;
   [['music', 'music', 'musicMute'], ['sfx', 'sfx', 'sfxMute']].forEach(([id, key, mkey]) => {
     const toggle = () => { audioInit(); SETTINGS[mkey] = !SETTINGS[mkey]; if (!SETTINGS[mkey] && SETTINGS[key] <= 0) SETTINGS[key] = .5; saveSettings(); applyVolumes(); renderSettings(); if (id === 'sfx') sfx('click'); };
@@ -3646,7 +3661,7 @@ function cleanSave(d) {
 // ---------- Debug tools: only for the accounts on the allow list (release build) ----------
 // The list holds SHA-256 hashes of lower-case emails, so no address is in the file. The email is not read from the stored login (that can be edited):
 // the server is asked who the access token belongs to, and the tools only switch on for a token it accepts. Everyone else, and anyone logged out, gets none.
-const DEBUG_HASHES = ['d57aaf9d49ff7732687a6e3740b2244aaaa42cfc724f914c26abff10e45c95d1', '6fb5bd500e442e5b2fea14003ee25432b8aaa4cda2dbf2bba2cd6cebd47196c1'];
+const DEBUG_HASHES = [];
 let debugFor = '';   // the access token the last check was made for
 async function sha256Hex(s) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
 function applyDebug(on) {
@@ -3724,9 +3739,9 @@ function acctHtmlInner() {
   let body = '';
   if (mode === 'in') body = `<div class="acctwho"><span>Logged in as</span> <b data-notr>${escH(cloudSess.user.email || '')}</b></div>
     <div class="acctbtns"><button class="primary" data-act="upload" ${dis}>Upload my save to the cloud</button><button data-act="download" ${dis}>Download my cloud save</button></div>
-    <div class="acctbtns"><button data-act="logout" ${dis}>Log out</button><button class="linkbtn" data-act="remove" ${dis}>Delete my account</button></div>`;
+    <div class="acctbtns"><button data-act="logout" ${dis}>Log out</button><button id="acctReset" ${dis}>Start over…</button></div>`;
   else if (mode === 'signup') body = `${email}${pass('Password (8 or more characters)')}
-    <p class="acctnote">We only store your email and your save, so you can back it up. We never sell or share them. You can delete your account at any time here.</p>
+    <p class="acctnote">We only store your email and your save, so you can back it up. We never sell or share them. To delete your account, email trapinch3d@gmail.com.</p>
     <div class="setrow click acctok" id="acctOk"><span>I am 13 or older. If I am under 16, a parent or guardian agrees.</span><button class="chk ${acct.ok13 ? 'on' : ''}" id="acctOk13" role="switch" aria-checked="${acct.ok13}" aria-label="I agree"></button></div>
     <div class="acctbtns"><button class="primary" data-act="signup" ${dis}>Create account</button><button data-mode="login" ${dis}>Back</button></div>`;
   else if (mode === 'forgot') body = `${email}<p class="acctnote">We will email you a link to choose a new password.</p><div class="acctbtns"><button class="primary" data-act="forgot" ${dis}>Send reset link</button><button data-mode="login" ${dis}>Back</button></div>`;
@@ -3744,6 +3759,7 @@ function acctWireInner() {
   const sh = b.querySelector('#acctShow'); if (sh) sh.onclick = () => { acct.show = !acct.show; const p = b.querySelector('#acctPass'); p.type = acct.show ? 'text' : 'password'; sh.textContent = acct.show ? 'Hide' : 'Show'; };
   const ok = b.querySelector('#acctOk'); if (ok) ok.onclick = () => { acct.ok13 = !acct.ok13; renderSettings(); };
   b.querySelectorAll('[data-act]').forEach(x => x.onclick = () => ACCT[x.dataset.act]());
+  const rs = b.querySelector('#acctReset'); if (rs) rs.onclick = () => { if (resetAll()) closeSettings(); };
   b.querySelectorAll('[data-mode]').forEach(x => x.onclick = () => { acct.mode = x.dataset.mode; acct.msg = ''; renderSettings(); });
 }
 // a password-reset link in the email brings the player back here with a temporary login in the address
@@ -3759,6 +3775,28 @@ function acctWireInner() {
     clean();
   } else if (h.get('error')) { acct.msg = 'That link has expired. Ask for a new one.'; acct.kind = 'err'; acct.mode = 'forgot'; setTimeout(openSettings, 700); clean(); }
 })();
+
+// ---------- Ads: two slots (the empty cell of the dungeon grid, and under the credits on the dungeon screen) ----------
+// Dormant until the AdSense ids below are filled in: with an empty client nothing is created, loaded or sent anywhere.
+// To switch on: put your publisher id (ca-pub-...) and the two ad unit ids here, add ads.txt to the site root, and update privacy.html (and add a consent choice for the EU/UK) first.
+const ADS = {live:true, client:'ca-pub-8838351466475097', menu:'8464794781', menuSize:[120, 240], game:'9398602507', gameSize:[300, 250]};   // live:false switches every ad off
+const adBoxes = {};
+function adPlace(where, parent, before) {
+  if (!ADS.live || !ADS.client || !ADS[where]) return;
+  try {
+    if (!adBoxes[where]) {
+      if (!document.querySelector('script[data-ads]')) { const sc = document.createElement('script'); sc.async = true; sc.dataset.ads = '1'; sc.crossOrigin = 'anonymous'; sc.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(ADS.client); document.head.appendChild(sc); }
+      if (!window.__fcLoaded) { window.__fcLoaded = 1; const fc = document.createElement('script'); fc.async = true; fc.src = 'https://fundingchoicesmessages.google.com/i/' + ADS.client.replace('ca-', '') + '?ers=1'; document.head.appendChild(fc); if (!window.frames.googlefcPresent) { const f = document.createElement('iframe'); f.style.display = 'none'; f.name = 'googlefcPresent'; document.body.appendChild(f); } }
+      const box = document.createElement('div'); box.className = 'adbox'; box.setAttribute('aria-label', 'Advertisement');
+      const [w, h] = ADS[where + 'Size']; box.style.minHeight = '0'; box.style.height = 'auto';
+      box.innerHTML = `<ins class="adsbygoogle" style="display:inline-block;width:${w}px;height:${h}px" data-ad-client="${ADS.client}" data-ad-slot="${ADS[where]}"></ins>`;
+      adBoxes[where] = {box, pushed:false};
+    }
+    const o = adBoxes[where]; parent.insertBefore(o.box, before || null);
+    if (!o.pushed) { const go = () => { if (o.pushed || !o.box.offsetWidth) return; o.pushed = true; try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {} }; const t = setInterval(() => { go(); if (o.pushed) clearInterval(t); }, 1000); }
+  } catch (e) { console.warn('ads:', e); }
+}
+adPlace('game', document.querySelector('aside.panel') || document.body);
 
 // ---------- Tutorial: an offer on the first visit to Tiny Woods, then three animated slides with the player's own Pokémon ----------
 const TUT_KEY = 'ppdTut';
@@ -4188,6 +4226,7 @@ function buildMenu() {
       <span class="dinfo"><span class="dname">${D.name}</span><span class="dmeta">${D.waves || FINAL_WAVE} waves${bossName ? ' · Boss: ' + bossName : ''}</span><span class="dtypes"><span class="dlab">Enemy types:</span>${dungeonTypes(D, st === 'cleared').map(t => `<span class="type" style="background:${TYPE_COLORS[t]}">${t}</span>`).join('')}</span></span></button>`;
   }).join('');
   $('dgrid').querySelectorAll('.dcard').forEach(b => b.onclick = () => { if (!b.disabled) startDungeon(+b.dataset.i); });
+  adPlace('menu', $('dgrid'));
 }
 function showMenu() { inMenu = true; hideOverlay(); introEl.hidden = true; bgStop(); appEl.classList.remove('in-intro'); appEl.classList.add('in-menu'); menuEl.hidden = false; setMenuTab(menuTab); window.scrollTo(0, 0); showWigHint(); musicStart('adventure'); if (cleared >= DUNGEONS.length && !endSeen) setTimeout(showEnd, 350); }
 function hideMenu() { hideWigHint(); inMenu = false; appEl.classList.remove('in-menu'); menuEl.hidden = true; }
@@ -4198,7 +4237,7 @@ function startDungeon(i) {
 $('menuBtn').onclick = () => { if (S.waveActive && !confirm(trText('Leave this dungeon? The wave in progress will be lost.'))) return; showMenu(); };
 $('menuUnlock').onclick = () => { if (!DEBUG) return; cleared = DUNGEONS.length; setMenuTab(menuTab); };
 $('menuCash').onclick = () => { if (!DEBUG) return; addWallet(5000); updateWallet(); };
-$('menuReset').onclick = resetAll;
+
 // debug: one Pokémon of every type, at the chosen strength, ready to place (not saved)
 function dbgPickDex(type, lvl) {
   const all = Object.keys(SPECIES).map(Number).filter(d => SPECIES[d][0] === type && SPR_PACK[d]);
@@ -4226,7 +4265,7 @@ newGame();
 if (team.hero) showMenu(); else startIntro();
 drawBackground();
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawBackground);
-window.__game = { BOSS_MUL, startBuff, bossTeam, bossPool, matchup, defMatch, defTypes, dexType, towerType, TYPE_K, snap, newGame, gotoDungeon, upCost, upLevel, UP_MAX, formOf, START_MONEY, TILE, setHpMul(v) { hpMul = v; }, setBossMul(v) { bossMul = v; }, TOUGH, BOSS_K, get hpMul() { return hpMul; }, setUnlimited(v) { unlimited = v; }, mkLine, TYPE_STYLE, TYPE_COST, UPGRADES, damage, recruitMon, recruitable, areaX, areaFor, get team() { return team; }, loadPack, ensure, spriteReady, get packState() { return packState; }, get S() { return S; }, get evo() { return evo; }, buildable, get COLS() { return COLS; }, get ROWS() { return ROWS; }, TOUGH, BOSS_K, bossHp, get PATH_LEN() { return PATH_LEN; }, posAt, update, statsOf, stagesOf, onMap, placementOk, startWave, LINES, LEGENDS, endWave, gotoDungeon, finalWave };
+const __gameHooks = { BOSS_MUL, startBuff, bossTeam, bossPool, matchup, defMatch, defTypes, dexType, towerType, TYPE_K, snap, newGame, gotoDungeon, upCost, upLevel, UP_MAX, formOf, START_MONEY, TILE, setHpMul(v) { hpMul = v; }, setBossMul(v) { bossMul = v; }, TOUGH, BOSS_K, get hpMul() { return hpMul; }, setUnlimited(v) { unlimited = v; }, mkLine, TYPE_STYLE, TYPE_COST, UPGRADES, damage, recruitMon, recruitable, areaX, areaFor, get team() { return team; }, loadPack, ensure, spriteReady, get packState() { return packState; }, get S() { return S; }, get evo() { return evo; }, buildable, get COLS() { return COLS; }, get ROWS() { return ROWS; }, TOUGH, BOSS_K, bossHp, get PATH_LEN() { return PATH_LEN; }, posAt, update, statsOf, stagesOf, onMap, placementOk, startWave, LINES, LEGENDS, endWave, gotoDungeon, finalWave };
 requestAnimationFrame(frame);
 })();
 </script>
