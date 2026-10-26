@@ -1,6 +1,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Poke-TD</title>
+<link rel="canonical" href="https://poke-td.com/">
+<meta property="og:url" content="https://poke-td.com/">
+<meta name="description" content="A free fan-made tower defense game: place Pokémon beside the path, recruit new friends, evolve them and teach them stronger moves, and defend your base through 20 Mystery Dungeon dungeons.">
+<meta property="og:title" content="Poke-TD">
+<meta property="og:description" content="Pokémon Tower Defense">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://poke-td.com/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Poke-TD: Pokémon defend a path against waves of wild Pokémon">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://poke-td.com/share.jpg">
+<style>html:not(.x7q3k9w2m5v8z1c4b6n0r) .debug, html:not(.x7q3k9w2m5v8z1c4b6n0r) #cheatBtn, html:not(.x7q3k9w2m5v8z1c4b6n0r) .dbgOnly { display: none !important; }</style>
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -118,7 +131,8 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:960/600;border-radius:1
 .upBtn{display:flex;flex-direction:column;align-items:stretch;gap:2px;text-align:left}
 .upTop{display:flex;align-items:center;gap:8px;min-height:24px}
 .upTop b{flex:1}
-.stk{display:grid}.stk>*{grid-area:1/1}.stk .gh{visibility:hidden;font-style:normal;pointer-events:none}
+.stk{display:grid}
+html.nodebug .debug,html.nodebug #cheatBtn,html.nodebug .dbgOnly{display:none!important}.stk>*{grid-area:1/1}.stk .gh{visibility:hidden;font-style:normal;pointer-events:none}
 .upCost{font-variant-numeric:tabular-nums}
 .pips{display:flex;gap:3px}
 .pips i{width:8px;height:8px;border-radius:50%;background:rgba(127,127,127,.35);display:block}
@@ -467,7 +481,7 @@ table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}.cmp t
         <div class="tip" id="shopTip" hidden></div>
       </section>
       <section class="box" id="info"></section>
-      <p class="credits">Sprites and portraits from the <a href="https://sprites.pmdcollab.org/" target="_blank" rel="noopener">PMD SpriteCollab</a> in the style of Pokémon Mystery Dungeon: Red Rescue Team. Pokémon © Nintendo, Creatures, Game Freak. Non-commercial fan prototype.</p>
+      <p class="credits">Sprites and portraits from the <a href="https://sprites.pmdcollab.org/" target="_blank" rel="noopener">PMD SpriteCollab</a> in the style of Pokémon Mystery Dungeon: Red Rescue Team. Pokémon and Pokémon Mystery Dungeon are © Nintendo, Creatures, Game Freak and Spike Chunsoft. This is an unofficial, free, non-commercial fan project, not affiliated with or endorsed by them. Music: free (CC0) tracks by MintoDog and Spring Spring from OpenGameArt.</p>
     </aside>
   </main>
   <footer class="sitefoot"><span>A free fan-made game, not affiliated with Nintendo.</span> · <a href="privacy.html" target="_blank" rel="noopener">Privacy</a></footer>
@@ -493,7 +507,7 @@ const LINE_DEX = {"bulbasaur":[1,2,3],"charmander":[4,5,6],"squirtle":[7,8,9],"p
 <script>
 (() => {
 // Added to the address of every pack and music file, so a new upload never reuses cached copies of the old ones. The release script replaces this line with a short hash of the build; while developing it is the current time.
-const BUILD = String(Date.now());
+const BUILD = '09e7b0ef85';
 const W = 960, H = 600;
 // Map tiles are drawn 10% bigger than PMD's native 24px; the last column and row are partly off screen
 const TILE = 26.4, COLS = Math.ceil(W / TILE), ROWS = Math.ceil(H / TILE);
@@ -776,9 +790,13 @@ function toughness() { return TOUGH[S.dungeon] * hpMul; }
 
 // ---------- State ----------
 let S;
-let DEBUG = true, DEBUG_GATED = false, DEBUG_CLASS = 'debug';   // the release build gates the debug tools: they only exist for the accounts on the allow list (see debugCheck)
-let unlimited = true;
-try { unlimited = localStorage.getItem('unlimitedMoney') !== 'off'; } catch (e) {}
+// Safety: this file is the development copy. Opened from any address other than this computer it switches every debug tool off,
+// so uploading it by mistake (instead of release/index.html) cannot hand the debug panel to players.
+const LOCAL_DEV = /^(localhost|127\.0\.0\.1|\[::1\]|)$/.test(location.hostname);
+if (!LOCAL_DEV) document.documentElement.classList.add('nodebug');
+let DEBUG = false, DEBUG_GATED = false, DEBUG_CLASS = 'x7q3k9w2m5v8z1c4b6n0r';   // the release build gates the debug tools: they only exist for the accounts on the allow list (see debugCheck)
+if (!LOCAL_DEV) DEBUG = false;
+let unlimited = false;
 const UNLIMITED = 999999;
 function newGame() {
   S = {
@@ -2138,8 +2156,8 @@ window.addEventListener('keydown', ev => {
   if (inMenu) return;
   if (ev.key === 'Escape') { cancelPlacing(); S.selected = null; refreshAll(); }
   if (ev.key === ' ') { ev.preventDefault(); tryStartWave(); }
-  if (ev.key === '[') gotoDungeon(S.dungeon - 1);
-  if (ev.key === ']') gotoDungeon(S.dungeon + 1);
+  if (DEBUG && ev.key === '[') gotoDungeon(S.dungeon - 1);
+  if (DEBUG && ev.key === ']') gotoDungeon(S.dungeon + 1);
   const idx = Number(ev.key) - 1;
   const keys = ownedKeys();
   if (idx >= 0 && idx < keys.length) choose(keys[idx]);
@@ -3672,7 +3690,7 @@ function cleanSave(d) {
 // ---------- Debug tools: only for the accounts on the allow list (release build) ----------
 // The list holds SHA-256 hashes of lower-case emails, so no address is in the file. The email is not read from the stored login (that can be edited):
 // the server is asked who the access token belongs to, and the tools only switch on for a token it accepts. Everyone else, and anyone logged out, gets none.
-const DEBUG_HASHES = ['d57aaf9d49ff7732687a6e3740b2244aaaa42cfc724f914c26abff10e45c95d1', '6fb5bd500e442e5b2fea14003ee25432b8aaa4cda2dbf2bba2cd6cebd47196c1'];
+const DEBUG_HASHES = [];
 let debugFor = '';   // the access token the last check was made for
 async function sha256Hex(s) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
 function applyDebug(on) {
@@ -4290,7 +4308,8 @@ newGame();
 if (team.hero) showMenu(); else startIntro();
 drawBackground();
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawBackground);
-window.__game = { BOSS_MUL, startBuff, bossTeam, bossPool, matchup, defMatch, defTypes, dexType, towerType, TYPE_K, snap, newGame, gotoDungeon, upCost, upLevel, UP_MAX, formOf, START_MONEY, TILE, setHpMul(v) { hpMul = v; }, setBossMul(v) { bossMul = v; }, TOUGH, BOSS_K, get hpMul() { return hpMul; }, setUnlimited(v) { unlimited = v; }, mkLine, TYPE_STYLE, TYPE_COST, UPGRADES, damage, recruitMon, recruitable, areaX, areaFor, get team() { return team; }, loadPack, ensure, spriteReady, get packState() { return packState; }, get S() { return S; }, get evo() { return evo; }, buildable, get COLS() { return COLS; }, get ROWS() { return ROWS; }, TOUGH, BOSS_K, bossHp, get PATH_LEN() { return PATH_LEN; }, posAt, update, statsOf, stagesOf, onMap, placementOk, startWave, LINES, LEGENDS, endWave, gotoDungeon, finalWave, frame, render, floatText, moveName };
+const __gameHooks = { BOSS_MUL, startBuff, bossTeam, bossPool, matchup, defMatch, defTypes, dexType, towerType, TYPE_K, snap, newGame, gotoDungeon, upCost, upLevel, UP_MAX, formOf, START_MONEY, TILE, setHpMul(v) { hpMul = v; }, setBossMul(v) { bossMul = v; }, TOUGH, BOSS_K, get hpMul() { return hpMul; }, setUnlimited(v) { unlimited = v; }, mkLine, TYPE_STYLE, TYPE_COST, UPGRADES, damage, recruitMon, recruitable, areaX, areaFor, get team() { return team; }, loadPack, ensure, spriteReady, get packState() { return packState; }, get S() { return S; }, get evo() { return evo; }, buildable, get COLS() { return COLS; }, get ROWS() { return ROWS; }, TOUGH, BOSS_K, bossHp, get PATH_LEN() { return PATH_LEN; }, posAt, update, statsOf, stagesOf, onMap, placementOk, startWave, LINES, LEGENDS, endWave, gotoDungeon, finalWave, frame, render, floatText, moveName };
+if (!LOCAL_DEV) delete window.__game;
 requestAnimationFrame(frame);
 })();
 </script>
