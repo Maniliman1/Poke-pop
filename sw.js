@@ -1,7 +1,7 @@
 // Service worker of the game, written by tools/make_release.py with the build id of the release (the release copy is release/sw.js).
 // Packs, music and fonts are kept on the device after their first download: their addresses change with every build, so a cached copy is never out of date.
 // The page itself is always fetched fresh first, so a new upload shows up at once; the cached page is only used when there is no connection.
-const CACHE = 'ppd-056655bb0e';
+const CACHE = 'ppd-21609a29b5';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil((async () => {
   for (const k of await caches.keys()) if (k.startsWith('ppd-') && k !== CACHE) await caches.delete(k);   // older builds

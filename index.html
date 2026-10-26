@@ -1,19 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Poke-TD</title>
-<link rel="canonical" href="https://poke-td.com/">
-<meta property="og:url" content="https://poke-td.com/">
-<meta name="description" content="A free fan-made tower defense game: place Pokémon beside the path, recruit new friends, evolve them and teach them stronger moves, and defend your base through 20 Mystery Dungeon dungeons.">
-<meta property="og:title" content="Poke-TD">
-<meta property="og:description" content="Pokémon Tower Defense">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://poke-td.com/share.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Poke-TD: Pokémon defend a path against waves of wild Pokémon">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://poke-td.com/share.jpg">
-<style>html:not(.x7q3k9w2m5v8z1c4b6n0r) .debug, html:not(.x7q3k9w2m5v8z1c4b6n0r) #cheatBtn, html:not(.x7q3k9w2m5v8z1c4b6n0r) .dbgOnly { display: none !important; }</style>
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -21,6 +8,7 @@
 <style>
 /* the two fonts are served from fonts/ (SIL Open Font License), so no visitor's browser contacts another site */
 @font-face{font-family:'Pixelify Sans';font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/PixelifySans-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'PixelDigits';font-style:normal;font-weight:300 900;font-display:swap;src:url(fonts/Rubik-latin.woff2) format('woff2');unicode-range:U+0023,U+0025,U+002B-003A}   /* the pixel font's digits are too alike (3/8, 1/7, 0/6): numbers use Rubik's clear digits, letters stay pixel */
 @font-face{font-family:'Rubik';font-style:normal;font-weight:300 900;font-display:swap;src:url(fonts/Rubik-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 </style>
 <style>
@@ -28,7 +16,7 @@
 :root{
   --bg:#141a2e; --panel:#1e2644; --panel-2:#28315a; --line:#3a4578;
   --fg:#eef1ff; --muted:#a3abd6; --accent:#ffd23f; --danger:#ff6b6b; --ok:#5fd38a; --gold:#ffcf4a;
-  --display:'Pixelify Sans', ui-monospace, monospace;
+  --display:'PixelDigits', 'Pixelify Sans', ui-monospace, monospace;
   --body:'Rubik', system-ui, -apple-system, sans-serif;
   color-scheme:dark;
 }
@@ -128,8 +116,9 @@ canvas{display:block;width:100%;height:auto;aspect-ratio:960/600;border-radius:1
 .actions{display:flex;flex-direction:column;gap:6px}
 .ups{display:flex;flex-direction:column;gap:6px;margin-top:2px}
 .upBtn{display:flex;flex-direction:column;align-items:stretch;gap:2px;text-align:left}
-.upTop{display:flex;align-items:center;gap:8px}
+.upTop{display:flex;align-items:center;gap:8px;min-height:24px}
 .upTop b{flex:1}
+.stk{display:grid}.stk>*{grid-area:1/1}.stk .gh{visibility:hidden;font-style:normal;pointer-events:none}
 .upCost{font-variant-numeric:tabular-nums}
 .pips{display:flex;gap:3px}
 .pips i{width:8px;height:8px;border-radius:50%;background:rgba(127,127,127,.35);display:block}
@@ -309,7 +298,8 @@ table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}.cmp t
 .teamhead{margin-bottom:10px}
 .teamctl{display:contents}   /* its buttons sit in the same row as Team, Lives and Money */
 .teamctl button{padding:8px 10px;font-size:13px;white-space:nowrap}
-.teamctl #startBtn{flex:0 0 auto}
+.teamctl #startBtn{flex:0 0 auto;min-width:11.8em;font-size:14px;padding:10px 12px}   /* "Start wave 1" and "Wave 12 in progress" take the same room, so the rows below never jump */
+#sellBtn.sure{background:#7a2a2a;border-color:#ff6b6b;color:#fff}
 .legs:not(:empty){margin-top:8px}
 .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px;margin-bottom:12px}
 .tslot{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;text-align:center;background:var(--panel-2);border:1px solid var(--line);border-radius:10px}
@@ -477,7 +467,7 @@ table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0}.cmp t
         <div class="tip" id="shopTip" hidden></div>
       </section>
       <section class="box" id="info"></section>
-      <p class="credits">Sprites and portraits from the <a href="https://sprites.pmdcollab.org/" target="_blank" rel="noopener">PMD SpriteCollab</a> in the style of Pokémon Mystery Dungeon: Red Rescue Team. Pokémon and Pokémon Mystery Dungeon are © Nintendo, Creatures, Game Freak and Spike Chunsoft. This is an unofficial, free, non-commercial fan project, not affiliated with or endorsed by them. Music: free (CC0) tracks by MintoDog and Spring Spring from OpenGameArt.</p>
+      <p class="credits">Sprites and portraits from the <a href="https://sprites.pmdcollab.org/" target="_blank" rel="noopener">PMD SpriteCollab</a> in the style of Pokémon Mystery Dungeon: Red Rescue Team. Pokémon © Nintendo, Creatures, Game Freak. Non-commercial fan prototype.</p>
     </aside>
   </main>
   <footer class="sitefoot"><span>A free fan-made game, not affiliated with Nintendo.</span> · <a href="privacy.html" target="_blank" rel="noopener">Privacy</a></footer>
@@ -503,7 +493,7 @@ const LINE_DEX = {"bulbasaur":[1,2,3],"charmander":[4,5,6],"squirtle":[7,8,9],"p
 <script>
 (() => {
 // Added to the address of every pack and music file, so a new upload never reuses cached copies of the old ones. The release script replaces this line with a short hash of the build; while developing it is the current time.
-const BUILD = '056655bb0e';
+const BUILD = String(Date.now());
 const W = 960, H = 600;
 // Map tiles are drawn 10% bigger than PMD's native 24px; the last column and row are partly off screen
 const TILE = 26.4, COLS = Math.ceil(W / TILE), ROWS = Math.ceil(H / TILE);
@@ -523,7 +513,7 @@ cv.width = W * DPR; cv.height = H * DPR;
 // (col and row = 1, 4, 7, ... 34), so each patch of open ground is a whole number of Pokémon wide and tall.
 const LAYOUTS = [
   [[-1,4],[10,4],[10,10],[4,10],[4,19],[16,19],[16,7],[28,7],[28,13],[99,13]],
-  [[-1,1],[31,1],[31,7],[4,7],[4,13],[99,13]],
+  [[-1,4],[31,4],[31,10],[4,10],[4,16],[99,16]],   // this layout started on row 1 (health bars cut off at the top) and left a big empty strip at the bottom: moved down 3 rows
   [[-1,10],[7,10],[7,4],[16,4],[16,19],[25,19],[25,4],[31,4],[31,13],[99,13]],
   [[-1,19],[4,19],[4,4],[13,4],[13,19],[22,19],[22,4],[31,4],[31,13],[99,13]],
   [[-1,4],[13,4],[13,10],[4,10],[4,19],[22,19],[22,7],[31,7],[31,13],[99,13]],
@@ -786,8 +776,9 @@ function toughness() { return TOUGH[S.dungeon] * hpMul; }
 
 // ---------- State ----------
 let S;
-let DEBUG = false, DEBUG_GATED = false, DEBUG_CLASS = 'x7q3k9w2m5v8z1c4b6n0r';   // the release build gates the debug tools: they only exist for the accounts on the allow list (see debugCheck)
-let unlimited = false;
+let DEBUG = true, DEBUG_GATED = false, DEBUG_CLASS = 'debug';   // the release build gates the debug tools: they only exist for the accounts on the allow list (see debugCheck)
+let unlimited = true;
+try { unlimited = localStorage.getItem('unlimitedMoney') !== 'off'; } catch (e) {}
 const UNLIMITED = 999999;
 function newGame() {
   S = {
@@ -919,7 +910,7 @@ function endWave() {
   const joinR = isFinal ? storyJoin(D) : null;
   if (isFinal) {
     S.between = true; S.autoTimer = 0; S.won = true;
-    showOverlay(`<h2>${last ? 'Sky Tower conquered!' : D.name + ' cleared!'}</h2>${starRow(sr.got)}${storyBox(D, 'outro')}${joinR ? `<p class="joined"><b>${DEX_NAMES[D.join.dex - 1]} joined your team!</b> ${joinR.onTeam ? 'You can place it from your team.' : 'Your team is full, so it waits in your team window until you swap it in.'}${D.join.gift ? ' Its friend area is now yours too.' : ''}</p>` : ''}<p class="small">Your team held off all ${finalWave()} waves with ${S.lives} lives left.</p>${unlimited ? '' : `<p class="small">Money left unspent: ₽${Math.max(0, Math.round(S.money)).toLocaleString()} of the ₽${Math.round(START_MONEY[S.dungeon] + (S.earned || 0)).toLocaleString()} you had.</p>`}<p class="small">+🪙 ${saved} coins${sr.coins ? ` <span class="starbonus">+ 🪙 ${sr.coins} (<b>${'★'.repeat(sr.got - sr.prev)}</b>)</span>` : ''}${first ? ', first clear bonus included' : ''}.</p>${last && first ? '<p class="small">Your Pokémon can evolve now. Open the <b>Team</b> window on the home screen.</p>' : ''}<button class="primary" id="ovHome">Back to the dungeons</button> <button id="ovAgain">Play again</button>`);
+    showOverlay(`<h2>${last ? 'Sky Tower conquered!' : D.name + ' cleared!'}</h2>${starRow(sr.got)}${storyBox(D, 'outro')}${joinR ? `<p class="joined"><b>${DEX_NAMES[D.join.dex - 1]} joined your team!</b> ${joinR.onTeam ? 'You can place it from your team.' : joinR.dup ? 'You already have one on your team, so it waits in your team window.' : 'Your team is full, so it waits in your team window until you swap it in.'}${D.join.gift ? ' Its friend area is now yours too.' : ''}</p>` : ''}<p class="small">Your team held off all ${finalWave()} waves with ${S.lives} lives left.</p>${unlimited ? '' : `<p class="small">Money left unspent: ₽${Math.max(0, Math.round(S.money)).toLocaleString()} of the ₽${Math.round(START_MONEY[S.dungeon] + (S.earned || 0)).toLocaleString()} you had.</p>`}<p class="small">+🪙 ${saved} coins${sr.coins ? ` <span class="starbonus">+ 🪙 ${sr.coins} (<b>${'★'.repeat(sr.got - sr.prev)}</b>)</span>` : ''}${first ? ', first clear bonus included' : ''}.</p>${last && first ? '<p class="small">Your Pokémon can evolve now. Open the <b>Team</b> window on the home screen.</p>' : ''}<button class="primary" id="ovHome">Back to the dungeons</button> <button id="ovAgain">Play again</button>`);
     $('overlayCard').classList.add('story-card'); typeStory();
     $('ovHome').onclick = showMenu;
     playStars(sr.got);
@@ -1459,12 +1450,12 @@ function snap(x, y) {
   return {gx, gy, x: (gx + .5) * TILE, y: (gy + .5) * TILE};
 }
 // the closest valid tile within a few tiles of a tap (a fingertip covers several tiles of the small phone map)
-function nearestPlacement(x, y, tiles) {
+function nearestPlacement(x, y, tiles, ignore) {
   const c = snap(x, y); let best = null, bd = 1e9;
   for (let gy = c.gy - tiles; gy <= c.gy + tiles; gy++) for (let gx = c.gx - tiles; gx <= c.gx + tiles; gx++) {
     if (gx < 1 || gy < 1 || gx > COLS - 2 || gy > ROWS - 2) continue;
     const px = (gx + .5) * TILE, py = (gy + .5) * TILE, d = (px - x) ** 2 + (py - y) ** 2;
-    if (d < bd && placementOk(px, py)) { bd = d; best = {x:px, y:py}; }
+    if (d < bd && placementOk(px, py, ignore)) { bd = d; best = {x:px, y:py}; }
   }
   return best;
 }
@@ -1656,7 +1647,7 @@ function render() {
         ctx.beginPath(); path.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
       }
     } else if (f.k === 'text') {
-      ctx.font = `700 ${f.size || 20}px 'Pixelify Sans', monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = `700 ${f.size || 20}px 'PixelDigits', 'Pixelify Sans', monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,.6)';
       const y = f.y - k * (f.rise ?? 20);
       ctx.strokeText(f.text, f.x, y); ctx.fillStyle = f.color; ctx.fillText(f.text, f.x, y);
@@ -1682,7 +1673,7 @@ function render() {
   if (S.wave === 0 && !S.towers.length && !S.placing) {
     ctx.fillStyle = 'rgba(20,26,46,.82)';
     roundRect(W/2 - 250, H/2 - 40, 500, 80, 12); ctx.fill();
-    ctx.fillStyle = '#ffd23f'; ctx.font = "700 20px 'Pixelify Sans', monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#ffd23f'; ctx.font = "700 20px 'PixelDigits', 'Pixelify Sans', monospace"; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(trText('Pick a Pokémon from your team'), W/2, H/2 - 12);
     ctx.fillStyle = '#eef1ff'; ctx.font = "15px 'Rubik', system-ui, sans-serif";
     ctx.fillText(trText('Place it beside the path, then press Start wave.'), W/2, H/2 + 16);
@@ -2078,8 +2069,12 @@ cv.addEventListener('pointermove', ev => {
   mouse = toLogical(ev);
   if (drag) {
     if (!canMove()) { endDrag(false); return; }
-    if (!drag.moved && Math.hypot(mouse.x - drag.sx, mouse.y - drag.sy) > 8) drag.moved = true;
-    if (drag.moved) { const sp = snap(mouse.x, mouse.y); drag.t.x = sp.x; drag.t.y = sp.y; }
+    if (!drag.moved && Math.hypot(mouse.x - drag.sx, mouse.y - drag.sy) > (drag.touch ? 6 : 8)) drag.moved = true;
+    if (drag.moved) {
+      // on a touch screen the Pokémon rides above the fingertip (so the finger doesn't hide it) and jumps to the nearest free spot
+      const ty = mouse.y - (drag.touch ? 38 : 0), sp = (drag.touch && nearestPlacement(mouse.x, ty, 2, drag.t)) || snap(mouse.x, ty);
+      drag.t.x = sp.x; drag.t.y = sp.y;
+    }
     cv.style.cursor = 'grabbing'; return;
   }
   if (S.waveActive && !S.placing && ev.buttons && S.selected && !S.moveHintT && Math.hypot(mouse.x - S.selected.x, mouse.y - S.selected.y) > 20 && towerAt(S.downX, S.downY) === S.selected) {
@@ -2116,11 +2111,17 @@ cv.addEventListener('pointerdown', ev => {
   S.selected = towerAt(p.x, p.y) || null;
   S.downX = p.x; S.downY = p.y; S.moveHintT = 0;
   if (S.selected && canMove()) {
-    drag = {t:S.selected, ox:S.selected.x, oy:S.selected.y, sx:p.x, sy:p.y, moved:false};
+    drag = {t:S.selected, ox:S.selected.x, oy:S.selected.y, sx:p.x, sy:p.y, moved:false, touch:ev.pointerType === 'touch'};
     try { cv.setPointerCapture(ev.pointerId); } catch (e) {}
   }
   refreshAll();
 });
+// a finger that starts on a Pokémon between waves is a drag, not a page scroll (the browser would otherwise cancel the drag after a few pixels)
+cv.addEventListener('touchstart', ev => {
+  if (S.over || S.placing || !canMove() || ev.touches.length !== 1) return;
+  const r = cv.getBoundingClientRect(), t = ev.touches[0];
+  if (towerAt((t.clientX - r.left) * W / r.width, (t.clientY - r.top) * H / r.height) && ev.cancelable) ev.preventDefault();
+}, {passive:false});
 cv.addEventListener('contextmenu', ev => { ev.preventDefault(); cancelPlacing(); });
 function cancelPlacing() { if (S.placing) { S.placing = null; refreshAll(); } }
 function onMap(key) { return S.towers.some(t => t.legendary && t.key === key); }
@@ -2137,8 +2138,8 @@ window.addEventListener('keydown', ev => {
   if (inMenu) return;
   if (ev.key === 'Escape') { cancelPlacing(); S.selected = null; refreshAll(); }
   if (ev.key === ' ') { ev.preventDefault(); tryStartWave(); }
-  if (DEBUG && ev.key === '[') gotoDungeon(S.dungeon - 1);
-  if (DEBUG && ev.key === ']') gotoDungeon(S.dungeon + 1);
+  if (ev.key === '[') gotoDungeon(S.dungeon - 1);
+  if (ev.key === ']') gotoDungeon(S.dungeon + 1);
   const idx = Number(ev.key) - 1;
   const keys = ownedKeys();
   if (idx >= 0 && idx < keys.length) choose(keys[idx]);
@@ -2320,7 +2321,7 @@ function renderEncounter() {
       <button class="primary" id="catchBtn" ${a ? '' : 'disabled'}>Recruit ${nm}</button>`;
     $('catchBtn').onclick = () => {
       const r = recruitMon(d); S.encounter = null; nextLegend();
-      floatText(W/2, 60, r ? (r.onTeam ? `${nm} joined your team!` : `${nm} joined, but your team is full. Add it from the team window.`) : `${nm} could not join.`, '#ffd23f', 2.2);
+      floatText(W/2, 60, r ? (r.onTeam ? `${nm} joined your team!` : r.dup ? `${nm} joined. You already have one on your team, so it waits in the team window.` : `${nm} joined, but your team is full. Add it from the team window.`) : `${nm} could not join.`, '#ffd23f', 2.2);
       refreshAll();
     };
     return;
@@ -2381,7 +2382,10 @@ function renderInfo() {
     evoBtn += `<div class="ups">${UP_KEYS.map(k => {
       const tr = upTrack(t, k), lv = upLevel(t, k), max = lv >= UP_MAX, cost = max ? 0 : upCost(t, k);
       const pips = Array.from({length:UP_MAX}, (_, i) => `<i class="${i < lv ? 'on' : ''}"></i>`).join('');
-      return `<button class="upBtn" data-k="${k}" ${max || S.money < cost ? 'disabled' : ''}><span class="upTop"><b>${tr.name}</b><span class="pips">${pips}</span><span class="upCost">${max ? 'Max' : '₽' + cost}</span></span><span class="upTip">${tr.tip}</span></button>`;
+      // the card keeps one height whatever the level: every wording it can show is stacked invisibly behind the current one
+      const all = k === 'atk' ? Array.from({length:UP_MAX + 1}, (_, l) => upTrack({...t, up:{...(t.up || {}), atk:l}}, k)) : [tr];
+      const ghost = f => all.map(x => `<i class="gh" aria-hidden="true">${f(x) || '&nbsp;'}</i>`).join('');
+      return `<button class="upBtn" data-k="${k}" ${max || S.money < cost ? 'disabled' : ''}><span class="upTop"><b class="stk"><span>${tr.name}</span>${ghost(x => x.name)}</b><span class="pips">${pips}</span><span class="upCost">${max ? 'Max' : '₽' + cost}</span></span><span class="upTip stk"><span>${tr.tip || '&nbsp;'}</span>${ghost(x => x.tip)}</span></button>`;
     }).join('')}</div>`;
   } else {
     evoHtml = `<div class="evo"><span class="on" style="color:var(--gold)">${LEGENDS[t.key].ally ? 'Story ally' : 'Legendary'} · one of a kind</span></div>`;
@@ -2407,6 +2411,12 @@ function renderInfo() {
   });
   const sb = $('sellBtn');
   if (sb) sb.onclick = () => {
+    // a second tap confirms, so a double-click aimed at an upgrade can never release a Pokémon
+    if (!sb.dataset.sure) {
+      sb.dataset.sure = '1'; sb.dataset.was = sb.textContent; sb.textContent = trText('Tap again to confirm'); sb.classList.add('sure');
+      setTimeout(() => { if (sb.isConnected && sb.dataset.sure) { delete sb.dataset.sure; sb.textContent = sb.dataset.was; sb.classList.remove('sure'); } }, 2500);
+      return;
+    }
     S.money += sellValue; S.towers = S.towers.filter(x => x !== t); S.selected = null; refreshAll();
   };
 }
@@ -2502,7 +2512,7 @@ function drawEvo() {
   ctx.fillStyle = 'rgba(14,18,48,.92)'; ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = 3;
   roundRect(bx, by, bw, bh, 10); ctx.fill(); ctx.stroke();
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillStyle = '#eef1ff'; ctx.font = "700 20px 'Pixelify Sans', monospace";
+  ctx.fillStyle = '#eef1ff'; ctx.font = "700 20px 'PixelDigits', 'Pixelify Sans', monospace";
   const line = t < DONE ? `What? ${evo.fromName} is evolving!` : `Congratulations! ${evo.fromName} evolved into ${evo.toName}!`;
   ctx.fillText(trText(line), cx, by + bh / 2);
   ctx.fillStyle = `rgba(200,210,255,${.55 + .35 * Math.sin(t * 4)})`; ctx.font = "14px 'Rubik', system-ui, sans-serif";
@@ -2580,12 +2590,13 @@ function ownedKeys() { return Object.keys(LINES).filter(k => team.members.includ
 function storyJoin(D) {
   const j = D.join;
   if (!j || (j.late && !wigSeen) || !SPECIES[j.dex] || team.recruits.some(r => r.dex === j.dex && r.story) || (team.released || []).includes(j.dex)) return null;
+  const dup = onTeamAlready(j.dex);
   const id = 'r' + (++team.rid);
   team.recruits.push({id, dex:j.dex, area:j.area, story:1}); team.owned.push(id); LINES[id] = recruitLine(j.dex);
   if (j.gift) { boughtAreas.add(j.area); saveAreas(); }
-  const onTeam = team.members.length < TEAM_MAX; if (onTeam) team.members.push(id);
+  const onTeam = !dup && team.members.length < TEAM_MAX; if (onTeam) team.members.push(id);
   saveTeam(); dexMark(j.dex, true); buildShop(); prefetchArt();
-  return {id, onTeam};
+  return {id, onTeam, dup};
 }
 // saves from before: the story allies were special towers. Turn them into the ordinary recruits they are now, keeping their team slot.
 const OLD_ALLY = {magnemite:81, absol:359};
@@ -3661,7 +3672,7 @@ function cleanSave(d) {
 // ---------- Debug tools: only for the accounts on the allow list (release build) ----------
 // The list holds SHA-256 hashes of lower-case emails, so no address is in the file. The email is not read from the stored login (that can be edited):
 // the server is asked who the access token belongs to, and the tools only switch on for a token it accepts. Everyone else, and anyone logged out, gets none.
-const DEBUG_HASHES = [];
+const DEBUG_HASHES = ['d57aaf9d49ff7732687a6e3740b2244aaaa42cfc724f914c26abff10e45c95d1', '6fb5bd500e442e5b2fea14003ee25432b8aaa4cda2dbf2bba2cd6cebd47196c1'];
 let debugFor = '';   // the access token the last check was made for
 async function sha256Hex(s) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
 function applyDebug(on) {
@@ -3977,13 +3988,17 @@ const PACK_DATA = {}, packState = {};
 window.ppdPack = (name, data) => { PACK_DATA[name] = data; };
 let artReady = false;   // set once the game has started, so a pack that arrives earlier doesn't touch half-built screens
 function loadPack(name) {
-  if (packState[name]) return packState[name].p;
+  if (packState[name] && packState[name].state !== 'failed') return packState[name].p;   // a pack that failed is tried again next time
   const st = packState[name] = {state:'loading'};
   st.p = new Promise(done => {
-    const sc = document.createElement('script'); sc.src = 'packs/' + name + '.js?v=' + BUILD;
-    sc.onerror = () => { st.state = 'failed'; sc.remove(); done(false); };
-    sc.onload = () => { sc.remove(); applyPack(name).then(() => { st.state = 'ready'; done(true); }); };
-    document.head.appendChild(sc);
+    let tries = 0;
+    const attempt = () => {   // a dropped connection must not leave a map without its pictures: try three times
+      const sc = document.createElement('script'); sc.src = 'packs/' + name + '.js?v=' + BUILD + (tries ? '&r=' + tries : '');
+      sc.onerror = () => { sc.remove(); if (++tries < 3) setTimeout(attempt, 700 * tries); else { st.state = 'failed'; done(false); } };
+      sc.onload = () => { sc.remove(); applyPack(name).then(() => { st.state = 'ready'; done(true); }); };
+      document.head.appendChild(sc);
+    };
+    attempt();
   });
   return st.p;
 }
@@ -4040,10 +4055,10 @@ function prefetchArt() {
   drainPrefetch();
 }
 // run fn once the packs are in; if they are not, say so for a moment
-function withArt(names, fn) {
+function withArt(names, fn, onFail) {
   if (packReady(names)) return fn();
   $('loadMsg').hidden = false;
-  ensure(names).then(() => { $('loadMsg').hidden = true; fn(); });
+  ensure(names).then(res => { $('loadMsg').hidden = true; if (onFail && res.includes(false)) return onFail(); fn(); });
 }
 // one line per recruit: a species with its own evolutions (starter species reuse the starters' hand-made lines)
 function recruitLine(dex) {
@@ -4056,6 +4071,12 @@ function recruitLine(dex) {
   if (terminal) branches = nxt.filter(d => TYPE_STYLE[SPECIES[d][0]]).map(d => [SPECIES[d][0], nm(d), d, SPECIES[d][2]]);
   else { let d = nxt[0]; while (d) { stages.push([nm(d), d, SPECIES[d][2]]); d = SPECIES[d][1][0]; } }
   return mkLine(type, TYPE_GLYPH[type], stages, branches && branches.length ? branches : null, false);
+}
+// the same Pokémon (or anyone from its evolution line) already on the team: a copy gains nothing there, so it waits in the team window instead
+function lineDexes(L) { const s = new Set(L.stages.map(x => x.dex)); (L.branches || []).forEach(b => s.add(b.dex)); return s; }
+function onTeamAlready(dex) {
+  const rl = lineDexes(recruitLine(dex));
+  return team.members.some(k => LINES[k] && [...lineDexes(LINES[k])].some(x => rl.has(x)));
 }
 function registerRecruits() {
   team.recruits = team.recruits.filter(r => SPECIES[r.dex]);
@@ -4105,11 +4126,12 @@ function recruitPick() {
 function recruitMon(d) {
   sfx('join');
   const a = areaFor(d); if (!a) return null;
+  const dup = onTeamAlready(d);
   const id = 'r' + (++team.rid);
   team.recruits.push({id, dex:d, area:a[0]}); team.owned.push(id); LINES[id] = recruitLine(d);
-  const onTeam = team.members.length < TEAM_MAX; if (onTeam) team.members.push(id);
+  const onTeam = !dup && team.members.length < TEAM_MAX; if (onTeam) team.members.push(id);
   saveTeam(); dexMark(d, true); buildShop();
-  return {id, area:a, onTeam};
+  return {id, area:a, onTeam, dup};
 }
 
 // ---------- Team window ----------
@@ -4232,7 +4254,10 @@ function showMenu() { inMenu = true; hideOverlay(); introEl.hidden = true; bgSto
 function hideMenu() { hideWigHint(); inMenu = false; appEl.classList.remove('in-menu'); menuEl.hidden = true; }
 function startDungeon(i) {
   menuTab = 'dungeons';
-  withArt([...packsForDungeon(i), ...packsForTeam()], () => { hideMenu(); newGame(); buildShop(); musicStart(DUNGEON_THEME[i]); if (i > 0) gotoDungeon(i); S.money = START_MONEY[i]; showDiscovered(); prefetchArt(); });
+  withArt([...packsForDungeon(i), ...packsForTeam()], () => { hideMenu(); newGame(); buildShop(); musicStart(DUNGEON_THEME[i]); if (i > 0) gotoDungeon(i); S.money = START_MONEY[i]; showDiscovered(); prefetchArt(); }, () => {
+    const m = $('loadMsg'), old = m.textContent; m.textContent = trText('Could not load this dungeon. Check your connection and try again.'); m.hidden = false;
+    setTimeout(() => { m.hidden = true; m.textContent = old; }, 4500);
+  });
 }
 $('menuBtn').onclick = () => { if (S.waveActive && !confirm(trText('Leave this dungeon? The wave in progress will be lost.'))) return; showMenu(); };
 $('menuUnlock').onclick = () => { if (!DEBUG) return; cleared = DUNGEONS.length; setMenuTab(menuTab); };
@@ -4265,7 +4290,7 @@ newGame();
 if (team.hero) showMenu(); else startIntro();
 drawBackground();
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawBackground);
-const __gameHooks = { BOSS_MUL, startBuff, bossTeam, bossPool, matchup, defMatch, defTypes, dexType, towerType, TYPE_K, snap, newGame, gotoDungeon, upCost, upLevel, UP_MAX, formOf, START_MONEY, TILE, setHpMul(v) { hpMul = v; }, setBossMul(v) { bossMul = v; }, TOUGH, BOSS_K, get hpMul() { return hpMul; }, setUnlimited(v) { unlimited = v; }, mkLine, TYPE_STYLE, TYPE_COST, UPGRADES, damage, recruitMon, recruitable, areaX, areaFor, get team() { return team; }, loadPack, ensure, spriteReady, get packState() { return packState; }, get S() { return S; }, get evo() { return evo; }, buildable, get COLS() { return COLS; }, get ROWS() { return ROWS; }, TOUGH, BOSS_K, bossHp, get PATH_LEN() { return PATH_LEN; }, posAt, update, statsOf, stagesOf, onMap, placementOk, startWave, LINES, LEGENDS, endWave, gotoDungeon, finalWave };
+window.__game = { BOSS_MUL, startBuff, bossTeam, bossPool, matchup, defMatch, defTypes, dexType, towerType, TYPE_K, snap, newGame, gotoDungeon, upCost, upLevel, UP_MAX, formOf, START_MONEY, TILE, setHpMul(v) { hpMul = v; }, setBossMul(v) { bossMul = v; }, TOUGH, BOSS_K, get hpMul() { return hpMul; }, setUnlimited(v) { unlimited = v; }, mkLine, TYPE_STYLE, TYPE_COST, UPGRADES, damage, recruitMon, recruitable, areaX, areaFor, get team() { return team; }, loadPack, ensure, spriteReady, get packState() { return packState; }, get S() { return S; }, get evo() { return evo; }, buildable, get COLS() { return COLS; }, get ROWS() { return ROWS; }, TOUGH, BOSS_K, bossHp, get PATH_LEN() { return PATH_LEN; }, posAt, update, statsOf, stagesOf, onMap, placementOk, startWave, LINES, LEGENDS, endWave, gotoDungeon, finalWave, frame, render, floatText, moveName };
 requestAnimationFrame(frame);
 })();
 </script>
